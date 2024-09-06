@@ -1,0 +1,19 @@
+.paper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    min-width: 250px;
+    max-width: 90%;
+    padding: 5px;
+    background-color: #b3dee2;
+    border-radius: 3px;
+    border: 1px solid black;
+    box-shadow: 0 1px 5px 0 black;
+}
+
+.header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}

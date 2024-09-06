@@ -1,0 +1,12 @@
+.nav {
+    height: 100%;
+    width: 100vw;
+    background-color: #999;
+}
+
+.logo {
+    height: 100%;
+    width: auto;
+    background-image: url('/public/assets/logos/printflow-logo.png');
+    background-size: cover;
+}
