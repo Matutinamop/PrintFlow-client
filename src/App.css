@@ -4,6 +4,7 @@
     align-items: center;
     width: 100vw;
     min-height: 100vh;
+    box-sizing: border-box;
     background-color: #ddd;
     overflow: hidden;
 }
@@ -11,6 +12,7 @@
 #header {
     position: fixed;
     height: 10vh;
+    box-sizing: border-box;
 }
 
 #page {
@@ -19,9 +21,11 @@
     align-items: center;
     margin-top: 10vh;
     width: 100%;
-    min-height: 85vh
+    min-height: 85vh;
+    box-sizing: border-box;
 }
 
 #footer {
     height: 5vh;
+    box-sizing: border-box;
 }

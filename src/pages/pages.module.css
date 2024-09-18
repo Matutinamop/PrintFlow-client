@@ -3,17 +3,29 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    height: 85vh;
+    background-color: #1e81b3;
+}
+
+.loader {
+    display: flex;
+    align-items: center;
     height: 100%;
 }
 
-.paperList {
+.paperGrid {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    box-sizing: border-box;
     width: 100%;
     min-height: 85vh;
     padding: 10px;
     overflow: auto;
+}
 
+.list {
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 275px;
 }
