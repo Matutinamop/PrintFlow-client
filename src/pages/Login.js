@@ -9,7 +9,9 @@ function Login() {
 	return (
 		<div>
 			Login
-			<Link to="/task/manager">task manager</Link>
+			<button>
+				<Link to="/task/manager">task manager</Link>
+			</button>
 		</div>
 	);
 }
