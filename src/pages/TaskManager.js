@@ -21,8 +21,8 @@ function TaskManager() {
 		setNewStations(stations);
 	}, [stations]);
 
-	const onDragEnd = (result) => {
-		const changedStations = movingTasks(
+	const onDragEnd = async (result) => {
+		const changedStations = await movingTasks(
 			result,
 			newStations
 		);

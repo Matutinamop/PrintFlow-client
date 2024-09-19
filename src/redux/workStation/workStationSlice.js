@@ -14,10 +14,16 @@ const initialState = {
 
 const fetchStations = createAsyncThunk(
 	'workStation/fetchStations',
-	() =>
-		axios
-			.get(`${url}/api/workStation`)
-			.then((res) => res.data.data)
+	async () => {
+		try {
+			const response = await axios.get(
+				`${url}/api/workStation`
+			);
+			return response.data.stations;
+		} catch (error) {
+			console.log(error);
+		}
+	}
 );
 
 const workStationSlice = createSlice({

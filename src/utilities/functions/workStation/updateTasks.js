@@ -12,8 +12,23 @@ export const updateStationTasks = async (
 			`${url}/api/workStation/${stationId}`,
 			{ tasks: tasksToUpdate }
 		);
-		return response.data;
+		const newArray = response.data.updatedStation.tasks;
+		const oldArray = response.data.oldStation.tasks;
+
+		console.log(newArray, oldArray);
+
+		if (
+			(oldArray.length === 0 && newArray.length === 0) ||
+			(newArray.length === oldArray.length &&
+				oldArray.every(
+					(value, index) => value === newArray[index]
+				))
+		) {
+			window.location.reload();
+		}
+		return response.data.updatedStation;
 	} catch (error) {
+		window.location.reload();
 		return error;
 	}
 };

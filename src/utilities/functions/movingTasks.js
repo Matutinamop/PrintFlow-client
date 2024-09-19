@@ -38,8 +38,32 @@ export const movingTasks = (result, newStations) => {
 			}
 			return station;
 		});
-		updateStationTasks(stationSrc._id, newSrcTasks);
-		updateStationTasks(stationDest._id, newDestTasks);
+
+		(async () => {
+			try {
+				const removeTask = await updateStationTasks(
+					stationSrc._id,
+					newSrcTasks
+				);
+				console.log(removeTask);
+
+				// Si la eliminación de la tarea en la estación de origen fue exitosa
+				if (removeTask) {
+					console.log('empieza');
+					await updateStationTasks(
+						stationDest._id,
+						newDestTasks
+					);
+					console.log('termino');
+				}
+			} catch (error) {
+				console.error(
+					'Error al actualizar las estaciones:',
+					error
+				);
+			}
+		})();
+
 		return changedStations;
 	}
 
