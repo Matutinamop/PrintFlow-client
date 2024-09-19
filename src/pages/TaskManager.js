@@ -4,10 +4,8 @@ import styles from './pages.module.css';
 import Paper from '../components/shared/Paper';
 import { fetchStations } from '../redux/workStation/workStationSlice';
 import Loader from '../components/shared/Loader';
-import {
-	DragDropContext,
-	Droppable,
-} from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { movingTasks } from '../utilities/functions/movingTasks';
 
 function TaskManager() {
 	const dispatch = useDispatch();
@@ -24,21 +22,39 @@ function TaskManager() {
 	}, [stations]);
 
 	const onDragEnd = (result) => {
+		const changedStations = movingTasks(
+			result,
+			newStations
+		);
+
+		if (changedStations) {
+			setNewStations(changedStations);
+		}
+		return;
+	};
+
+	/* const onDragEnd = (result) => {
+		movingTasks(result, newStations)
 		const { destination, source, draggableId } = result;
-		if (!destination) return;
+
+		if (!destination || !source) return;
+		if (
+			destination.droppableId === source.droppableId &&
+			destination.index === source.index
+		) {
+			return;
+		}
 		const stationSrc = newStations.find(
 			(station) => station._id === source.droppableId
 		);
 		const stationDest = newStations.find(
 			(station) => station._id === destination.droppableId
 		);
-		if (stationSrc !== stationDest) {
-			// Buscamos la tarea que se movió
-			const movedTask = stationSrc.tasks.find(
-				(task) => task._id === draggableId
-			);
+		const movedTask = stationSrc.tasks.find(
+			(task) => task._id === draggableId
+		);
 
-			// Agregamos la tarea a la estación de destino (en la posición indicada por destination.index)
+		if (stationSrc !== stationDest) {
 			const newSrcTasks = stationSrc.tasks.filter(
 				(task) => task !== movedTask
 			);
@@ -55,41 +71,29 @@ function TaskManager() {
 				}
 				return station;
 			});
+			setNewStations(changedStations);
+			updateStationTasks(stationSrc._id, newSrcTasks);
+			updateStationTasks(stationDest._id, newDestTasks);
+		}
+
+		if (stationSrc === stationDest) {
+			const newTasks = stationSrc.tasks.filter(
+				(task) => task !== movedTask
+			);
+			newTasks.splice(destination.index, 0, movedTask);
+
+			const changedStations = newStations.map((station) => {
+				if (station._id === stationDest._id) {
+					return { ...station, tasks: newTasks };
+				}
+				return station;
+			});
 
 			setNewStations(changedStations);
-
-			// Actualizamos el estado con las nuevas estaciones
+			updateStationTasks(stationSrc._id, newTasks);
 		}
-	};
 
-	/* 	const onDragEnd = (result) => {
-		const { destination, source, draggableId } = result;
-
-		const stationSrc = newStations.find(
-			(station) => station._id === source.droppableId
-		);
-		const stationDest = newStations.find(
-			(station) => station._id === destination.droppableId
-		);
-
-		if (stationSrc !== stationDest) {
-			const changedStations = newStations;
-			changedStations.map((station) => {
-				if (station._id === source.droppableId) {
-					return stationSrc.tasks.filter(
-						(task) => task._id !== draggableId
-					);
-				}
-			});
-			stationSrc.tasks.map((task))
-
-			const newTasks = stationSrc.tasks.filter(
-				(task) => task._id !== draggableId
-			);
-			stationSrc.tasks = newTasks;
-			console.log(changedStations[0]);
-		}
-		console.log(result);
+		return;
 	}; */
 
 	return (
