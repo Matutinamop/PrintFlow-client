@@ -1,4 +1,7 @@
-import { updateStationTasks } from './workStation/updateTasks';
+import {
+	addTask,
+	removeTask,
+} from './workStation/updateTasks';
 
 export const movingTasks = (result, newStations) => {
 	const { destination, source, draggableId } = result;
@@ -20,6 +23,7 @@ export const movingTasks = (result, newStations) => {
 	const movedTask = stationSrc.tasks.find(
 		(task) => task._id === draggableId
 	);
+	let changedStations;
 
 	if (stationSrc !== stationDest) {
 		const newSrcTasks = stationSrc.tasks.filter(
@@ -29,7 +33,7 @@ export const movingTasks = (result, newStations) => {
 		const newDestTasks = [...stationDest.tasks];
 		newDestTasks.splice(destination.index, 0, movedTask);
 
-		const changedStations = newStations.map((station) => {
+		changedStations = newStations.map((station) => {
 			if (station === stationSrc) {
 				return { ...station, tasks: newSrcTasks };
 			}
@@ -38,33 +42,6 @@ export const movingTasks = (result, newStations) => {
 			}
 			return station;
 		});
-
-		(async () => {
-			try {
-				const removeTask = await updateStationTasks(
-					stationSrc._id,
-					newSrcTasks
-				);
-				console.log(removeTask);
-
-				// Si la eliminación de la tarea en la estación de origen fue exitosa
-				if (removeTask) {
-					console.log('empieza');
-					await updateStationTasks(
-						stationDest._id,
-						newDestTasks
-					);
-					console.log('termino');
-				}
-			} catch (error) {
-				console.error(
-					'Error al actualizar las estaciones:',
-					error
-				);
-			}
-		})();
-
-		return changedStations;
 	}
 
 	if (stationSrc === stationDest) {
@@ -73,14 +50,30 @@ export const movingTasks = (result, newStations) => {
 		);
 		newTasks.splice(destination.index, 0, movedTask);
 
-		const changedStations = newStations.map((station) => {
+		changedStations = newStations.map((station) => {
 			if (station._id === stationDest._id) {
 				return { ...station, tasks: newTasks };
 			}
 			return station;
 		});
-
-		updateStationTasks(stationSrc._id, newTasks);
-		return changedStations;
 	}
+	(async () => {
+		try {
+			const removedTask = await removeTask(
+				stationSrc._id,
+				draggableId
+			);
+
+			if (removedTask) {
+				await addTask(destination, draggableId);
+			}
+		} catch (error) {
+			console.error(
+				'Error al actualizar las estaciones:',
+				error
+			);
+		}
+	})();
+
+	return changedStations;
 };

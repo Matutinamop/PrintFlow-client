@@ -12,6 +12,7 @@ function TaskManager() {
 	const { loadingStation, stations, errorStation } =
 		useSelector((state) => state.workStation);
 	const [newStations, setNewStations] = useState([]);
+	const [isDragAllowed, setIsDragAllowed] = useState(true);
 
 	useEffect(() => {
 		dispatch(fetchStations());
@@ -27,77 +28,26 @@ function TaskManager() {
 			newStations
 		);
 
+		setIsDragAllowed(false);
+
 		if (changedStations) {
 			setNewStations(changedStations);
 		}
+		setTimeout(() => {
+			setIsDragAllowed(true);
+		}, 500);
+
 		return;
 	};
 
-	/* const onDragEnd = (result) => {
-		movingTasks(result, newStations)
-		const { destination, source, draggableId } = result;
-
-		if (!destination || !source) return;
-		if (
-			destination.droppableId === source.droppableId &&
-			destination.index === source.index
-		) {
-			return;
-		}
-		const stationSrc = newStations.find(
-			(station) => station._id === source.droppableId
-		);
-		const stationDest = newStations.find(
-			(station) => station._id === destination.droppableId
-		);
-		const movedTask = stationSrc.tasks.find(
-			(task) => task._id === draggableId
-		);
-
-		if (stationSrc !== stationDest) {
-			const newSrcTasks = stationSrc.tasks.filter(
-				(task) => task !== movedTask
-			);
-
-			const newDestTasks = [...stationDest.tasks];
-			newDestTasks.splice(destination.index, 0, movedTask);
-
-			const changedStations = newStations.map((station) => {
-				if (station === stationSrc) {
-					return { ...station, tasks: newSrcTasks };
-				}
-				if (station === stationDest) {
-					return { ...station, tasks: newDestTasks };
-				}
-				return station;
-			});
-			setNewStations(changedStations);
-			updateStationTasks(stationSrc._id, newSrcTasks);
-			updateStationTasks(stationDest._id, newDestTasks);
-		}
-
-		if (stationSrc === stationDest) {
-			const newTasks = stationSrc.tasks.filter(
-				(task) => task !== movedTask
-			);
-			newTasks.splice(destination.index, 0, movedTask);
-
-			const changedStations = newStations.map((station) => {
-				if (station._id === stationDest._id) {
-					return { ...station, tasks: newTasks };
-				}
-				return station;
-			});
-
-			setNewStations(changedStations);
-			updateStationTasks(stationSrc._id, newTasks);
-		}
-
-		return;
-	}; */
-
 	return (
-		<DragDropContext onDragEnd={onDragEnd}>
+		<DragDropContext
+			onDragEnd={(result) => {
+				if (isDragAllowed) {
+					onDragEnd(result);
+				}
+			}}
+		>
 			<div className={styles.taskManager}>
 				{loadingStation ? (
 					<div className={styles.loader}>

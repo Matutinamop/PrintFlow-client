@@ -21,7 +21,7 @@ const fetchStations = createAsyncThunk(
 			);
 			return response.data.stations;
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 	}
 );

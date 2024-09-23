@@ -1,0 +1,36 @@
+.table {
+    width: 100%;
+    min-width: 1600px;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.th {
+    background-color: #f4f4f4;
+}
+
+.th, .td {
+    border: 1px solid #101204;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    padding: 5px;
+}
+
+.normal {
+    width: 150px;
+}
+
+.small {
+    width: 60px;
+    text-align: center;
+}
+
+.big {
+    width: 300px;
+}
+
+.tr:nth-child(even) {
+    background-color: #f9f9f9;
+}

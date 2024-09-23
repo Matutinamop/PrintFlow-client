@@ -29,3 +29,40 @@
     flex-shrink: 0;
     width: 275px;
 }
+
+.ordersList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    width: 100vw;
+    min-height: 85vh;
+}
+
+.ordersListTitle {
+    align-self: center;
+}
+
+.ordersListSearch {
+    align-self: flex-end;
+}
+
+.ordersListTable {
+    display: flex;
+    flex-direction: column;
+/*     align-items: center; */
+    gap: 15px;
+    flex-shrink: 0;
+    width: 90%;
+    border: 1px solid #101204;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px 0 #101204;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.space {
+    width: 100%;
+    min-width: 1600px;
+    margin-bottom: 10px;
+}

@@ -2,30 +2,60 @@ import axios from 'axios';
 
 const url = process.env.REACT_APP_API_URL;
 
-export const updateStationTasks = async (
-	stationId,
-	newTasks
-) => {
-	const tasksToUpdate = newTasks.map((task) => task._id);
+export const removeTask = async (stationId, taskId) => {
 	try {
+		const oldStation = await axios.get(
+			`${url}/api/workStation/${stationId}`
+		);
+		if (!oldStation.data.station) {
+			window.location.reload();
+			return;
+		}
+		const hasTask = oldStation.data.station.tasks.find(
+			(task) => task._id === taskId
+		);
+		if (!hasTask) {
+			window.location.reload();
+			return;
+		}
+		const newTasks = oldStation.data.station.tasks.filter(
+			(task) => task._id !== taskId
+		);
 		const response = await axios.put(
 			`${url}/api/workStation/${stationId}`,
-			{ tasks: tasksToUpdate }
+			{ tasks: newTasks }
 		);
-		const newArray = response.data.updatedStation.tasks;
-		const oldArray = response.data.oldStation.tasks;
+		return response.data.updatedStation;
+	} catch (error) {
+		window.location.reload();
+		return error;
+	}
+};
 
-		console.log(newArray, oldArray);
-
-		if (
-			(oldArray.length === 0 && newArray.length === 0) ||
-			(newArray.length === oldArray.length &&
-				oldArray.every(
-					(value, index) => value === newArray[index]
-				))
-		) {
+export const addTask = async (destination, taskId) => {
+	const stationId = destination.droppableId;
+	try {
+		const oldStation = await axios.get(
+			`${url}/api/workStation/${stationId}`
+		);
+		if (!oldStation.data.station) {
 			window.location.reload();
+			return;
 		}
+		const hasTask = oldStation.data.station.tasks.find(
+			(task) => task._id === taskId
+		);
+		if (hasTask) {
+			window.location.reload();
+			return;
+		}
+		const newTasks = [...oldStation.data.station.tasks];
+		newTasks.splice(destination.index, 0, taskId);
+
+		const response = await axios.put(
+			`${url}/api/workStation/${stationId}`,
+			{ tasks: newTasks }
+		);
 		return response.data.updatedStation;
 	} catch (error) {
 		window.location.reload();
