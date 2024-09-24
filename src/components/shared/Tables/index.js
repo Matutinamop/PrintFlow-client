@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import styles from './tables.module.css';
 
 export function Table({ children }) {
@@ -24,9 +25,19 @@ export function Tr({ children }) {
 	return <tr className={styles.tr}>{children}</tr>;
 }
 
-export function Td({ children, size = 'normal' }) {
+export function Td({
+	children,
+	size = 'normal',
+	urgent,
+	warning,
+}) {
 	return (
-		<td className={`${styles.td} ${styles[size]}`}>
+		<td
+			className={clsx(styles.td, styles[size], {
+				[styles.urgent]: urgent,
+				[styles.warning]: warning,
+			})}
+		>
 			{children}
 		</td>
 	);

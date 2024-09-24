@@ -10,6 +10,7 @@ const initialState = {
 	loadingOrders: true,
 	orders: [],
 	errorOrders: '',
+	ordersCount: 0,
 };
 
 const fetchOrdersPage = createAsyncThunk(
@@ -22,7 +23,7 @@ const fetchOrdersPage = createAsyncThunk(
 					params: from ? { from } : {},
 				}
 			);
-			return response.data.orders;
+			return response.data;
 		} catch (error) {
 			console.error(error);
 		}
@@ -31,20 +32,20 @@ const fetchOrdersPage = createAsyncThunk(
 
 const fetchFilteredOrders = createAsyncThunk(
 	'orders/fetchFilteredOrders',
-	async (client, product, status, from) => {
+	async ({ searchTerm, status, from }) => {
 		try {
 			const response = await axios.get(
 				`${url}/api/order/filtered`,
 				{
 					params: {
 						...(from && { lastOrderNumber: from }),
-						...(client && { client }),
-						...(product && { product }),
+						...(searchTerm && { searchTerm }),
 						...(status && { status }),
 					},
 				}
 			);
-			return response.data.orders;
+			console.log(response);
+			return response.data;
 		} catch (error) {
 			console.error(error);
 		}
@@ -76,8 +77,9 @@ const ordersSlice = createSlice({
 			fetchOrdersPage.fulfilled,
 			(state, action) => {
 				state.loadingOrders = false;
-				state.orders = action.payload;
+				state.orders = action.payload.orders;
 				state.errorOrders = '';
+				state.ordersCount = action.payload.count;
 			}
 		);
 		builder.addCase(
@@ -86,6 +88,7 @@ const ordersSlice = createSlice({
 				state.loadingOrders = false;
 				state.orders = [];
 				state.errorOrders = action.error.message;
+				state.ordersCount = 0;
 			}
 		);
 		builder.addCase(
@@ -98,8 +101,9 @@ const ordersSlice = createSlice({
 			fetchFilteredOrders.fulfilled,
 			(state, action) => {
 				state.loadingOrders = false;
-				state.orders = action.payload;
+				state.orders = action.payload.orders;
 				state.errorOrders = '';
+				state.ordersCount = action.payload.count;
 			}
 		);
 		builder.addCase(
@@ -108,6 +112,7 @@ const ordersSlice = createSlice({
 				state.loadingOrders = false;
 				state.orders = [];
 				state.errorOrders = action.error.message;
+				state.ordersCount = 0;
 			}
 		);
 		builder.addCase(
@@ -122,6 +127,7 @@ const ordersSlice = createSlice({
 				state.loadingOrders = false;
 				state.orders = action.payload;
 				state.errorOrders = '';
+				state.ordersCount = 1;
 			}
 		);
 		builder.addCase(
@@ -130,10 +136,15 @@ const ordersSlice = createSlice({
 				state.loadingOrders = false;
 				state.orders = [];
 				state.errorOrders = action.error.message;
+				state.ordersCount = 0;
 			}
 		);
 	},
 });
 
 export const { reducer: ordersReducer } = ordersSlice;
-export { fetchOrdersPage };
+export {
+	fetchOrdersPage,
+	fetchFilteredOrders,
+	fetchOrderByOrderNumber,
+};

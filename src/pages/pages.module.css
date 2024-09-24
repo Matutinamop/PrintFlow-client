@@ -50,10 +50,11 @@
 .ordersListTable {
     display: flex;
     flex-direction: column;
-/*     align-items: center; */
     gap: 15px;
     flex-shrink: 0;
     width: 90%;
+    height: 75vh;
+    margin: auto;
     border: 1px solid #101204;
     border-radius: 8px;
     box-shadow: 0 1px 5px 0 #101204;
@@ -66,3 +67,54 @@
     min-width: 1600px;
     margin-bottom: 10px;
 }
+
+.ordersListTable::-webkit-scrollbar {
+    width: 12px;    
+    border-radius: 20px;           /* width of the entire scrollbar */
+  }
+  
+  .ordersListTable::-webkit-scrollbar-track {
+    border-radius: 20px;
+    /* background: orange;  */       /* color of the tracking area */
+  }
+  
+  .ordersListTable::-webkit-scrollbar-thumb {
+    background-color: black;    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid #ddd;  /* creates padding around scroll thumb */
+  }
+
+  .ordersListTable::-webkit-scrollbar:window-inactive{
+    display: none;
+  }
+
+
+/* 
+::-webkit-scrollbar {
+
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #d61818;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    border-radius: 5px;
+    background-color: #d61818;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+html {
+    border-radius: 5px;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1; 
+} */
+
