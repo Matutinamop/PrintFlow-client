@@ -34,59 +34,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 50px;
+    justify-content: space-between;
     width: 100vw;
-    min-height: 85vh;
-}
-
-.ordersListTitle {
-    align-self: center;
+    height: 85vh;
 }
 
 .ordersListSearch {
+    margin-right: 3%;
     align-self: flex-end;
 }
-
-.ordersListTable {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    flex-shrink: 0;
-    width: 90%;
-    height: 75vh;
-    margin: auto;
-    border: 1px solid #101204;
-    border-radius: 8px;
-    box-shadow: 0 1px 5px 0 #101204;
-    padding: 10px;
-    overflow-x: auto;
-}
-
-.space {
-    width: 100%;
-    min-width: 1600px;
-    margin-bottom: 10px;
-}
-
-.ordersListTable::-webkit-scrollbar {
-    width: 12px;    
-    border-radius: 20px;           /* width of the entire scrollbar */
-  }
-  
-  .ordersListTable::-webkit-scrollbar-track {
-    border-radius: 20px;
-    /* background: orange;  */       /* color of the tracking area */
-  }
-  
-  .ordersListTable::-webkit-scrollbar-thumb {
-    background-color: black;    /* color of the scroll thumb */
-    border-radius: 20px;       /* roundness of the scroll thumb */
-    border: 3px solid #ddd;  /* creates padding around scroll thumb */
-  }
-
-  .ordersListTable::-webkit-scrollbar:window-inactive{
-    display: none;
-  }
 
 
 /* 

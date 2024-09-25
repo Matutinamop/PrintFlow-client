@@ -21,23 +21,22 @@ export function Tbody({ children }) {
 	return <tbody className={styles.tbody}>{children}</tbody>;
 }
 
-export function Tr({ children }) {
-	return <tr className={styles.tr}>{children}</tr>;
-}
-
-export function Td({
-	children,
-	size = 'normal',
-	urgent,
-	warning,
-}) {
+export function Tr({ children, urgent, warning }) {
 	return (
-		<td
-			className={clsx(styles.td, styles[size], {
+		<tr
+			className={clsx(styles.tr, {
 				[styles.urgent]: urgent,
 				[styles.warning]: warning,
 			})}
 		>
+			{children}
+		</tr>
+	);
+}
+
+export function Td({ children, size = 'normal' }) {
+	return (
+		<td className={`${styles.td} ${styles[size]}`}>
 			{children}
 		</td>
 	);

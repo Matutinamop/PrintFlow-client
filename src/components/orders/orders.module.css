@@ -1,0 +1,52 @@
+.allOrders {
+    width: 100%;
+    height: 75vh;
+}
+
+
+.allOrdersTitle {
+    align-self: center;
+}
+
+
+
+.allOrdersTable {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-shrink: 0;
+    width: 95%;
+    height: 65vh;
+    margin: 20px auto;
+    border: 1px solid #101204;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px 0 #101204;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.space {
+    width: 100%;
+    min-width: 1600px;
+    margin-bottom: 10px;
+}
+
+.allOrdersTable::-webkit-scrollbar {
+    width: 12px;    
+    border-radius: 20px;           /* width of the entire scrollbar */
+  }
+  
+  .allOrdersTable::-webkit-scrollbar-track {
+    border-radius: 20px;
+    /* background: orange;  */       /* color of the tracking area */
+  }
+  
+  .allOrdersTable::-webkit-scrollbar-thumb {
+    background-color: black;    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 3px solid #ddd;  /* creates padding around scroll thumb */
+  }
+
+  .allOrdersTable::-webkit-scrollbar:window-inactive{
+    display: none;
+  }
