@@ -12,23 +12,48 @@ export const parseDate = (dateString) => {
 	return new Date(year, month - 1, day);
 };
 
+export const isUrgent = (order) => {
+	if (order) {
+		const { dateFinal, status } = order;
+		if (status === 'En espera' || status === 'En proceso') {
+			const startDate = parseDate(today);
+			const endDate = parseDate(dateFinal);
+			if (endDate > startDate) {
+				const daysInRange = eachDayOfInterval({
+					start: startDate,
+					end: endDate,
+				});
+
+				const businessDays = daysInRange.filter(
+					(date) => !isWeekend(date)
+				);
+				return businessDays.length < 3;
+			}
+			return true;
+		}
+	}
+	return false;
+};
+
 export const isWarning = (order) => {
-	const { dateEstimate, status } = order;
-	if (status === 'En espera' || status === 'En proceso') {
-		if (dateEstimate > today) {
+	if (order) {
+		const { dateEstimate, status } = order;
+		if (status === 'En espera' || status === 'En proceso') {
 			const startDate = parseDate(today);
 			const endDate = parseDate(dateEstimate);
-			const daysInRange = eachDayOfInterval({
-				start: startDate,
-				end: endDate,
-			});
+			if (dateEstimate > today) {
+				const daysInRange = eachDayOfInterval({
+					start: startDate,
+					end: endDate,
+				});
 
-			const businessDays = daysInRange.filter(
-				(date) => !isWeekend(date)
-			);
-			return businessDays.length < 5;
+				const businessDays = daysInRange.filter(
+					(date) => !isWeekend(date)
+				);
+				return businessDays.length < 3;
+			}
+			return true;
 		}
-		return true;
 	}
 	return false;
 };

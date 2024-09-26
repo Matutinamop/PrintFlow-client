@@ -5,29 +5,10 @@ import { useDispatch } from 'react-redux';
 function Pagination({
 	count,
 	itemsPerPage,
-	fetchPage,
-	searchTerm,
+	currentPage,
+	totalPages,
+	setPage,
 }) {
-	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
-
-	const dispatch = useDispatch();
-
-	useEffect(() => {
-		const pages = Math.ceil(count / itemsPerPage);
-		setTotalPages(pages);
-		setCurrentPage(1);
-	}, [count]);
-
-	useEffect(() => {
-		dispatch(
-			fetchPage({
-				searchTerm,
-				page: currentPage,
-			})
-		);
-	}, [currentPage]);
-
 	const getPaginationRange = () => {
 		const range = [];
 		let start = Math.max(1, currentPage - 2);
@@ -46,9 +27,7 @@ function Pagination({
 					<button
 						className={styles.prevBtn}
 						onClick={() =>
-							setCurrentPage((prev) =>
-								Math.max(prev - 1, 1)
-							)
+							setPage((prev) => Math.max(prev - 1, 1))
 						}
 						disabled={currentPage === 1}
 					>
@@ -57,16 +36,12 @@ function Pagination({
 					{getPaginationRange().map((page) => (
 						<button
 							key={page}
-							onClick={() => setCurrentPage(page)}
+							onClick={() => setPage(page)}
 							className={`${styles.pageBtn} ${
 								page === currentPage
 									? styles.currentPageBtn
 									: ''
-							}`} /* 
-							style={{
-								fontWeight:
-									page === currentPage ? 'bold' : 'normal',
-							}} */
+							}`}
 						>
 							{page}
 						</button>
@@ -74,7 +49,7 @@ function Pagination({
 					<button
 						className={styles.nextBtn}
 						onClick={() =>
-							setCurrentPage((next) =>
+							setPage((next) =>
 								Math.min(next + 1, totalPages)
 							)
 						}

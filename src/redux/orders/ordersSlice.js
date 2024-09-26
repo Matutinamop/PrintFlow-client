@@ -125,7 +125,7 @@ const ordersSlice = createSlice({
 			fetchOrderByOrderNumber.fulfilled,
 			(state, action) => {
 				state.loadingOrders = false;
-				state.orders = action.payload;
+				state.orders = [action.payload];
 				state.errorOrders = '';
 				state.ordersCount = 1;
 			}

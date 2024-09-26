@@ -1,71 +1,53 @@
 .table {
     width: 100%;
-    min-width: 1600px;
+    display: flex;
+    flex-direction: column;
     table-layout: fixed;
     border-collapse: collapse;
 }
 
+.thead {
+    position: relative;
+}
+
+.tr {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
 .th {
     background-color: #f4f4f4;
+    display: flex;
 }
 
 .th, .td {
     position: relative;
     border: 1px solid #101204;
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: left;
     padding: 5px;
 }
 
-.td.urgent::after {
-    content: '';
-    position: absolute;
-    top: 0; 
-    left: 0; 
-    right: 0; 
-    bottom: 0; 
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    margin: 0;
-    padding: 0;
-    border: none;
-    box-sizing: border-box;
-    background-color: rgba(200, 50, 50, 0.4);
-}
-
-.td.warning::after {
-    content: '';
-    position: absolute;
-    top: 0; 
-    left: 0; 
-    right: 0; 
-    bottom: 0; 
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    margin: 0;
-    padding: 0;
-    border: none;
-    box-sizing: border-box;
-    background-color: rgba(255, 165, 0, 0.3);
+.td {
+    overflow: hidden;
 }
 
 .normal {
-    width: 150px;
+    flex: 2 ;
+    flex-shrink: 0;
 }
 
 .small {
-    width: 60px;
+    flex: 1 ;
+    flex-shrink: 0;
     text-align: center;
 }
 
 .big {
-    width: 300px;
+    flex: 4 ;
+    flex-shrink: 0;
 }
 
 .tr:nth-child(odd) {
@@ -73,11 +55,19 @@
 }
 
 .tr.warning {
-    background-color: rgba(255, 165, 0, 0.7);
+    background-color: rgb(255, 200, 150);
 }
 
 .tr.warning:nth-child(odd) {
-    background-color: rgba(223, 145, 1, 0.7);
+    background-color: rgb(255, 190, 140);
+}
+
+.tr.urgent {
+    background-color: rgb(255, 124, 124);
+}
+
+.tr.urgent:nth-child(odd) {
+    background-color: rgb(255, 114, 114);
 }
 
 

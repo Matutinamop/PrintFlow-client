@@ -1,9 +1,12 @@
 .pagination {
-    margin-bottom: 5px;
+        margin-bottom: 5px;
+    width: 25%;
 }
 
 .paginationBtns {
     display: flex;
+    justify-content: space-between;
+
     gap: 10px;
 }
 
