@@ -8,6 +8,8 @@ import {
 import { Input } from '../../../components/shared/Inputs';
 import AllOrdersList from '../../../components/orders/AllOrdersList';
 import Pagination from '../../../components/shared/Pagination';
+import { Link } from 'wouter';
+import Button from '../../../components/shared/Button';
 
 function OrdersList() {
 	const { loadingOrders, orders, ordersCount } =
@@ -67,27 +69,41 @@ function OrdersList() {
 			<h2 className={styles.allOrdersTitle}>
 				Lista de órdenes
 			</h2>
-			<div className={styles.ordersListSearch}>
-				<form onSubmit={(e) => orderNumberSubmit(e)}>
-					<Input
-						value={orderNumber}
-						type={'number'}
-						onChange={(e) => setOrderNumber(e.target.value)}
-						placeholder={'Buscar por Nº orden'}
-					>
-						Buscar:{' '}
-					</Input>
-				</form>
-
-				<form onSubmit={(e) => searchTermSubmit(e)}>
-					<Input
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-						placeholder={'Buscar por cliente o producto'}
-					></Input>
-				</form>
+			<div
+				style={{
+					display: 'flex',
+					alignItems: 'center',
+					width: '85vw',
+				}}
+			>
+				<div className={styles.ordersListSearch}>
+					<label className={styles.label}>Buscar: </label>
+					<form onSubmit={(e) => orderNumberSubmit(e)}>
+						<Input
+							value={orderNumber}
+							type={'number'}
+							onChange={(e) =>
+								setOrderNumber(e.target.value)
+							}
+							placeholder={'Buscar por Nº orden'}
+						></Input>
+					</form>
+					<form onSubmit={(e) => searchTermSubmit(e)}>
+						<Input
+							value={searchTerm}
+							onChange={(e) =>
+								setSearchTerm(e.target.value)
+							}
+							placeholder={'Buscar por cliente o producto'}
+						></Input>
+					</form>
+				</div>
+				<Link to="./form">
+					<Button>Crear</Button>
+				</Link>
 			</div>
 			<AllOrdersList
+				ordersLoading={loadingOrders}
 				orders={orders}
 				status={status}
 				changeStatus={changeStatus}

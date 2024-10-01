@@ -31,3 +31,25 @@ export function Input({
 		</div>
 	);
 }
+
+export function TextArea({
+	children,
+	placeholder,
+	value,
+	onChange,
+	orientation = 'horizontal',
+}) {
+	return (
+		<div
+			className={`${styles.container} ${styles[orientation]}`}
+		>
+			<label className={styles.label}>{children}</label>
+			<textarea
+				className={styles.textarea}
+				placeholder={placeholder}
+				value={value}
+				onChange={onChange}
+			></textarea>
+		</div>
+	);
+}

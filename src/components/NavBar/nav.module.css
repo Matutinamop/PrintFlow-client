@@ -1,12 +1,70 @@
-.nav {
+.navBar {
+    display: flex;
+    justify-content: space-between ;
+    padding: 5px 2%;
+    align-items: center;
+    gap: 150px;
     height: 100%;
     width: 100vw;
-    background-color: #999;
+    background-color: #24252A;
+    color: #EDF0F1;
+}
+
+.nav {
+    display: flex;
+    gap: 100px;
+}
+
+.verticalNav {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    left: 0;
+    top: 7vh;
+    padding: 20px;
+    background-color: #24252A;
+}
+
+.burgerMenu {
+    height: 40px;
+    width: 40px;
+    border-radius: 5px;
+
+    &:hover {
+        border: 1px solid #0088a9;
+        cursor: pointer;
+    }
+}
+
+.open {
+    background-color: #3a3b41;
+}
+
+.navLinks {
+    display: flex;
+    gap: 15px;
+    font-weight: 600;
+    font-size: 20px;
+    padding-top: 25px;
+}
+
+.navLinks a {
+    text-decoration: none;
+    /* color: #EDF0F1; */
+    transition: all 0.3s ease 0s;
+
+    &:hover {
+        color: #0088a9
+    }
+}
+
+.active {
+    font-weight: bold;
+    color: #0088a9;
 }
 
 .logo {
+    display: flex;
+    align-items: center;
     height: 100%;
-    width: auto;
-    background-image: url('/public/assets/logos/printflow-logo.png');
-    background-size: cover;
 }

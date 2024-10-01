@@ -1,12 +1,11 @@
 .pagination {
-        margin-bottom: 5px;
-    width: 25%;
+    margin-bottom: 5px;
+    width: 20%;
 }
 
 .paginationBtns {
     display: flex;
     justify-content: space-between;
-
     gap: 10px;
 }
 
@@ -33,4 +32,10 @@
 .currentPageBtn {
    transform: scale(1.3);
    transition: transform 0.3s ease;
+}
+
+@media (max-width: 1000px) {
+    .pagination{ 
+        width: 300px;
+    }
 }

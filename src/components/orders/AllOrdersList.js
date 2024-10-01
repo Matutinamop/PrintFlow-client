@@ -15,7 +15,11 @@ import {
 import Loader from '../shared/Loader';
 import Dropdown from '../shared/Dropdown';
 
-function AllOrdersList({ orders, changeStatus }) {
+function AllOrdersList({
+	orders,
+	ordersLoading,
+	changeStatus,
+}) {
 	const statusList = [
 		'Todos',
 		'En proceso',
@@ -26,10 +30,12 @@ function AllOrdersList({ orders, changeStatus }) {
 
 	return (
 		<div className={styles.allOrders}>
-			{!orders ? (
-				<Loader />
-			) : (
-				<div className={styles.allOrdersTable}>
+			<div className={styles.allOrdersTable}>
+				{ordersLoading ? (
+					<div className={styles.loader}>
+						<Loader />
+					</div>
+				) : (
 					<div className={styles.tables}>
 						<Table>
 							<Thead>
@@ -77,8 +83,8 @@ function AllOrdersList({ orders, changeStatus }) {
 							</Tbody>
 						</Table>
 					</div>
-				</div>
-			)}
+				)}
+			</div>
 		</div>
 	);
 }
