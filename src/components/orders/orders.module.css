@@ -57,6 +57,12 @@
   }
 
 @media (max-width: 1000px) {
+
+  .allOrders {
+    height: 53vh;
+  }
+
   .allOrdersTable{
-  height: 55vh;}
+    height: 50vh;
+}
 }
