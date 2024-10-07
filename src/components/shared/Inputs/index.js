@@ -9,6 +9,7 @@ export function Input({
 	size,
 	orientation = 'horizontal',
 	required = false,
+	min = '0',
 }) {
 	return (
 		<div
@@ -21,6 +22,7 @@ export function Input({
 				)}
 			</label>
 			<input
+				min={min}
 				placeholder={placeholder}
 				type={type}
 				value={value}
@@ -38,6 +40,8 @@ export function TextArea({
 	value,
 	onChange,
 	orientation = 'horizontal',
+	width = '50%',
+	height = '100px',
 }) {
 	return (
 		<div
@@ -45,6 +49,7 @@ export function TextArea({
 		>
 			<label className={styles.label}>{children}</label>
 			<textarea
+				style={{ width: width, height: height }}
 				className={styles.textarea}
 				placeholder={placeholder}
 				value={value}

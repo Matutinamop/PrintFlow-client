@@ -28,25 +28,22 @@
     white-space: nowrap;
     text-align: left;
     padding: 5px;
-}
-
-.td {
     overflow: hidden;
 }
 
 .normal {
-    flex: 2 ;
+    flex: 4 ;
     flex-shrink: 0;
 }
 
 .small {
-    flex: 1 ;
+    flex: 2 ;
     flex-shrink: 0;
     text-align: center;
 }
 
 .big {
-    flex: 4 ;
+    flex: 5 ;
     flex-shrink: 0;
 }
 

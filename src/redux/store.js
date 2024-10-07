@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { workStationReducer } from './workStation/workStationSlice';
+import { workStationReducer } from './workStations/workStationSlice';
 import { ordersReducer } from './orders/ordersSlice';
+import { taskReducer } from './tasks/tasksSlice';
 
 const store = configureStore({
 	reducer: {
-		workStation: workStationReducer,
+		workStations: workStationReducer,
 		orders: ordersReducer,
+		tasks: taskReducer,
 	},
 });
 

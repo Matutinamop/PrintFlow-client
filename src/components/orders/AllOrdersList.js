@@ -51,14 +51,11 @@ function AllOrdersList({
 											handleClick={changeStatus}
 										/>
 									</Th>
-									<Th>Recibido</Th>
+									<Th>Creado</Th>
 									<Th>Fecha límite</Th>
 									<Th>Presupuesto</Th>
 								</Tr>
 							</Thead>
-						</Table>
-						<div className={styles.space}></div>
-						<Table>
 							<Tbody>
 								{orders.map((order) => (
 									<Tr
@@ -75,7 +72,7 @@ function AllOrdersList({
 											{order.client.companyName}
 										</Td>
 										<Td>{order.status}</Td>
-										<Td>{order.dateReceived}</Td>
+										<Td>{order.dateCreated}</Td>
 										<Td>{order.dateFinal}</Td>
 										<Td>${order.budget}</Td>
 									</Tr>

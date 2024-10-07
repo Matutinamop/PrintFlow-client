@@ -6,7 +6,7 @@ import {
 	fetchOrderByOrderNumber,
 } from '../../../redux/orders/ordersSlice';
 import { Input } from '../../../components/shared/Inputs';
-import AllOrdersList from '../../../components/orders/AllOrdersList';
+import AllOrdersList from '../../../components/Orders/AllOrdersList';
 import Pagination from '../../../components/shared/Pagination';
 import { Link } from 'wouter';
 import Button from '../../../components/shared/Button';
@@ -76,6 +76,9 @@ function OrdersList() {
 					width: '85vw',
 				}}
 			>
+				<Link to="./form">
+					<Button>Crear</Button>
+				</Link>
 				<div className={styles.ordersListSearch}>
 					<label className={styles.label}>Buscar: </label>
 					<form onSubmit={(e) => orderNumberSubmit(e)}>
@@ -98,9 +101,6 @@ function OrdersList() {
 						></Input>
 					</form>
 				</div>
-				<Link to="./form">
-					<Button>Crear</Button>
-				</Link>
 			</div>
 			<AllOrdersList
 				ordersLoading={loadingOrders}

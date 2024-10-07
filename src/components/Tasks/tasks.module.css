@@ -1,0 +1,40 @@
+.taskManager {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 88vh;
+    padding-top: 20px;
+    background-color: #1e81b3;
+}
+
+.loader {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.paperGrid {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    min-height: 85vh;
+    padding: 10px;
+    overflow: auto;
+}
+
+.list {
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 275px;
+}
+
+.label {
+        margin-left: 10px;
+        margin-bottom: 0.5rem;
+        font-size: 18px;
+        font-weight: bold;
+    
+}

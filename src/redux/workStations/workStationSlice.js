@@ -9,6 +9,7 @@ const url = process.env.REACT_APP_API_URL;
 const initialState = {
 	loadingStation: true,
 	stations: [],
+	station: {},
 	errorStation: '',
 };
 
@@ -20,6 +21,20 @@ const fetchStations = createAsyncThunk(
 				`${url}/api/workStation`
 			);
 			return response.data.stations;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+);
+
+const fetchStationById = createAsyncThunk(
+	'workStation/fetchById',
+	async (id) => {
+		try {
+			const response = await axios.get(
+				`${url}/api/workStation/${id}`
+			);
+			return response.data.station;
 		} catch (error) {
 			console.error(error);
 		}
@@ -49,9 +64,21 @@ const workStationSlice = createSlice({
 				state.errorStation = action.error.message;
 			}
 		);
+		builder.addCase(fetchStationById.pending, (state) => {
+			state.station = {};
+		});
+		builder.addCase(
+			fetchStationById.fulfilled,
+			(state, action) => {
+				state.station = action.payload;
+			}
+		);
+		builder.addCase(fetchStationById.rejected, (state) => {
+			state.station = {};
+		});
 	},
 });
 
 export const { reducer: workStationReducer } =
 	workStationSlice;
-export { fetchStations };
+export { fetchStations, fetchStationById };

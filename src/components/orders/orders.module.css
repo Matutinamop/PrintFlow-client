@@ -1,5 +1,5 @@
-.allOrders {
-    width: 100%;
+.allOrders, .orderForm {
+    width: 95%;
     height: 70vh;
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.6);
@@ -8,6 +8,46 @@
     color: #101204;
     box-shadow: 0 1px 5px 0 #101204;
 }
+
+.orderForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 84vh;
+  margin: 2vh 0;
+  overflow: auto;
+}
+
+.form { 
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 1400px;
+}
+
+.blockTitle {
+  margin-bottom: 10px;
+}
+
+.block {
+  background-color: rgba(0,0,0,0.3);
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 35px;
+}
+
+.orderInfo, .clientInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 25%;
+  margin: 30px 50px;
+  background-color: rgba(0,0,0,0.3);
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 25px;
+}
+
 
 .loader {
   margin: auto;
@@ -19,7 +59,7 @@
 }
 
 .tables {
-  min-width: 1600px;
+  width: 100%;
 }
 
 .allOrdersTable {
@@ -27,7 +67,6 @@
     flex-direction: column;
     gap: 15px;
     height: 100%;
-/*     flex-shrink: 0; */
     overflow-x: auto;
 }
 
@@ -57,6 +96,10 @@
   }
 
 @media (max-width: 1000px) {
+
+  .tables {
+    width: 1400px;
+  }
 
   .allOrders {
     height: 53vh;
