@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './orders.module.css';
 import {
 	Table,
@@ -15,7 +15,7 @@ import {
 import Loader from '../shared/Loader';
 import Dropdown from '../shared/Dropdown';
 
-function AllOrdersList({
+export function AllOrdersList({
 	orders,
 	ordersLoading,
 	changeStatus,
@@ -85,5 +85,3 @@ function AllOrdersList({
 		</div>
 	);
 }
-
-export default AllOrdersList;
