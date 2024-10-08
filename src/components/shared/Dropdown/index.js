@@ -2,21 +2,25 @@ import React, { useState } from 'react';
 import styles from './dropdown.module.css';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-function Dropdown({ options, handleClick }) {
+function Dropdown({ options, handleSelect, handleIndex }) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const toggleDropdown = () => {
 		setIsOpen(!isOpen);
 	};
 
-	const selectOption = (select) => {
+	const selectOption = (select, index) => {
 		setIsOpen(!isOpen);
-		handleClick(select);
+		if (handleSelect) {
+			handleSelect(select);
+		}
+		if (handleIndex) handleIndex(index);
 	};
 
 	return (
 		<div className={styles.dropdown}>
 			<button
+				type="button"
 				className={styles.dropdownBtn}
 				onClick={toggleDropdown}
 			>
@@ -27,7 +31,7 @@ function Dropdown({ options, handleClick }) {
 					{options?.map((option, index) => (
 						<li
 							key={index}
-							onClick={() => selectOption(option)}
+							onClick={() => selectOption(option, index)}
 						>
 							{option}
 						</li>
