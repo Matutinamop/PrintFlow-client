@@ -6,7 +6,7 @@ import {
 	fetchOrderByOrderNumber,
 } from '../../../redux/orders/ordersSlice';
 import { Input } from '../../../components/shared/Inputs';
-import { AllOrdersList } from '../../../components/Order/AllOrdersList';
+import { AllOrdersList } from '../../../components/Orders/AllOrdersList';
 import Pagination from '../../../components/shared/Pagination';
 import { Link } from 'wouter';
 import Button from '../../../components/shared/Button';
