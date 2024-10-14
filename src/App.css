@@ -8,13 +8,14 @@
     background-color: #ddd;
     overflow: hidden;
     background-image: url('/public/assets/images/dark-background.jpg');
-    background-size: cover;
+    background-size:contain;
 }
 
 #header {
     position: fixed;
     height: 7vh;
     box-sizing: border-box;
+    z-index: 1;
 }
 
 #page {
@@ -25,7 +26,6 @@
     width: 100%;
     min-height: 88vh;
     box-sizing: border-box;
-
 }
 
 #footer {

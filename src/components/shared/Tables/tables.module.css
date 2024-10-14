@@ -1,9 +1,10 @@
 .table {
     width: 100%;
-    display: flex;
-    flex-direction: column;
+/*     display: flex;
+    flex-direction: column; */
     table-layout: fixed;
     border-collapse: collapse;
+    font-weight: 600;
 }
 
 .thead {
@@ -12,12 +13,18 @@
 
 .tr {
     position: relative;
-    display: flex;
+    /* display: flex; */
     width: 100%;
 }
 
 .th {
-    background-color: #f4f4f4;
+    background-color: black;
+    color: white;
+    white-space: nowrap;
+}
+
+.thContent {
+    position: relative;
     display: flex;
 }
 
@@ -28,17 +35,18 @@
     white-space: nowrap;
     text-align: left;
     padding: 5px;
-    overflow: hidden;
+}
+
+.td {
+    overflow: hidden
 }
 
 .normal {
-    flex: 4 ;
-    flex-shrink: 0;
+    min-width: 200px;
 }
 
 .small {
-    flex: 2 ;
-    flex-shrink: 0;
+    width: 100px;
     text-align: center;
 }
 
@@ -60,11 +68,11 @@
 }
 
 .tr.urgent {
-    background-color: rgb(255, 124, 124);
+    background-color: rgb(255, 69, 69);
 }
 
 .tr.urgent:nth-child(odd) {
-    background-color: rgb(255, 114, 114);
+    background-color: rgb(252, 83, 83);
 }
 
 

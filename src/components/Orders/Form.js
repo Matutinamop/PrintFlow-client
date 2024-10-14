@@ -122,6 +122,7 @@ function Form() {
 						options={clients.map(
 							(client) => client.companyName
 						)}
+						autocomplete="off"
 					>
 						Cliente:
 					</SearchableInput>
@@ -143,14 +144,14 @@ function Form() {
 					className={`${styles.block} ${styles.clientInfo}`}
 				>
 					<h3 className={styles.blockTitle}>
-						Información del cliente:
+						Información del cliente:{' '}
+						<Dropdown
+							handleIndex={setContactInfo}
+							options={client?.contact?.map(
+								(contact) => contact.name
+							)}
+						/>
 					</h3>{' '}
-					<Dropdown
-						handleIndex={setContactInfo}
-						options={client?.contact?.map(
-							(contact) => contact.name
-						)}
-					/>
 					<Input
 						name={'contactName'}
 						orientation="vertical"

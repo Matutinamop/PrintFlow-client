@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
 	fetchFilteredOrders,
 	fetchOrderByOrderNumber,
+	fetchOrdersPage,
 } from '../../../redux/orders/ordersSlice';
 import { Input } from '../../../components/shared/Inputs';
 import { AllOrdersList } from '../../../components/Orders/AllOrdersList';
@@ -27,6 +28,10 @@ function OrdersList() {
 		setTotalPages(pages);
 		setCurrentPage(1);
 	}, [ordersCount]);
+
+	useEffect(() => {
+		dispatch(fetchOrdersPage());
+	}, []);
 
 	useEffect(() => {
 		dispatch(
@@ -67,7 +72,7 @@ function OrdersList() {
 	return (
 		<div className={styles.ordersList}>
 			<h2 className={styles.allOrdersTitle}>
-				Lista de órdenes
+				LISTA DE MOPS
 			</h2>
 			<div
 				style={{

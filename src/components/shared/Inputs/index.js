@@ -5,6 +5,7 @@ export function Input({
 	name,
 	children,
 	placeholder,
+	isDisabled = false,
 	type,
 	value,
 	onChange,
@@ -18,13 +19,14 @@ export function Input({
 		<div
 			className={`${styles.container} ${styles[orientation]} ${styles[size]}`}
 		>
-			<label className={styles.label}>
+			<label className={`${styles.label} ${styles[size]}`}>
 				{children}
 				{required && (
 					<span className={styles.required}>*</span>
 				)}
 			</label>
 			<input
+				disabled={isDisabled}
 				name={name}
 				min={min}
 				max={max}
@@ -51,6 +53,7 @@ export function SearchableInput({
 	min = '0',
 	options,
 	ifMatch,
+	autocomplete = 'on',
 }) {
 	const [inputValue, setInputValue] = useState('');
 
@@ -64,7 +67,7 @@ export function SearchableInput({
 	const containerRef = useRef(null);
 	const listRef = useRef(null);
 
-	const isExactMatch = options.includes(inputValue);
+	const isExactMatch = options?.includes(inputValue);
 
 	useEffect(() => {
 		if (ifMatch) {
@@ -77,7 +80,7 @@ export function SearchableInput({
 		setInputValue(value);
 
 		const filtered = options.filter((option) =>
-			option.toLowerCase().includes(value.toLowerCase())
+			option?.toLowerCase().includes(value.toLowerCase())
 		);
 		setFilteredOptions(filtered);
 		setIsDropdownOpen(filtered.length > 0);
@@ -159,13 +162,14 @@ export function SearchableInput({
 			onFocus={handleFocus}
 			onBlur={handleBlur}
 		>
-			<label className={styles.label}>
+			<label className={`${styles.label} ${styles[size]}`}>
 				{children}
 				{required && (
 					<span className={styles.required}>*</span>
 				)}
 			</label>
 			<input
+				autocomplete={autocomplete}
 				name={name}
 				min={min}
 				placeholder={placeholder}
@@ -183,35 +187,12 @@ export function SearchableInput({
 				isDropdownOpen &&
 				!isExactMatch &&
 				isFocused && (
-					<ul
-						ref={listRef}
-						style={{
-							position: 'absolute',
-							top: '100%',
-							left: 0,
-							right: 0,
-							maxHeight: '150px',
-							overflowY: 'auto',
-							backgroundColor: 'white',
-							border: '1px solid #ccc',
-							listStyle: 'none',
-							padding: '0',
-							margin: '0',
-							zIndex: 1,
-						}}
-					>
+					<ul ref={listRef} className={styles.ul}>
 						{filteredOptions.map((option, index) => (
 							<li
 								key={index}
 								onClick={() => handleOptionClick(option)}
-								style={{
-									padding: '8px',
-									cursor: 'pointer',
-									backgroundColor:
-										highlightedIndex === index
-											? '#ddd'
-											: 'transparent',
-								}}
+								className={styles.li}
 							>
 								{option}
 							</li>

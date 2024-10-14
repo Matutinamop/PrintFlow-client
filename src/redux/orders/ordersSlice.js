@@ -11,6 +11,7 @@ const initialState = {
 	orders: [],
 	errorOrders: '',
 	ordersCount: 0,
+	allOrdersCount: 0,
 };
 
 const fetchOrdersPage = createAsyncThunk(
@@ -80,6 +81,7 @@ const ordersSlice = createSlice({
 				state.orders = action.payload.orders;
 				state.errorOrders = '';
 				state.ordersCount = action.payload.count;
+				state.allOrdersCount = action.payload.count;
 			}
 		);
 		builder.addCase(

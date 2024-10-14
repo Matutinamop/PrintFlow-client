@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import styles from './dropdown.module.css';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-function Dropdown({ options, handleSelect, handleIndex }) {
+function Dropdown({
+	options,
+	handleSelect,
+	handleIndex,
+	dark,
+}) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const toggleDropdown = () => {
@@ -21,7 +26,11 @@ function Dropdown({ options, handleSelect, handleIndex }) {
 		<div className={styles.dropdown}>
 			<button
 				type="button"
-				className={styles.dropdownBtn}
+				className={
+					dark
+						? `${styles.dropdownBtn} ${styles.dropdownBtnDark}`
+						: styles.dropdownBtn
+				}
 				onClick={toggleDropdown}
 			>
 				<ArrowDropDownIcon />

@@ -49,6 +49,7 @@ export function AllOrdersList({
 										<Dropdown
 											options={statusList}
 											handleClick={changeStatus}
+											dark
 										/>
 									</Th>
 									<Th>Creado</Th>

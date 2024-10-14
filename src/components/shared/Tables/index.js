@@ -12,7 +12,7 @@ export function Thead({ children }) {
 export function Th({ children, size = 'normal' }) {
 	return (
 		<th className={`${styles.th} ${styles[size]}`}>
-			{children}
+			<div className={styles.thContent}>{children}</div>
 		</th>
 	);
 }

@@ -4,6 +4,7 @@ import {
 	TextArea,
 } from '../../../components/shared/Inputs';
 import Form from '../../../components/Orders/Form';
+import FormTwo from '../../../components/Orders/FormTwo';
 
 function OrderForm() {
 	/* 	const [newTasks, setNewTasks] = useState([]);
@@ -13,7 +14,7 @@ function OrderForm() {
 		value: `Objeto ${index + 1}`,
 	  })); */
 
-	return <Form />;
+	return <FormTwo />;
 }
 
 export default OrderForm;

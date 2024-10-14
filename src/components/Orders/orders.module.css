@@ -1,8 +1,103 @@
+.formPage {
+  width: 100%;
+  overflow: auto;
+}
+
+.a4Sheet {
+  width: 794px;
+  min-height: 1123px;
+  border: 1px solid black;
+  background-color: white;
+  margin: 2% auto; /* Centramos la hoja */
+  
+}
+
+.documentContent {
+  width: 100%;
+  height: 100%;
+  padding: 38px 76px 76px;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+.mopHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.headerBlock {
+  width: 280px;
+}
+
+.infoHeader {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.block {
+  position: relative;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  background-color: rgba(0,0,0,0.05);
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  margin-top: 10px;
+  padding: 15px;
+}
+
+.blockTitle {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  font-size: 16px;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.inputNumberContainer {
+  display: flex;
+  font-size: 14px;
+  width: 100%;
+  gap: 10px;
+}
+
+.textArea, .inputNumber {
+  width: 100%;
+  resize: vertical;
+  min-height: 30px;
+  max-height: 150px;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.inputNumber {
+  font-weight: bold;
+  width: 50px;
+  height: 14px;
+}
+
+
+
+
+
 .allOrders, .orderForm {
     width: 95%;
     height: 70vh;
     padding: 10px;
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 1);
     border: 1px solid #101204;
     border-radius: 8px;
     color: #101204;
@@ -12,7 +107,6 @@
 .orderForm {
   display: flex;
   flex-direction: column;
-  align-items: center;
   height: 84vh;
   margin: 2vh 0;
   overflow: auto;
@@ -20,23 +114,22 @@
 
 .form { 
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
   width: 1400px;
 }
 
-.blockTitle {
+/* .blockTitle {
   margin-bottom: 10px;
-}
+} */
 
-.block {
+/* .block {
   background-color: rgba(0,0,0,0.3);
   border: 1px solid black;
   border-radius: 10px;
   padding: 35px;
-}
+} */
 
-.orderInfo, .clientInfo {
+/* .orderInfo, .clientInfo {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,7 +139,7 @@
   border: 1px solid black;
   border-radius: 10px;
   padding: 25px;
-}
+} */
 
 
 .loader {
