@@ -322,7 +322,7 @@ function FormTwo() {
 									size="adjusted"
 									isDisabled
 								>
-									Costo papel:
+									Costo Papel:
 								</Input>
 								<div
 									style={{
