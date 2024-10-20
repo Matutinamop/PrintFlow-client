@@ -53,7 +53,7 @@ export function SearchableInput({
 	min = '0',
 	options,
 	ifMatch,
-	autocomplete = 'on',
+	autoComplete = 'on',
 }) {
 	const [inputValue, setInputValue] = useState('');
 
@@ -104,11 +104,13 @@ export function SearchableInput({
 		setIsDropdownOpen(true);
 	};
 
-	const handleBlur = () => {
-		setTimeout(() => {
-			setIsFocused(false);
-			setIsDropdownOpen(false);
-		}, 100);
+	const handleBlur = (e) => {
+		if (!containerRef.current.contains(e.relatedTarget)) {
+			setTimeout(() => {
+				setIsFocused(false);
+				setIsDropdownOpen(false);
+			}, 100);
+		}
 	};
 
 	const handleKeyDown = (e) => {
@@ -169,7 +171,7 @@ export function SearchableInput({
 				)}
 			</label>
 			<input
-				autocomplete={autocomplete}
+				autoComplete={autoComplete}
 				name={name}
 				min={min}
 				placeholder={placeholder}

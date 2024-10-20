@@ -52,7 +52,28 @@ function NavBar() {
 								}
 								to="/orders/all"
 							>
-								Órdenes
+								MOPS
+							</Link>
+							<Link
+								className={(active) =>
+									active ? styles.active : ''
+								}
+							>
+								Clientes
+							</Link>
+							<Link
+								className={(active) =>
+									active ? styles.active : ''
+								}
+							>
+								Usuarios
+							</Link>
+							<Link
+								className={(active) =>
+									active ? styles.active : ''
+								}
+							>
+								Estaciones
 							</Link>
 						</div>
 					) : (
@@ -79,7 +100,28 @@ function NavBar() {
 							}
 							to="/orders/all"
 						>
-							Órdenes
+							Mops
+						</Link>
+						<Link
+							className={(active) =>
+								active ? styles.active : ''
+							}
+						>
+							Clientes
+						</Link>
+						<Link
+							className={(active) =>
+								active ? styles.active : ''
+							}
+						>
+							Usuarios
+						</Link>
+						<Link
+							className={(active) =>
+								active ? styles.active : ''
+							}
+						>
+							Estaciones
 						</Link>
 					</div>
 				</div>

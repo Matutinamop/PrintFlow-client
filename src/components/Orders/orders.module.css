@@ -90,7 +90,15 @@
   height: 14px;
 }
 
-
+@media print {
+  .a4Sheet {
+    visibility: visible;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}
 
 
 

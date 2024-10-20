@@ -140,7 +140,7 @@ function FormTwo() {
 							options={clients.map(
 								(client) => client.companyName
 							)}
-							autocomplete="off"
+							autoComplete="off"
 						>
 							Cliente:
 						</SearchableInput>
@@ -331,6 +331,14 @@ function FormTwo() {
 										gap: '15px',
 									}}
 								>
+									<p
+										style={{
+											alignSelf: 'end',
+											width: '190px',
+										}}
+									>
+										Tintas
+									</p>
 									<Input
 										orientation="vertical"
 										size="adjusted"
@@ -357,6 +365,62 @@ function FormTwo() {
 										Costo Chapa:
 									</Input>
 								</div>
+								<Input
+									orientation="vertical"
+									size="adjusted"
+								>
+									Frente:
+								</Input>
+								<Input
+									orientation="vertical"
+									size="adjusted"
+								>
+									Dorso:
+								</Input>
+								<Input
+									orientation="vertical"
+									size="adjusted"
+								>
+									Posturas:
+								</Input>
+								<Input
+									orientation="vertical"
+									size="adjusted"
+								>
+									Imp. y Ret.:
+								</Input>
+								<Input
+									orientation="vertical"
+									size="adjusted"
+								>
+									Tiraje:
+								</Input>
+								<Input
+									orientation="vertical"
+									size="adjusted"
+								>
+									Costo Postura:
+								</Input>
+								<Input
+									orientation="vertical"
+									size="adjusted"
+									isDisabled
+								>
+									Costo Tinta:
+								</Input>
+								<Input orientation="vertical" size="normal">
+									Descripción del pliego:
+								</Input>
+								<Input orientation="vertical" size="normal">
+									Repetir costo del pliego:
+								</Input>
+								<Input
+									orientation="vertical"
+									size="adjusted"
+									isDisabled
+								>
+									Costo Total:
+								</Input>
 							</div>
 						)
 					)}
