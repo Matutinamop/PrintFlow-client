@@ -44,6 +44,10 @@
     }
 }
 
+.highlightLi {
+    background-color: #ddd;
+}
+
 .input, .textarea {
     width: 100%;
     padding: 0.5rem;
@@ -55,6 +59,7 @@
 
 .input {
     height: 25px;
+    font-size: 11px;
 }
 
 .input:focus {
@@ -82,5 +87,6 @@
 }
 
 .big {
-    width: 80%;
+    width: 60%;
+    font-size: 12px;
 }
