@@ -48,12 +48,12 @@ export function SearchableInput({
 	type,
 	onChange,
 	size,
-	orientation = 'horizontal',
+	orientation = 'vertical',
 	required = false,
 	min = '0',
 	options,
 	ifMatch,
-	autoComplete = 'on',
+	autoComplete = 'off',
 }) {
 	const [inputValue, setInputValue] = useState('');
 
@@ -135,7 +135,6 @@ export function SearchableInput({
 	};
 
 	useEffect(() => {
-		console.log(highlightedIndex)
 		if (listRef.current && highlightedIndex >= 0) {
 			const highlightedOption =
 				listRef.current.children[highlightedIndex];
@@ -195,7 +194,11 @@ export function SearchableInput({
 							<li
 								key={index}
 								onClick={() => handleOptionClick(option)}
-								className={`${styles.li} ${highlightedIndex===index ? styles.highlightLi : ''}`}
+								className={`${styles.li} ${
+									highlightedIndex === index
+										? styles.highlightLi
+										: ''
+								}`}
 							>
 								{option}
 							</li>

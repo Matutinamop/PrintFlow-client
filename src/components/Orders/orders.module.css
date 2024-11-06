@@ -90,6 +90,23 @@
   height: 14px;
 }
 
+.label {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.selectContainer,.selectClientContainer,.selectMaterialContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 75px;
+}
+
+.selectClientContainer, .selectMaterialContainer {
+  width: 200px;
+}
+
+
 @media print {
   .a4Sheet {
     visibility: visible;
