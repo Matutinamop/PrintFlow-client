@@ -19,7 +19,7 @@ export function Input({
 		<div
 			className={`${styles.container} ${styles[orientation]} ${styles[size]}`}
 		>
-			<label className={`${styles.label} ${styles[size]}`}>
+			<label className={styles.label}>
 				{children}
 				{required && (
 					<span className={styles.required}>*</span>

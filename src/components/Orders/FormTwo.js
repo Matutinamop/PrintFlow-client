@@ -2,18 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from './orders.module.css';
 import { format } from 'date-fns';
 import { useSelector } from 'react-redux';
-import { Input, SearchableInput } from '../shared/Inputs';
+import { Input } from '../shared/Inputs';
 import { useDispatch } from 'react-redux';
 import {
 	fetchClientById,
 	fetchClients,
 } from '../../redux/clients/clientsSlice';
 import Dropdown from '../shared/Dropdown';
-import calculateItemInArea from '../../utilities/functions/calculateItemInArea';
 import PrintTask from './PrintTask';
-import Select from 'react-select/base';
+
 import CreatableSelect from 'react-select/creatable';
-import { WidthFull } from '@mui/icons-material';
 
 function FormTwo() {
 	const dispatch = useDispatch();

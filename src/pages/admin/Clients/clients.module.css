@@ -1,0 +1,15 @@
+.clientsList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 90vw;
+    height: 88vh;
+    color: #EDF0F1;
+    padding-top: 20px;
+}
+
+.clientsListSearch {
+    display: flex;
+    width: 85vw;
+}

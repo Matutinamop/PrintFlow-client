@@ -84,12 +84,12 @@ function PrintTask() {
 				),
 			}));
 		}
-		if (fields.sheetSize && fields.finalSize) {
+		if (fields.sheetSize && fields.sizeWithMargins) {
 			setFields((prev) => ({
 				...prev,
 				['unitsPerSheet']: calculateItemInArea(
 					fields.sheetSize,
-					fields.finalSize
+					fields.sizeWithMargins
 				),
 			}));
 		}
@@ -104,7 +104,7 @@ function PrintTask() {
 	}, [
 		fields.bulkPaperSize,
 		fields.sheetSize,
-		fields.finalSize,
+		fields.sizeWithMargins,
 		fields.quantity,
 		fields.unitsPerSheet,
 	]);
@@ -113,7 +113,7 @@ function PrintTask() {
 		console.log(fields);
 	}, [fields]);
 
-	const matchMaterial = (option) => {
+	/* 	const matchMaterial = (option) => {
 		setFields((prevFields) => ({
 			...prevFields,
 			['material']: option,
@@ -125,19 +125,6 @@ function PrintTask() {
 			...prevFields,
 			['grammage']: option,
 		}));
-	};
-
-	/* 
-	const matchClient = (name) => {
-		const clientsMatched = clients.filter(
-			(client) => name === client.companyName
-		);
-
-		if (clientsMatched.length === 1) {
-			const clientId = clientsMatched[0]._id;
-			dispatch(fetchClientById(clientId));
-		}
-		return;
 	}; */
 
 	return (
@@ -157,13 +144,19 @@ function PrintTask() {
 					value={fields.finalSize}
 					size="adjusted"
 				>
-					Medida Final:
+					Medida Final{' '}
+				</Input>
+				<Input
+					name="sizeWithMargins"
+					onChange={(e) => changeValue(e)}
+					value={fields.sizeWithMargins}
+					size="adjusted"
+				>
+					Medida con márgenes
 				</Input>
 				<div className={styles.selectMaterialContainer}>
 					<label className={styles.label}>Material:</label>
 					<CreatableSelect
-						/* 							className={styles['container']}
-							classNamePrefix={'searchable'} */
 						styles={selectStyles}
 						name="material"
 						onChange={(option) => {
@@ -176,33 +169,9 @@ function PrintTask() {
 						placeholder={''}
 					/>
 				</div>
-				{/* 
-				<SearchableInput
-					name="material"
-					onChange={(e) => changeValue(e)}
-					value={fields.material}
-					size="normal"
-					orientation="vertical"
-					options={['1', '2', '3']}
-					ifMatch={matchMaterial}
-				>
-					Material:{' '}
-				</SearchableInput> */}
-				{/* <SearchableInput
-					name="grammage"
-					onChange={(e) => changeValue(e)}
-					value={fields.grammage}
-					size="adjusted"
-					options={['1', '2', '3']}
-					ifMatch={matchGrammage}
-				>
-					Gramaje:{' '}
-				</SearchableInput> */}
 				<div className={styles.selectContainer}>
 					<label className={styles.label}>Gramaje:</label>
 					<CreatableSelect
-						/* 							className={styles['container']}
-							classNamePrefix={'searchable'} */
 						styles={selectStyles}
 						name="grammage"
 						onChange={(option) => {
@@ -218,8 +187,6 @@ function PrintTask() {
 				<div className={styles.selectContainer}>
 					<label className={styles.label}>Tam. hoja:</label>
 					<CreatableSelect
-						/* 							className={styles['container']}
-							classNamePrefix={'searchable'} */
 						styles={selectStyles}
 						name="bulkPaperSize"
 						onChange={(option) => {
@@ -237,8 +204,6 @@ function PrintTask() {
 						Tam. pliego:
 					</label>
 					<CreatableSelect
-						/* 							className={styles['container']}
-							classNamePrefix={'searchable'} */
 						styles={selectStyles}
 						name="sheetSize"
 						onChange={(option) => {
@@ -251,22 +216,6 @@ function PrintTask() {
 						placeholder={''}
 					/>
 				</div>
-				{/* <Input
-					name="bulkPaperSize"
-					onChange={(e) => changeValue(e)}
-					value={fields.bulkPaperSize}
-					size="adjusted"
-				>
-					Tam. hoja:{' '}
-				</Input>
-				<Input
-					name="sheetSize"
-					onChange={(e) => changeValue(e)}
-					value={fields.sheetSize}
-					size="adjusted"
-				>
-					Tam. Pli.:{' '}
-				</Input> */}
 				<Input
 					name="sheetPerBulkPaper"
 					onChange={(e) => changeValue(e)}
@@ -343,8 +292,6 @@ function PrintTask() {
 					<div className={styles.selectContainer}>
 						<label className={styles.label}>Maquina:</label>
 						<CreatableSelect
-							/* 							className={styles['container']}
-							classNamePrefix={'searchable'} */
 							styles={selectStyles}
 							name="station"
 							onChange={(option) => {
@@ -357,14 +304,6 @@ function PrintTask() {
 							placeholder={''}
 						/>
 					</div>
-					{/* <Input
-						name="station"
-						onChange={(e) => changeValue(e)}
-						value={fields.station}
-						size="adjusted"
-					>
-						Maquina:
-					</Input> */}
 					<Input
 						name="plates"
 						onChange={(e) => changeValue(e)}
@@ -373,18 +312,6 @@ function PrintTask() {
 					>
 						Chapas:
 					</Input>
-					<Input
-						name="platesQuantity"
-						placeholder="creo que no va"
-						onChange={(e) => changeValue(e)}
-						value={fields.platesQuantity}
-						size="adjusted"
-					>
-						Cant.:
-					</Input>
-					{/* 					<Input name="costPerPlate" size="adjusted">
-						Costo Unit.:
-					</Input> */}
 					<Input
 						name="plateCost"
 						onChange={(e) => changeValue(e)}
@@ -419,9 +346,6 @@ function PrintTask() {
 				>
 					Posturas:
 				</Input>
-				{/* 				<Input name="" size="adjusted">
-					Imp. y Ret.:
-				</Input> */}
 				<Input
 					name="printRun"
 					onChange={(e) => changeValue(e)}

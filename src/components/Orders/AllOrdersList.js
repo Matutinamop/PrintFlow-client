@@ -60,22 +60,22 @@ export function AllOrdersList({
 							<Tbody>
 								{orders.map((order) => (
 									<Tr
-										key={order._id}
+										key={order?._id}
 										warning={isWarning(order)}
 										urgent={isUrgent(order)}
 									>
 										<Td size={'small'}>
-											{order.orderNumber}
+											{order?.orderNumber}
 										</Td>
-										<Td size={'big'}>{order.name}</Td>
-										<Td>{order.product}</Td>
+										<Td size={'big'}>{order?.name}</Td>
+										<Td>{order?.product}</Td>
 										<Td size={'big'}>
-											{order.client.companyName}
+											{order?.client?.companyName}
 										</Td>
-										<Td>{order.status}</Td>
-										<Td>{order.dateCreated}</Td>
-										<Td>{order.dateFinal}</Td>
-										<Td>${order.budget}</Td>
+										<Td>{order?.status}</Td>
+										<Td>{order?.dateCreated}</Td>
+										<Td>{order?.dateFinal}</Td>
+										<Td>${order?.budget}</Td>
 									</Tr>
 								))}
 							</Tbody>

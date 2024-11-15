@@ -58,6 +58,7 @@ function NavBar() {
 								className={(active) =>
 									active ? styles.active : ''
 								}
+								to="/clients"
 							>
 								Clientes
 							</Link>
@@ -106,6 +107,7 @@ function NavBar() {
 							className={(active) =>
 								active ? styles.active : ''
 							}
+							to="/clients"
 						>
 							Clientes
 						</Link>

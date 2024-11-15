@@ -11,6 +11,8 @@ const initialState = {
 	clients: [],
 	client: {},
 	errorClient: '',
+	clientsCount: 0,
+	allClientsCount: 0,
 };
 
 const fetchClients = createAsyncThunk(
@@ -19,6 +21,28 @@ const fetchClients = createAsyncThunk(
 		try {
 			const response = await axios.get(`${url}/api/client`);
 			return response.data.clients;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+);
+
+const fetchFilteredClients = createAsyncThunk(
+	'client/fetchFilteredClients',
+	async ({ from, searchTerm, page, limit }) => {
+		try {
+			const response = await axios.get(
+				`${url}/api/client/filtered`,
+				{
+					params: {
+						...(page && { page }),
+						...(from && { from }),
+						...(searchTerm && { searchTerm }),
+						...(limit && { limit }),
+					},
+				}
+			);
+			return response.data;
 		} catch (error) {
 			console.error(error);
 		}
@@ -62,6 +86,31 @@ const clientSlice = createSlice({
 				state.errorClient = action.error.message;
 			}
 		);
+
+		builder.addCase(
+			fetchFilteredClients.pending,
+			(state) => {
+				state.loadingClient = true;
+			}
+		);
+		builder.addCase(
+			fetchFilteredClients.fulfilled,
+			(state, action) => {
+				state.loadingClient = false;
+				state.clients = action.payload.clients;
+				state.errorClient = '';
+				state.clientsCount = action.payload.count;
+				state.allClientsCount = action.payload.count;
+			}
+		);
+		builder.addCase(
+			fetchFilteredClients.rejected,
+			(state, action) => {
+				state.loadingClient = false;
+				state.errorClient = action.error.message;
+			}
+		);
+
 		builder.addCase(fetchClientById.pending, (state) => {
 			state.client = {};
 		});
@@ -78,4 +127,8 @@ const clientSlice = createSlice({
 });
 
 export const { reducer: clientReducer } = clientSlice;
-export { fetchClients, fetchClientById };
+export {
+	fetchClients,
+	fetchClientById,
+	fetchFilteredClients,
+};
