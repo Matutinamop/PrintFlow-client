@@ -1,0 +1,73 @@
+  .block {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    flex-wrap: wrap;
+    background-color: rgba(0,0,0,0.05);
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 15px;
+  }
+  
+  .blockTitle {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    font-size: 14px;
+  }
+  
+  .inputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 12px;
+    width: 100%;
+  }
+  
+  .inputNumberContainer {
+    display: flex;
+    font-size: 12px;
+    width: 100%;
+    gap: 10px;
+  }
+  
+  .textArea, .inputNumber {
+    width: 100%;
+    resize: vertical;
+    min-height: 33px;
+    max-height: 150px;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .inputNumber {
+    font-weight: bold;
+    width: 50px;
+    height: 14px;
+  }
+  
+  .label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 30px;
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+  
+  .selectContainer,.selectClientContainer,.selectMaterialContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 90px;
+  }
+  
+  .selectClientContainer, .selectMaterialContainer {
+    width: 300px;
+  }
+    
