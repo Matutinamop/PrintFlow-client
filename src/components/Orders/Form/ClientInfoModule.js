@@ -60,7 +60,11 @@ function ClientInfoModule({
 			</Input>
 			<div className={styles.inputContainer}>
 				<label>Datos de entrega:</label>
-				<textarea className={styles.textArea} />
+				<textarea
+					name="request"
+					onChange={(e) => changeValue(e)}
+					className={styles.textArea}
+				/>
 			</div>
 		</div>
 	);

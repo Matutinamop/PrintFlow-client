@@ -8,6 +8,8 @@ import ClientInfoModule from '../../../components/Orders/Form/ClientInfoModule';
 import RequestInfoModule from '../../../components/Orders/Form/RequestInfoModule';
 import PrintTaskModule from '../../../components/Orders/Form/PrintTaskModule';
 import { fetchClients } from '../../../redux/clients/clientsSlice';
+import { Button } from '@mui/material';
+import { fetchMaterials } from '../../../redux/materials/materialsSlice';
 
 function OrderForm() {
 	const dispatch = useDispatch();
@@ -27,6 +29,7 @@ function OrderForm() {
 
 	useEffect(() => {
 		dispatch(fetchClients());
+		dispatch(fetchMaterials());
 	}, []);
 
 	const setContactInfo = (index) => {
@@ -68,6 +71,21 @@ function OrderForm() {
 				[e.target.name]: newValue,
 			}));
 		}
+	};
+
+	const schemeField = (fileLink, files) => {
+		setFields((prevFields) => ({
+			...prevFields,
+			scheme: { link: fileLink, files: files },
+		}));
+	};
+
+	useEffect(() => {
+		console.log(fields);
+	}, [fields]);
+
+	const createMOP = () => {
+		console.log(fields);
 	};
 
 	const selectStyles = {
@@ -162,6 +180,7 @@ function OrderForm() {
 						changeTaskCount={changeTaskCount}
 						selectStyles={selectStyles}
 						fields={fields}
+						schemeField={schemeField}
 					/>
 					{Array.from(
 						{ length: fields.taskCount },
@@ -175,6 +194,13 @@ function OrderForm() {
 					)}
 				</div>
 			</div>
+			<Button
+				variant="contained"
+				color="success"
+				onClick={() => createMOP()}
+			>
+				Crear MOP
+			</Button>
 		</div>
 	);
 }

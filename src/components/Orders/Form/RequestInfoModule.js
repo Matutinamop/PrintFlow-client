@@ -10,13 +10,17 @@ import styles from './form.module.css';
 
 import React, { useEffect, useState } from 'react';
 import JSZip from 'jszip';
-import AWS from 'aws-sdk';
+import {
+	S3Client,
+	PutObjectCommand,
+} from '@aws-sdk/client-s3';
 
 function RequestInfoModule({
 	changeValue,
 	changeTaskCount,
 	fields,
 	selectStyles,
+	schemeField,
 }) {
 	const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -24,14 +28,19 @@ function RequestInfoModule({
 		console.log(selectedFiles);
 	}, [selectedFiles]);
 
-	AWS.config.update({
-		accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
-		secretAccessKey:
-			process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
-		region: process.env.REACT_APP_AWS_REGION,
-	});
+	const accessKey = process.env.REACT_APP_AWS_ACCESS_KEY_ID;
+	const secretKey =
+		process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
+	const region = process.env.REACT_APP_AWS_REGION;
+	const bucketName = 'print-flow';
 
-	const s3 = new AWS.S3();
+	const s3 = new S3Client({
+		credentials: {
+			accessKeyId: accessKey,
+			secretAccessKey: secretKey,
+		},
+		region: region,
+	});
 
 	const handleFileChange = (event) => {
 		const files = Array.from(event.target.files);
@@ -57,40 +66,38 @@ function RequestInfoModule({
 		if (selectedFiles.length > 0) {
 			const zip = new JSZip();
 
-			// Añadir los archivos al ZIP
 			selectedFiles.forEach((file) => {
-				zip.file(file.name, file); // Usamos file.name como el nombre del archivo dentro del ZIP
+				zip.file(file.name, file);
 			});
 
 			try {
-				// Generar el archivo ZIP como un Blob
 				const content = await zip.generateAsync({
 					type: 'blob',
 				});
 
-				// Obtener el timestamp para el nombre del archivo
 				const now = new Date();
 				const timestamp = now
 					.toISOString()
 					.replace(/[-:T]/g, '')
-					.split('.')[0]; // "2024-11-17_153022"
+					.split('.')[0];
 
-				// Nombre del archivo zip
 				const zipFileName = `upload/orders/${timestamp}.zip`;
 
-				// Parámetros para subir el archivo
 				const params = {
-					Bucket: 'print-flow', // Nombre del bucket de S3
-					Key: zipFileName, // Nombre del archivo en el bucket
-					Body: content, // El contenido del archivo ZIP
-					ContentType: 'application/zip', // Tipo de contenido del archivo
-					ACL: 'public-read', // Establecer permisos (puedes cambiarlo según tus necesidades)
+					Bucket: bucketName,
+					Key: zipFileName,
+					Body: content,
+					ContentType: 'application/zip',
+					ACL: 'public-read',
 				};
 
-				// Subir el archivo a S3
-				const data = await s3.upload(params).promise();
-				console.log(zipFileName, content);
-				console.log('Archivo subido exitosamente:', data);
+				const command = new PutObjectCommand(params);
+
+				await s3.send(command);
+
+				const fileLink = `https://${bucketName}.s3.${region}.amazonaws.com/${zipFileName}`;
+
+				schemeField(fileLink, selectedFiles);
 			} catch (err) {
 				console.error(
 					'Error al generar o subir el archivo:',
@@ -109,15 +116,27 @@ function RequestInfoModule({
 			</div>
 			<div className={styles.inputContainer}>
 				<label>Comentarios para el Cliente:</label>
-				<textarea className={styles.textArea} />
+				<textarea
+					name="descriptionClient"
+					className={styles.textArea}
+					onChange={(e) => changeValue(e)}
+				/>
 			</div>
 			<div className={styles.inputContainer}>
 				<label>Comentarios para el Taller:</label>
-				<textarea className={styles.textArea} />
+				<textarea
+					name="descriptionWork"
+					className={styles.textArea}
+					onChange={(e) => changeValue(e)}
+				/>
 			</div>
 			<div className={styles.inputContainer}>
 				<label>Comentarios Internos:</label>
-				<textarea className={styles.textArea} />
+				<textarea
+					name="descriptionPrivate"
+					className={styles.textArea}
+					onChange={(e) => changeValue(e)}
+				/>
 			</div>
 			<div
 				style={{

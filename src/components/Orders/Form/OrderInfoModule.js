@@ -13,7 +13,7 @@ function OrderInfoModule({
 }) {
 	const dispatch = useDispatch();
 
-	const clientOptions = clients.map((client) => ({
+	const clientOptions = clients?.map((client) => ({
 		key: client._id,
 		value: client.companyName,
 		label: client.companyName,

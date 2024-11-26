@@ -41,7 +41,6 @@ export function AllOrdersList({
 							<Thead>
 								<Tr>
 									<Th size={'small'}>Nº orden</Th>
-									<Th size={'big'}>Nombre</Th>
 									<Th>Producto</Th>
 									<Th size={'big'}>Cliente</Th>
 									<Th>
@@ -67,7 +66,6 @@ export function AllOrdersList({
 										<Td size={'small'}>
 											{order?.orderNumber}
 										</Td>
-										<Td size={'big'}>{order?.name}</Td>
 										<Td>{order?.product}</Td>
 										<Td size={'big'}>
 											{order?.client?.companyName}
