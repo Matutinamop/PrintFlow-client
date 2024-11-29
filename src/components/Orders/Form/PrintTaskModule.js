@@ -6,54 +6,43 @@ import {
 } from '../../shared/Inputs';
 import CreatableSelect from 'react-select/creatable';
 import calculateItemInArea from '../../../utilities/functions/calculateItemInArea';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { fetchMaterialById } from '../../../redux/materials/materialsSlice';
 
 function PrintTaskModule({ selectStyles }) {
+	const dispatch = useDispatch();
 	const [fields, setFields] = useState({
 		/* bulkPaperSize: '0x0',
     finalSize: '0x0',
     sheetSize: '0x0', */
 	});
 
-	/* const selectStyles = {
-		control: (provided, state) => ({
-			...provided,
-			minHeight: '25px',
-			height: '25px',
-			minWidth: '100%',
-			width: '100%',
-			fontSize: '11px',
-			border: '1px solid #ccc',
-			borderRadius: '4px',
-			boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-		}),
+	const { materials, material } = useSelector(
+		(state) => state.materials
+	);
 
-		valueContainer: (provided, state) => ({
-			...provided,
-			height: '25px',
-			padding: '0 6px',
-		}),
+	const materialOptions = materials?.map((material) => ({
+		key: material._id,
+		value: material.name,
+		label: material.name,
+	}));
 
-		container: (provided, state) => ({
-			...provided,
-			height: '18px',
-		}),
+	const grammageOptions = material?.grammage?.map(
+		(grammage, index) => ({
+			key: index,
+			value: grammage,
+			label: grammage,
+		})
+	);
 
-		input: (provided, state) => ({
-			...provided,
-			margin: '0px',
-		}),
-		indicatorSeparator: (state) => ({
-			display: 'none',
-		}),
-		indicatorsContainer: (provided, state) => ({
-			...provided,
-			display: 'none',
-		}),
-		option: (provided, state) => ({
-			...provided,
-			fontSize: '12px',
-		}),
-	}; */
+	const sizeMaterialOptions = material?.sizes?.map(
+		(size, index) => ({
+			key: index,
+			value: size,
+			label: size,
+		})
+	);
 
 	const genericOptions = [
 		{
@@ -167,8 +156,9 @@ function PrintTaskModule({ selectStyles }) {
 								...prev,
 								['material']: option.value,
 							}));
+							dispatch(fetchMaterialById(option.key));
 						}}
-						options={genericOptions}
+						options={materialOptions}
 						placeholder={''}
 					/>
 				</div>
@@ -183,7 +173,7 @@ function PrintTaskModule({ selectStyles }) {
 								['grammage']: option.value,
 							}));
 						}}
-						options={genericOptions}
+						options={grammageOptions}
 						placeholder={''}
 					/>
 				</div>
@@ -198,7 +188,7 @@ function PrintTaskModule({ selectStyles }) {
 								['bulkPaperSize']: option.value,
 							}));
 						}}
-						options={genericOptions}
+						options={sizeMaterialOptions}
 						placeholder={''}
 					/>
 				</div>

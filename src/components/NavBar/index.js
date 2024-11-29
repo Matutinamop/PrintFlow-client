@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './nav.module.css';
 import { Link } from 'wouter';
 import Button from '../shared/Button';
 import MenuIcon from '@mui/icons-material/Menu';
+import { logout } from '../../utilities/functions/login';
 
 function NavBar() {
 	const [windowSize, setWindowSize] = useState({
@@ -10,6 +11,8 @@ function NavBar() {
 		height: window.innerHeight,
 	});
 	const [menuOpen, setMenuOpen] = useState(false);
+	const menuRef = useRef(null);
+	const buttonRef = useRef(null);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -24,11 +27,37 @@ function NavBar() {
 		};
 	}, [window.innerWidth]);
 
+	useEffect(() => {
+		const handleClickOutside = (e) => {
+			if (
+				menuRef.current &&
+				!menuRef.current.contains(e.target) &&
+				buttonRef.current &&
+				!buttonRef.current.contains(e.target)
+			) {
+				setMenuOpen(false);
+			}
+		};
+
+		document.addEventListener(
+			'mousedown',
+			handleClickOutside
+		);
+
+		return () => {
+			document.removeEventListener(
+				'mousedown',
+				handleClickOutside
+			);
+		};
+	}, []);
+
 	return (
 		<div className={styles.navBar}>
 			{windowSize.width < 1000 ? (
 				<div>
 					<MenuIcon
+						ref={buttonRef}
 						className={`${styles.burgerMenu} ${
 							menuOpen ? styles.open : ''
 						}`}
@@ -36,6 +65,7 @@ function NavBar() {
 					/>
 					{menuOpen ? (
 						<div
+							ref={menuRef}
 							className={`${styles.verticalNav} ${styles.navLinks}`}
 						>
 							<Link
@@ -73,8 +103,9 @@ function NavBar() {
 								className={(active) =>
 									active ? styles.active : ''
 								}
+								to="/resources"
 							>
-								Estaciones
+								Estaciones y Materiales
 							</Link>
 						</div>
 					) : (
@@ -122,14 +153,17 @@ function NavBar() {
 							className={(active) =>
 								active ? styles.active : ''
 							}
+							to="/resources"
 						>
-							Estaciones
+							Estaciones y Materiales
 						</Link>
 					</div>
 				</div>
 			)}
 
-			<Button>Cerrar sesión</Button>
+			<Button onClick={() => logout()}>
+				Cerrar sesión
+			</Button>
 		</div>
 	);
 }

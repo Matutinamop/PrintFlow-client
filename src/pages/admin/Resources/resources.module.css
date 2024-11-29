@@ -1,0 +1,16 @@
+.resourcesPage {
+    display: flex;
+    justify-content: space-around;
+    width: 90vw;
+    height: 88vh;
+    color: #EDF0F1;
+    padding-top: 20px;
+}
+
+.stationsList {
+    flex: 1;
+}
+
+.materialsList {
+    flex: 2;
+}

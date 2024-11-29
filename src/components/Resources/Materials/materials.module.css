@@ -1,0 +1,9 @@
+.allMaterials {
+    width: 95%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px solid #101204;
+  border-radius: 8px;
+  color: #101204;
+  box-shadow: 0 1px 5px 0 #101204;
+}

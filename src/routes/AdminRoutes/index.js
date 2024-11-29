@@ -9,6 +9,7 @@ import LoadingPage from '../../pages/LoadingPage';
 import ClientsList from '../../pages/admin/Clients/ClientsList';
 import ClientProfile from '../../pages/admin/Clients/ClientProfile';
 import ClientForm from '../../pages/admin/Clients/ClientForm';
+import ResourcesList from '../../pages/admin/Resources/ResourcesList';
 
 function AdminRoutes() {
 	const [isLoading, setIsLoading] = useState(true);
@@ -58,6 +59,12 @@ function AdminRoutes() {
 					<PrivateRoute
 						path="/clients/form"
 						component={ClientForm}
+						condition={isAdmin}
+						redirectTo="/login"
+					/>
+					<PrivateRoute
+						path="/resources"
+						component={ResourcesList}
 						condition={isAdmin}
 						redirectTo="/login"
 					/>
