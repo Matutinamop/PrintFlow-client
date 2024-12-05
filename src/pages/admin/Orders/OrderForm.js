@@ -10,6 +10,8 @@ import PrintTaskModule from '../../../components/Orders/Form/PrintTaskModule';
 import { fetchClients } from '../../../redux/clients/clientsSlice';
 import { Button } from '@mui/material';
 import { fetchMaterials } from '../../../redux/materials/materialsSlice';
+import { fetchStations } from '../../../redux/workStations/workStationSlice';
+import OtherTaskModule from '../../../components/Orders/Form/OtherTaskModule';
 
 function OrderForm() {
 	const dispatch = useDispatch();
@@ -23,13 +25,15 @@ function OrderForm() {
 	const today = format(new Date(), 'dd/MM/yyyy');
 
 	const [fields, setFields] = useState({
-		taskCount: '1',
+		otherTaskCount: '0',
+		printTaskCount: '1',
 		client: '',
 	});
 
 	useEffect(() => {
 		dispatch(fetchClients());
 		dispatch(fetchMaterials());
+		dispatch(fetchStations());
 	}, []);
 
 	const setContactInfo = (index) => {
@@ -45,6 +49,7 @@ function OrderForm() {
 
 	useEffect(() => {
 		if (client?.contact?.length > 0) {
+			/*{
 			const { name, email, phone } = client?.contact[0];
 
 			setFields((prev) => ({
@@ -53,32 +58,9 @@ function OrderForm() {
 				['contactEmail']: email,
 				['contactPhone']: phone,
 			}));
+		} */ setContactInfo(0);
 		}
 	}, [client]);
-
-	const changeValue = (e) => {
-		setFields((prevFields) => ({
-			...prevFields,
-			[e.target.name]: e.target.value,
-		}));
-	};
-
-	const changeTaskCount = (e) => {
-		const newValue = e.target.value;
-		if (newValue >= 0 && newValue <= 10) {
-			setFields((prevFields) => ({
-				...prevFields,
-				[e.target.name]: newValue,
-			}));
-		}
-	};
-
-	const schemeField = (fileLink, files) => {
-		setFields((prevFields) => ({
-			...prevFields,
-			scheme: { link: fileLink, files: files },
-		}));
-	};
 
 	useEffect(() => {
 		console.log(fields);
@@ -164,28 +146,38 @@ function OrderForm() {
 					</div>
 					<OrderInfoModule
 						fields={fields}
-						changeValue={changeValue}
 						clients={clients}
 						selectStyles={selectStyles}
+						setFields={setFields}
 					/>
 					<ClientInfoModule
-						changeValue={changeValue}
 						setContactInfo={setContactInfo}
 						client={client}
 						selectStyles={selectStyles}
 						fields={fields}
+						setFields={setFields}
 					/>
 					<RequestInfoModule
-						changeValue={changeValue}
-						changeTaskCount={changeTaskCount}
 						selectStyles={selectStyles}
 						fields={fields}
-						schemeField={schemeField}
+						setFields={setFields}
 					/>
 					{Array.from(
-						{ length: fields.taskCount },
+						{ length: fields.printTaskCount },
 						(_, index) => (
 							<PrintTaskModule
+								key={index}
+								selectStyles={selectStyles}
+								fields={fields[`printTask${index + 1}`]}
+								setFields={setFields}
+								index={index}
+							/>
+						)
+					)}
+					{Array.from(
+						{ length: fields.otherTaskCount },
+						(_, index) => (
+							<OtherTaskModule
 								key={index}
 								selectStyles={selectStyles}
 								fields={fields}

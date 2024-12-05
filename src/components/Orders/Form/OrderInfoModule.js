@@ -4,11 +4,12 @@ import { Input } from '../../shared/Inputs';
 import CreatableSelect from 'react-select/creatable';
 import { useDispatch } from 'react-redux';
 import { fetchClientById } from '../../../redux/clients/clientsSlice';
+import { changeValue } from '../../../utilities/functions/forms/fields';
 
 function OrderInfoModule({
 	clients,
-	changeValue,
 	fields,
+	setFields,
 	selectStyles,
 }) {
 	const dispatch = useDispatch();
@@ -24,7 +25,7 @@ function OrderInfoModule({
 			<Input
 				name={'product'}
 				size="big"
-				onChange={(e) => changeValue(e)}
+				onChange={(e) => changeValue(e, setFields)}
 			>
 				Familia:{' '}
 			</Input>
@@ -40,7 +41,7 @@ function OrderInfoModule({
 								value: option.value,
 							},
 						};
-						changeValue(e);
+						changeValue(e, setFields);
 						dispatch(fetchClientById(option.key));
 					}}
 					options={clientOptions}

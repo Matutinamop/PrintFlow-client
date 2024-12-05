@@ -2,12 +2,13 @@ import React from 'react';
 import styles from './form.module.css';
 import Dropdown from '../../shared/Dropdown';
 import { Input } from '../../shared/Inputs';
+import { changeValue } from '../../../utilities/functions/forms/fields';
 
 function ClientInfoModule({
 	client,
-	changeValue,
 	setContactInfo,
 	fields,
+	setFields,
 	selectStyles,
 }) {
 	return (
@@ -25,7 +26,7 @@ function ClientInfoModule({
 				name={'RUT'}
 				size={'big'}
 				value={fields.RUT ? fields.RUT : ''}
-				onChange={(e) => changeValue(e)}
+				onChange={(e) => changeValue(e, setFields)}
 				isDisabled
 			>
 				RUT
@@ -34,7 +35,7 @@ function ClientInfoModule({
 				name={'contactName'}
 				size="normal"
 				value={fields.contactName ? fields.contactName : ''}
-				onChange={(e) => changeValue(e)}
+				onChange={(e) => changeValue(e, setFields)}
 			>
 				Contacto:{' '}
 			</Input>
@@ -44,7 +45,7 @@ function ClientInfoModule({
 					fields.contactPhone ? fields.contactPhone : ''
 				}
 				size="normal"
-				onChange={(e) => changeValue(e)}
+				onChange={(e) => changeValue(e, setFields)}
 			>
 				Teléfono:
 			</Input>
@@ -54,7 +55,7 @@ function ClientInfoModule({
 					fields.contactEmail ? fields.contactEmail : ''
 				}
 				size="normal"
-				onChange={(e) => changeValue(e)}
+				onChange={(e) => changeValue(e, setFields)}
 			>
 				Email:{' '}
 			</Input>
@@ -62,7 +63,7 @@ function ClientInfoModule({
 				<label>Datos de entrega:</label>
 				<textarea
 					name="request"
-					onChange={(e) => changeValue(e)}
+					onChange={(e) => changeValue(e, setFields)}
 					className={styles.textArea}
 				/>
 			</div>

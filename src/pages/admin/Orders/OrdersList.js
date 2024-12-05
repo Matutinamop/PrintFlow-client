@@ -11,6 +11,7 @@ import { AllOrdersList } from '../../../components/Orders/AllOrdersList';
 import Pagination from '../../../components/shared/Pagination';
 import { Link } from 'wouter';
 import Button from '../../../components/shared/Button';
+import { rolToken } from '../../../utilities/functions/login';
 
 function OrdersList() {
 	const { loadingOrders, orders, ordersCount } =
@@ -30,6 +31,7 @@ function OrdersList() {
 	}, [ordersCount]);
 
 	useEffect(() => {
+		rolToken();
 		dispatch(fetchOrdersPage());
 	}, []);
 

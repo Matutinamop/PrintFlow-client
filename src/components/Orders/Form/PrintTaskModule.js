@@ -1,48 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import styles from './form.module.css';
-import {
-	Input,
-	SearchableInput,
-} from '../../shared/Inputs';
+import { Input } from '../../shared/Inputs';
 import CreatableSelect from 'react-select/creatable';
-import calculateItemInArea from '../../../utilities/functions/calculateItemInArea';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { fetchMaterialById } from '../../../redux/materials/materialsSlice';
+import useCalculateFields from '../../../utilities/customHooks/orderFields';
+import { changeValue } from '../../../utilities/functions/forms/fields';
 
-function PrintTaskModule({ selectStyles }) {
-	const dispatch = useDispatch();
-	const [fields, setFields] = useState({
-		/* bulkPaperSize: '0x0',
-    finalSize: '0x0',
-    sheetSize: '0x0', */
+function PrintTaskModule({
+	selectStyles,
+	fields,
+	setFields,
+	index,
+}) {
+	const [printTaskFields, setPrintTaskFields] = useState({
+		fields,
 	});
 
-	const { materials, material } = useSelector(
-		(state) => state.materials
-	);
-
-	const materialOptions = materials?.map((material) => ({
-		key: material._id,
-		value: material.name,
-		label: material.name,
-	}));
-
-	const grammageOptions = material?.grammage?.map(
-		(grammage, index) => ({
-			key: index,
-			value: grammage,
-			label: grammage,
-		})
-	);
-
-	const sizeMaterialOptions = material?.sizes?.map(
-		(size, index) => ({
-			key: index,
-			value: size,
-			label: size,
-		})
-	);
+	useEffect(() => {
+		setFields((prev) => ({
+			...prev,
+			[`printTask${index + 1}`]: printTaskFields,
+		}));
+	}, [printTaskFields]);
 
 	const genericOptions = [
 		{
@@ -59,89 +37,37 @@ function PrintTaskModule({ selectStyles }) {
 		},
 	];
 
-	const changeValue = (e) => {
-		setFields((prevFields) => ({
-			...prevFields,
-			[e.target.name]: e.target.value,
-		}));
-	};
-
-	useEffect(() => {
-		if (fields.bulkPaperSize && fields.sheetSize) {
-			setFields((prev) => ({
-				...prev,
-				['sheetPerBulkPaper']: calculateItemInArea(
-					fields.bulkPaperSize,
-					fields.sheetSize
-				),
-			}));
-		}
-		if (fields.sheetSize && fields.sizeWithMargins) {
-			setFields((prev) => ({
-				...prev,
-				['unitsPerSheet']: calculateItemInArea(
-					fields.sheetSize,
-					fields.sizeWithMargins
-				),
-			}));
-		}
-		if (fields.quantity && fields.unitsPerSheet) {
-			setFields((prev) => ({
-				...prev,
-				['sheetQuantity']: Math.ceil(
-					fields.quantity / fields.unitsPerSheet
-				),
-			}));
-		}
-	}, [
-		fields.bulkPaperSize,
-		fields.sheetSize,
-		fields.sizeWithMargins,
-		fields.quantity,
-		fields.unitsPerSheet,
-	]);
-
-	useEffect(() => {
-		console.log(fields);
-	}, [fields]);
-
-	/* 	const matchMaterial = (option) => {
-		setFields((prevFields) => ({
-			...prevFields,
-			['material']: option,
-		}));
-	};
-
-	const matchGrammage = (option) => {
-		setFields((prevFields) => ({
-			...prevFields,
-			['grammage']: option,
-		}));
-	}; */
+	useCalculateFields(printTaskFields, setPrintTaskFields);
 
 	return (
 		<div>
 			<div className={styles.block}>
 				<Input
 					name="quantity"
-					onChange={(e) => changeValue(e)}
-					value={fields.quantity}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.quantity || ''}
 					size="adjusted"
 				>
 					Unidades:{' '}
 				</Input>
 				<Input
 					name="finalSize"
-					onChange={(e) => changeValue(e)}
-					value={fields.finalSize}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.finalSize || ''}
 					size="adjusted"
 				>
 					Medida Final{' '}
 				</Input>
 				<Input
 					name="sizeWithMargins"
-					onChange={(e) => changeValue(e)}
-					value={fields.sizeWithMargins}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.sizeWithMargins || ''}
 					size="adjusted"
 				>
 					Medida con márgenes
@@ -152,13 +78,12 @@ function PrintTaskModule({ selectStyles }) {
 						styles={selectStyles}
 						name="material"
 						onChange={(option) => {
-							setFields((prev) => ({
+							setPrintTaskFields((prev) => ({
 								...prev,
 								['material']: option.value,
 							}));
-							dispatch(fetchMaterialById(option.key));
 						}}
-						options={materialOptions}
+						options={printTaskFields.materialOptions}
 						placeholder={''}
 					/>
 				</div>
@@ -168,12 +93,12 @@ function PrintTaskModule({ selectStyles }) {
 						styles={selectStyles}
 						name="grammage"
 						onChange={(option) => {
-							setFields((prev) => ({
+							setPrintTaskFields((prev) => ({
 								...prev,
 								['grammage']: option.value,
 							}));
 						}}
-						options={grammageOptions}
+						options={printTaskFields.grammageOptions}
 						placeholder={''}
 					/>
 				</div>
@@ -183,12 +108,12 @@ function PrintTaskModule({ selectStyles }) {
 						styles={selectStyles}
 						name="bulkPaperSize"
 						onChange={(option) => {
-							setFields((prev) => ({
+							setPrintTaskFields((prev) => ({
 								...prev,
 								['bulkPaperSize']: option.value,
 							}));
 						}}
-						options={sizeMaterialOptions}
+						options={printTaskFields.sizeMaterialOptions}
 						placeholder={''}
 					/>
 				</div>
@@ -200,7 +125,7 @@ function PrintTaskModule({ selectStyles }) {
 						styles={selectStyles}
 						name="sheetSize"
 						onChange={(option) => {
-							setFields((prev) => ({
+							setPrintTaskFields((prev) => ({
 								...prev,
 								['sheetSize']: option.value,
 							}));
@@ -211,16 +136,20 @@ function PrintTaskModule({ selectStyles }) {
 				</div>
 				<Input
 					name="sheetPerBulkPaper"
-					onChange={(e) => changeValue(e)}
-					value={fields.sheetPerBulkPaper}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.sheetPerBulkPaper || ''}
 					size="adjusted"
 				>
 					Pli. x Hoja:
 				</Input>
 				<Input
 					name="unitsPerSheet"
-					onChange={(e) => changeValue(e)}
-					value={fields.unitsPerSheet}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.unitsPerSheet || ''}
 					size="adjusted"
 				>
 					Unid. x Pli.:
@@ -228,40 +157,51 @@ function PrintTaskModule({ selectStyles }) {
 				<Input
 					name="sheetQuantity"
 					size="adjusted"
-					onChange={(e) => changeValue(e)}
-					value={fields.sheetQuantity}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.sheetQuantity || ''}
 				>
 					Cant. Pli.:
 				</Input>
 				<Input
 					name="excess"
-					onChange={(e) => changeValue(e)}
-					value={fields.excess}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.excess || ''}
 					size="adjusted"
 				>
 					Demasía:
 				</Input>
 				<Input
-					name="costPerBulkPaper"
-					onChange={(e) => changeValue(e)}
-					value={fields.costPerBulkPaper}
-					size="adjusted"
-				>
-					Costo x hoja:
-				</Input>
-				<Input
 					name="bulkPaperQuantity"
-					onChange={(e) => changeValue(e)}
-					value={fields.bulkPaperQuantity}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.bulkPaperQuantity || ''}
 					size="adjusted"
 					isDisabled
 				>
 					Hojas:
 				</Input>
 				<Input
+					name="costPerBulkPaper"
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.costPerBulkPaper || ''}
+					size="adjusted"
+					isDisabled
+				>
+					Costo x hoja:
+				</Input>
+				<Input
 					name="paperCost"
-					onChange={(e) => changeValue(e)}
-					value={fields.paperCost}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.paperCost || ''}
 					size="adjusted"
 					isDisabled
 				>
@@ -288,27 +228,31 @@ function PrintTaskModule({ selectStyles }) {
 							styles={selectStyles}
 							name="station"
 							onChange={(option) => {
-								setFields((prev) => ({
+								setPrintTaskFields((prev) => ({
 									...prev,
 									['station']: option.value,
 								}));
 							}}
-							options={genericOptions}
+							options={printTaskFields.stationOptions}
 							placeholder={''}
 						/>
 					</div>
 					<Input
 						name="plates"
-						onChange={(e) => changeValue(e)}
-						value={fields.plates}
+						onChange={(e) =>
+							changeValue(e, setPrintTaskFields)
+						}
+						value={printTaskFields.plates || ''}
 						size="adjusted"
 					>
 						Chapas:
 					</Input>
 					<Input
 						name="plateCost"
-						onChange={(e) => changeValue(e)}
-						value={fields.plateCost}
+						onChange={(e) =>
+							changeValue(e, setPrintTaskFields)
+						}
+						value={printTaskFields.plateCost || ''}
 						size="adjusted"
 						isDisabled
 					>
@@ -317,48 +261,60 @@ function PrintTaskModule({ selectStyles }) {
 				</div>
 				<Input
 					name="front"
-					onChange={(e) => changeValue(e)}
-					value={fields.front}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.front || ''}
 					size="adjusted"
 				>
 					Frente:
 				</Input>
 				<Input
 					name="back"
-					onChange={(e) => changeValue(e)}
-					value={fields.back}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.back || ''}
 					size="adjusted"
 				>
 					Dorso:
 				</Input>
 				<Input
 					name="postures"
-					onChange={(e) => changeValue(e)}
-					value={fields.postures}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.postures || ''}
 					size="adjusted"
 				>
 					Posturas:
 				</Input>
 				<Input
 					name="printRun"
-					onChange={(e) => changeValue(e)}
-					value={fields.printRun}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.printRun || ''}
 					size="adjusted"
 				>
 					Tiraje:
 				</Input>
 				<Input
 					name="postureCost"
-					onChange={(e) => changeValue(e)}
-					value={fields.postureCost}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.postureCost || ''}
 					size="adjusted"
 				>
 					Costo Postura:
 				</Input>
 				<Input
 					name="inkCost"
-					onChange={(e) => changeValue(e)}
-					value={fields.inkCost}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.inkCost || ''}
 					size="adjusted"
 					isDisabled
 				>
@@ -366,24 +322,30 @@ function PrintTaskModule({ selectStyles }) {
 				</Input>
 				<Input
 					name="sheetDescription"
-					onChange={(e) => changeValue(e)}
-					value={fields.sheetDescription}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.sheetDescription || ''}
 					size="normal"
 				>
 					Descripción del pliego:
 				</Input>
 				<Input
 					name="sheetRepeat"
-					onChange={(e) => changeValue(e)}
-					value={fields.sheetRepeat}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.sheetRepeat || ''}
 					size="normal"
 				>
 					Repetir costo del pliego:
 				</Input>
 				<Input
 					name="totalCost"
-					onChange={(e) => changeValue(e)}
-					value={fields.totalCost}
+					onChange={(e) =>
+						changeValue(e, setPrintTaskFields)
+					}
+					value={printTaskFields.totalCost || ''}
 					size="adjusted"
 					isDisabled
 				>

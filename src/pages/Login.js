@@ -3,6 +3,7 @@ import styles from './pages.module.css';
 import { Button, Input } from '@mui/material';
 import { login } from '../utilities/functions/login';
 import { navigate } from 'wouter/use-browser-location';
+import { changeValue } from '../utilities/functions/forms/fields';
 
 function Login() {
 	const [fields, setFields] = useState({});
@@ -11,13 +12,6 @@ function Login() {
 	const usernames =
 		JSON.parse(localStorage.getItem('loggedUsernames')) ||
 		[];
-
-	const changeValue = (e) => {
-		setFields((prevFields) => ({
-			...prevFields,
-			[e.target.name]: e.target.value,
-		}));
-	};
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -57,7 +51,7 @@ function Login() {
 						placeholder="Nombre de usuario"
 						autoComplete="off"
 						inputProps={{ list: 'usernames' }}
-						onChange={(e) => changeValue(e)}
+						onChange={(e) => changeValue(e, setFields)}
 					/>
 					<datalist id="usernames">
 						{usernames.map((username, index) => (
@@ -68,7 +62,7 @@ function Login() {
 					<Input
 						name="pw"
 						type="password"
-						onChange={(e) => changeValue(e)}
+						onChange={(e) => changeValue(e, setFields)}
 					/>
 					{error && (
 						<p

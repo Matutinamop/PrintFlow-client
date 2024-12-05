@@ -7,107 +7,52 @@ import {
 } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import styles from './form.module.css';
-
-import React, { useEffect, useState } from 'react';
-import JSZip from 'jszip';
 import {
-	S3Client,
-	PutObjectCommand,
-} from '@aws-sdk/client-s3';
+	handleUpload,
+	removeFile,
+	handleFileChange,
+} from '../../../utilities/functions/forms/uploadFile';
+import React, { useEffect, useState } from 'react';
+import { changeValue } from '../../../utilities/functions/forms/fields';
 
 function RequestInfoModule({
-	changeValue,
-	changeTaskCount,
+	setFields,
 	fields,
 	selectStyles,
-	schemeField,
 }) {
 	const [selectedFiles, setSelectedFiles] = useState([]);
 
-	useEffect(() => {
-		console.log(selectedFiles);
-	}, [selectedFiles]);
-
-	const accessKey = process.env.REACT_APP_AWS_ACCESS_KEY_ID;
-	const secretKey =
-		process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
-	const region = process.env.REACT_APP_AWS_REGION;
-	const bucketName = 'print-flow';
-
-	const s3 = new S3Client({
-		credentials: {
-			accessKeyId: accessKey,
-			secretAccessKey: secretKey,
-		},
-		region: region,
-	});
-
-	const handleFileChange = (event) => {
-		const files = Array.from(event.target.files);
-		const combinedArray = [
-			...new Map(
-				[...files, ...selectedFiles].map((file) => [
-					file.name,
-					file,
-				])
-			), // Usa el nombre del archivo como clave
-		].map(([key, file]) => file);
-		setSelectedFiles(combinedArray);
-	};
-
-	const removeFile = (fileIndex) => {
-		const newFiles = selectedFiles.filter(
-			(file, index) => index !== fileIndex
-		);
-		setSelectedFiles(newFiles);
-	};
-
-	const handleUpload = async () => {
-		if (selectedFiles.length > 0) {
-			const zip = new JSZip();
-
-			selectedFiles.forEach((file) => {
-				zip.file(file.name, file);
-			});
-
-			try {
-				const content = await zip.generateAsync({
-					type: 'blob',
-				});
-
-				const now = new Date();
-				const timestamp = now
-					.toISOString()
-					.replace(/[-:T]/g, '')
-					.split('.')[0];
-
-				const zipFileName = `upload/orders/${timestamp}.zip`;
-
-				const params = {
-					Bucket: bucketName,
-					Key: zipFileName,
-					Body: content,
-					ContentType: 'application/zip',
-					ACL: 'public-read',
-				};
-
-				const command = new PutObjectCommand(params);
-
-				await s3.send(command);
-
-				const fileLink = `https://${bucketName}.s3.${region}.amazonaws.com/${zipFileName}`;
-
-				schemeField(fileLink, selectedFiles);
-			} catch (err) {
-				console.error(
-					'Error al generar o subir el archivo:',
-					err
-				);
-			}
-		} else {
-			alert('Por favor selecciona al menos un archivo.');
+	const changePrintTaskCount = (e) => {
+		const newValue = e.target.value;
+		if (newValue >= 0 && newValue <= 10) {
+			setFields((prevFields) => ({
+				...prevFields,
+				[e.target.name]: newValue,
+				[`printTask${newValue}`]: {},
+			}));
 		}
 	};
+
+	const changeOtherTaskCount = (e) => {
+		const newValue = e.target.value;
+		if (newValue >= 0 && newValue <= 10) {
+			setFields((prevFields) => ({
+				...prevFields,
+				[e.target.name]: newValue,
+			}));
+		}
+	};
+
+	const schemeField = (fileLink, files) => {
+		setFields((prevFields) => ({
+			...prevFields,
+			scheme: { link: fileLink, files: files },
+		}));
+	};
+
+	/* 	useEffect(() => {
+		console.log(selectedFiles);
+	}, [selectedFiles]); */
 
 	return (
 		<div className={styles.block}>
@@ -119,7 +64,7 @@ function RequestInfoModule({
 				<textarea
 					name="descriptionClient"
 					className={styles.textArea}
-					onChange={(e) => changeValue(e)}
+					onChange={(e) => changeValue(e, setFields)}
 				/>
 			</div>
 			<div className={styles.inputContainer}>
@@ -127,7 +72,7 @@ function RequestInfoModule({
 				<textarea
 					name="descriptionWork"
 					className={styles.textArea}
-					onChange={(e) => changeValue(e)}
+					onChange={(e) => changeValue(e, setFields)}
 				/>
 			</div>
 			<div className={styles.inputContainer}>
@@ -135,7 +80,7 @@ function RequestInfoModule({
 				<textarea
 					name="descriptionPrivate"
 					className={styles.textArea}
-					onChange={(e) => changeValue(e)}
+					onChange={(e) => changeValue(e, setFields)}
 				/>
 			</div>
 			<div
@@ -147,15 +92,26 @@ function RequestInfoModule({
 				}}
 			>
 				<div className={styles.inputNumberContainer}>
-					<label>Número de tareas:</label>
+					<label>Tareas de impresión:</label>
 					<input
 						className={styles.inputNumber}
-						name="taskCount"
+						name="printTaskCount"
 						type="number"
 						min={1}
-						value={fields.taskCount}
+						value={fields.printTaskCount}
 						onChange={(e) => {
-							changeTaskCount(e);
+							changePrintTaskCount(e);
+						}}
+					/>
+					<label>Otras tareas:</label>
+					<input
+						className={styles.inputNumber}
+						name="otherTaskCount"
+						type="number"
+						min={1}
+						value={fields.otherTaskCount}
+						onChange={(e) => {
+							changeOtherTaskCount(e);
 						}}
 					/>
 				</div>
@@ -165,7 +121,13 @@ function RequestInfoModule({
 						id="upload-button"
 						style={{ display: 'none' }}
 						multiple
-						onChange={handleFileChange}
+						onChange={(e) =>
+							handleFileChange(
+								e,
+								selectedFiles,
+								setSelectedFiles
+							)
+						}
 					/>
 					<label htmlFor="upload-button">
 						<Button
@@ -197,7 +159,13 @@ function RequestInfoModule({
 											).toFixed(2)} KB`}
 										/>
 										<button
-											onClick={() => removeFile(index)}
+											onClick={() =>
+												removeFile(
+													index,
+													selectedFiles,
+													setSelectedFiles
+												)
+											}
 										>
 											x
 										</button>
@@ -210,7 +178,9 @@ function RequestInfoModule({
 						variant="contained"
 						color="success"
 						style={{ marginTop: '20px' }}
-						onClick={handleUpload}
+						onClick={() =>
+							handleUpload(selectedFiles, schemeField)
+						}
 					>
 						Subir
 					</Button>
