@@ -10,13 +10,18 @@ import ClientsList from '../../pages/admin/Clients/ClientsList';
 import ClientProfile from '../../pages/admin/Clients/ClientProfile';
 import ClientForm from '../../pages/admin/Clients/ClientForm';
 import ResourcesList from '../../pages/admin/Resources/ResourcesList';
+import { rolToken } from '../../utilities/functions/login';
 
 function AdminRoutes() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [isAdmin, setIsAdmin] = useState(false);
+	const [isWorker, setIsWorker] = useState(false);
+
+	const role = rolToken();
 
 	useEffect(() => {
-		setIsAdmin(true);
+		setIsAdmin(role === 'ADMIN' || role === 'SUPERADMIN');
+		setIsWorker(role === 'WORKER');
 		setIsLoading(false);
 	}, []);
 
@@ -30,49 +35,57 @@ function AdminRoutes() {
 						path="/orders/all"
 						component={OrdersList}
 						condition={isAdmin}
-						redirectTo="/login"
+						redirectTo={
+							!isWorker ? '/login' : '/task/manager'
+						}
 					/>
 					<PrivateRoute
 						path="/orders/form"
 						component={OrderForm}
 						condition={isAdmin}
-						redirectTo="/login"
+						redirectTo={
+							!isWorker ? '/login' : '/task/manager'
+						}
 					/>
 					<PrivateRoute
 						path="/orders/:id"
 						component={OrderItem}
 						condition={isAdmin}
-						redirectTo="/login"
+						redirectTo={
+							!isWorker ? '/login' : '/task/manager'
+						}
 					/>
 					<PrivateRoute
 						path="/clients"
 						component={ClientsList}
 						condition={isAdmin}
-						redirectTo="/login"
+						redirectTo={
+							!isWorker ? '/login' : '/task/manager'
+						}
 					/>
 					<PrivateRoute
 						path="/clients/:id"
 						component={ClientProfile}
 						condition={isAdmin}
-						redirectTo="/login"
+						redirectTo={
+							!isWorker ? '/login' : '/task/manager'
+						}
 					/>
 					<PrivateRoute
 						path="/clients/form"
 						component={ClientForm}
 						condition={isAdmin}
-						redirectTo="/login"
+						redirectTo={
+							!isWorker ? '/login' : '/task/manager'
+						}
 					/>
 					<PrivateRoute
 						path="/resources"
 						component={ResourcesList}
 						condition={isAdmin}
-						redirectTo="/login"
-					/>
-					<PrivateRoute
-						path="/"
-						component={Login}
-						condition={!isAdmin}
-						redirectTo="/orders/all"
+						redirectTo={
+							!isWorker ? '/login' : '/task/manager'
+						}
 					/>
 				</Switch>
 			)}

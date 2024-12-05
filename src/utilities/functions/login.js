@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import { navigate } from 'wouter/use-browser-location';
 
 export async function login(username, pw) {
@@ -37,4 +38,13 @@ export async function login(username, pw) {
 export async function logout() {
 	localStorage.removeItem('sessionToken');
 	navigate('/');
+}
+
+export function rolToken() {
+	const token = localStorage.getItem('sessionToken');
+	if (token) {
+		const userInfo = jwtDecode(token);
+		return userInfo.role;
+	}
+	return;
 }

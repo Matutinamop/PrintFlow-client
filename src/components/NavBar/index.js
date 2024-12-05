@@ -1,9 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './nav.module.css';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import Button from '../shared/Button';
 import MenuIcon from '@mui/icons-material/Menu';
-import { logout } from '../../utilities/functions/login';
+import {
+	logout,
+	rolToken,
+} from '../../utilities/functions/login';
 
 function NavBar() {
 	const [windowSize, setWindowSize] = useState({
@@ -11,8 +14,14 @@ function NavBar() {
 		height: window.innerHeight,
 	});
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [role, setRole] = useState();
 	const menuRef = useRef(null);
 	const buttonRef = useRef(null);
+	const [location] = useLocation();
+
+	useEffect(() => {
+		setRole(rolToken());
+	}, [location]);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -54,116 +63,122 @@ function NavBar() {
 
 	return (
 		<div className={styles.navBar}>
-			{windowSize.width < 1000 ? (
-				<div>
-					<MenuIcon
-						ref={buttonRef}
-						className={`${styles.burgerMenu} ${
-							menuOpen ? styles.open : ''
-						}`}
-						onClick={() => setMenuOpen(!menuOpen)}
-					/>
-					{menuOpen ? (
-						<div
-							ref={menuRef}
-							className={`${styles.verticalNav} ${styles.navLinks}`}
-						>
-							<Link
-								className={(active) =>
-									active ? styles.active : ''
-								}
-								to="/task/manager"
-							>
-								Tareas
-							</Link>
-							<Link
-								className={(active) =>
-									active ? styles.active : ''
-								}
-								to="/orders/all"
-							>
-								MOPS
-							</Link>
-							<Link
-								className={(active) =>
-									active ? styles.active : ''
-								}
-								to="/clients"
-							>
-								Clientes
-							</Link>
-							<Link
-								className={(active) =>
-									active ? styles.active : ''
-								}
-							>
-								Usuarios
-							</Link>
-							<Link
-								className={(active) =>
-									active ? styles.active : ''
-								}
-								to="/resources"
-							>
-								Estaciones y Materiales
-							</Link>
+			<div className={styles.logo}>
+				<h1>Matutina</h1>
+			</div>
+			{!role ? (
+				''
+			) : (
+				<>
+					{' '}
+					{windowSize.width < 1000 ? (
+						<div>
+							<MenuIcon
+								ref={buttonRef}
+								className={`${styles.burgerMenu} ${
+									menuOpen ? styles.open : ''
+								}`}
+								onClick={() => setMenuOpen(!menuOpen)}
+							/>
+							{menuOpen ? (
+								<div
+									ref={menuRef}
+									className={`${styles.verticalNav} ${styles.navLinks}`}
+								>
+									<Link
+										className={(active) =>
+											active ? styles.active : ''
+										}
+										to="/task/manager"
+									>
+										Tareas
+									</Link>
+									<Link
+										className={(active) =>
+											active ? styles.active : ''
+										}
+										to="/orders/all"
+									>
+										MOPS
+									</Link>
+									<Link
+										className={(active) =>
+											active ? styles.active : ''
+										}
+										to="/clients"
+									>
+										Clientes
+									</Link>
+									<Link
+										className={(active) =>
+											active ? styles.active : ''
+										}
+									>
+										Usuarios
+									</Link>
+									<Link
+										className={(active) =>
+											active ? styles.active : ''
+										}
+										to="/resources"
+									>
+										Estaciones y Materiales
+									</Link>
+								</div>
+							) : (
+								''
+							)}
 						</div>
 					) : (
-						''
+						<div className={styles.nav}>
+							<div className={styles.navLinks}>
+								<Link
+									className={(active) =>
+										active ? styles.active : ''
+									}
+									to="/task/manager"
+								>
+									Tareas
+								</Link>
+								<Link
+									className={(active) =>
+										active ? styles.active : ''
+									}
+									to="/orders/all"
+								>
+									Mops
+								</Link>
+								<Link
+									className={(active) =>
+										active ? styles.active : ''
+									}
+									to="/clients"
+								>
+									Clientes
+								</Link>
+								<Link
+									className={(active) =>
+										active ? styles.active : ''
+									}
+								>
+									Usuarios
+								</Link>
+								<Link
+									className={(active) =>
+										active ? styles.active : ''
+									}
+									to="/resources"
+								>
+									Estaciones y Materiales
+								</Link>
+							</div>
+						</div>
 					)}
-				</div>
-			) : (
-				<div className={styles.nav}>
-					<div className={styles.logo}>
-						<h1>Matutina</h1>
-					</div>
-					<div className={styles.navLinks}>
-						<Link
-							className={(active) =>
-								active ? styles.active : ''
-							}
-							to="/task/manager"
-						>
-							Tareas
-						</Link>
-						<Link
-							className={(active) =>
-								active ? styles.active : ''
-							}
-							to="/orders/all"
-						>
-							Mops
-						</Link>
-						<Link
-							className={(active) =>
-								active ? styles.active : ''
-							}
-							to="/clients"
-						>
-							Clientes
-						</Link>
-						<Link
-							className={(active) =>
-								active ? styles.active : ''
-							}
-						>
-							Usuarios
-						</Link>
-						<Link
-							className={(active) =>
-								active ? styles.active : ''
-							}
-							to="/resources"
-						>
-							Estaciones y Materiales
-						</Link>
-					</div>
-				</div>
+					<Button onClick={() => logout()}>
+						Cerrar sesión
+					</Button>
+				</>
 			)}
-
-			<Button onClick={() => logout()}>
-				Cerrar sesión
-			</Button>
 		</div>
 	);
 }
