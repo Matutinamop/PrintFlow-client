@@ -4,6 +4,7 @@ import { ordersReducer } from './orders/ordersSlice';
 import { taskReducer } from './tasks/tasksSlice';
 import { clientReducer } from './clients/clientsSlice';
 import { materialReducer } from './materials/materialsSlice';
+import { operationReducer } from './operations/operationsSlice';
 
 const rootReducer = combineReducers({
 	workStations: workStationReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
 	tasks: taskReducer,
 	clients: clientReducer,
 	materials: materialReducer,
+	operations: operationReducer,
 });
 
 export default rootReducer;

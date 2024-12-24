@@ -1,11 +1,12 @@
 .taskManager {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
     height: 88vh;
     padding-top: 20px;
     background-color: #1e81b3;
+    overflow-x: auto;
 }
 
 .loader {
@@ -18,10 +19,29 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    width: 100%;
     min-height: 85vh;
     padding: 10px;
     overflow: auto;
+}
+
+.taskContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 20px;
+}
+
+.content {
+    font-size: 12px;
+}
+
+.task {
+    margin: 5px 0;
+    padding: 8px 12px 4px;
+    background-color: #24252A;
+    border-radius: 10px;
+    width: 100%;
+    color: #9FADBC;
 }
 
 .list {
@@ -29,4 +49,38 @@
     justify-content: center;
     flex-shrink: 0;
     width: 275px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 70px;
+    width: 250px;
+    padding: 8px;
+    background-color: #101204;
+    color: #9FADBC;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px 0 #101204;
+}
+
+
+.taskManager::-webkit-scrollbar {
+    width: 15px;   
+    height: 15px; 
+    border-radius: 20px;        
+  }
+  
+  .taskManager::-webkit-scrollbar-track {
+    border-radius: 20px;
+  }
+  
+  .taskManager::-webkit-scrollbar-thumb {
+    background-color: black;    
+    border-radius: 20px;      
+    border: 3px solid #1e81b3;  
+  }
+
+  .taskManager::-webkit-scrollbar-corner {
+    background-color: #1e81b3;
 }

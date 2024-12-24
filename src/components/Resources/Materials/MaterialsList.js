@@ -38,7 +38,7 @@ function MaterialsList() {
 								</Tr>
 							</Thead>
 							<Tbody>
-								{materials.map((material) => (
+								{materials?.map((material) => (
 									<Tr key={material?._id}>
 										<Td size={'big'}>{material?.name}</Td>
 										<Td size={'small'}>{material?.type}</Td>

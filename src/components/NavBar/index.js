@@ -61,77 +61,23 @@ function NavBar() {
 		};
 	}, []);
 
-	return (
-		<div className={styles.navBar}>
-			<div className={styles.logo}>
-				<h1>Matutina</h1>
-			</div>
-			{!role ? (
-				''
-			) : (
-				<>
-					{' '}
-					{windowSize.width < 1000 ? (
-						<div>
-							<MenuIcon
-								ref={buttonRef}
-								className={`${styles.burgerMenu} ${
-									menuOpen ? styles.open : ''
-								}`}
-								onClick={() => setMenuOpen(!menuOpen)}
-							/>
-							{menuOpen ? (
-								<div
-									ref={menuRef}
-									className={`${styles.verticalNav} ${styles.navLinks}`}
-								>
-									<Link
-										className={(active) =>
-											active ? styles.active : ''
-										}
-										to="/task/manager"
-									>
-										Tareas
-									</Link>
-									<Link
-										className={(active) =>
-											active ? styles.active : ''
-										}
-										to="/orders/all"
-									>
-										MOPS
-									</Link>
-									<Link
-										className={(active) =>
-											active ? styles.active : ''
-										}
-										to="/clients"
-									>
-										Clientes
-									</Link>
-									<Link
-										className={(active) =>
-											active ? styles.active : ''
-										}
-									>
-										Usuarios
-									</Link>
-									<Link
-										className={(active) =>
-											active ? styles.active : ''
-										}
-										to="/resources"
-									>
-										Estaciones y Materiales
-									</Link>
-								</div>
-							) : (
-								''
-							)}
-						</div>
-					) : (
-						<div className={styles.nav}>
-							<div className={styles.navLinks}>
+	if (role) {
+		if (windowSize.width < 1000) {
+			return (
+				<div className={styles.navBar}>
+					<div>
+						<MenuIcon
+							ref={buttonRef}
+							className={`${styles.burgerMenu} ${
+								menuOpen ? styles.open : ''
+							}`}
+							onClick={() => setMenuOpen(!menuOpen)}
+						/>
+						{menuOpen ? (
+							<div
+								ref={menuRef}
+								className={`${styles.verticalNav} ${styles.navLinks}`}
+							>
 								<Link
 									className={(active) =>
 										active ? styles.active : ''
@@ -146,7 +92,7 @@ function NavBar() {
 									}
 									to="/orders/all"
 								>
-									Mops
+									MOPS
 								</Link>
 								<Link
 									className={(active) =>
@@ -171,14 +117,90 @@ function NavBar() {
 								>
 									Estaciones y Materiales
 								</Link>
+								<div onClick={() => logout()}>
+									Cerrar sesión
+								</div>
 							</div>
-						</div>
-					)}
+						) : (
+							''
+						)}
+					</div>
+					<div className={styles.logo}>
+						<Link to="/task/manager">
+							<h1>Matutina</h1>
+						</Link>
+					</div>
+				</div>
+			);
+		}
+		return (
+			<div className={styles.nav}>
+				<div className={styles.logo}>
+					<Link to="/task/manager">
+						<h1>Matutina</h1>
+					</Link>
+				</div>
+				<div className={styles.navLinks}>
+					<Link
+						className={(active) =>
+							active ? styles.active : ''
+						}
+						to="/task/manager"
+					>
+						Tareas
+					</Link>
+					<Link
+						className={(active) =>
+							active ? styles.active : ''
+						}
+						to="/orders/all"
+					>
+						Mops
+					</Link>
+					<Link
+						className={(active) =>
+							active ? styles.active : ''
+						}
+						to="/clients"
+					>
+						Clientes
+					</Link>
+					<Link
+						className={(active) =>
+							active ? styles.active : ''
+						}
+					>
+						Usuarios
+					</Link>
+					<Link
+						className={(active) =>
+							active ? styles.active : ''
+						}
+						to="/resources"
+					>
+						Estaciones y Materiales
+					</Link>
+				</div>
+				<div className={styles.logout}>
 					<Button onClick={() => logout()}>
 						Cerrar sesión
 					</Button>
-				</>
-			)}
+				</div>
+			</div>
+		);
+	}
+	return (
+		<div className={styles.navBarUnknown}>
+			<div className={styles.logo}>
+				<Link to="/task/manager">
+					<h1>Matutina</h1>
+				</Link>
+			</div>
+			<div className={styles.logout}>
+				<Link to="/login">
+					<Button>Iniciar sesión</Button>
+				</Link>
+			</div>
 		</div>
 	);
 }

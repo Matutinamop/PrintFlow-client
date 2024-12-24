@@ -17,7 +17,7 @@ function MainRoutes() {
 			<AdminRoutes />
 			<WorkerRoutes />
 			<Route path="/">
-				<Redirect to="/login" />
+				<Redirect to="/task/manager" />
 			</Route>
 			<Route path="/login">
 				<Login />

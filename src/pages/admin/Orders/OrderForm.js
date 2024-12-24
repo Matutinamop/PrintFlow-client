@@ -11,7 +11,7 @@ import { fetchClients } from '../../../redux/clients/clientsSlice';
 import { Button } from '@mui/material';
 import { fetchMaterials } from '../../../redux/materials/materialsSlice';
 import { fetchStations } from '../../../redux/workStations/workStationSlice';
-import OtherTaskModule from '../../../components/Orders/Form/OtherTaskModule';
+import OperationsModule from '../../../components/Orders/Form/OperationsModule';
 
 function OrderForm() {
 	const dispatch = useDispatch();
@@ -25,8 +25,7 @@ function OrderForm() {
 	const today = format(new Date(), 'dd/MM/yyyy');
 
 	const [fields, setFields] = useState({
-		otherTaskCount: '0',
-		printTaskCount: '1',
+		printTasks: [{ id: 1 }],
 		client: '',
 	});
 
@@ -41,9 +40,9 @@ function OrderForm() {
 
 		setFields((prev) => ({
 			...prev,
-			['contactName']: name,
-			['contactEmail']: email,
-			['contactPhone']: phone,
+			contactName: name,
+			contactEmail: email,
+			contactPhone: phone,
 		}));
 	};
 
@@ -111,6 +110,16 @@ function OrderForm() {
 		}),
 	};
 
+	/* 	const changePrintTaskCount = (e) => {
+		const newValue = e.target.value;
+		if (newValue >= 0 && newValue <= 10) {
+			setFields((prevFields) => ({
+				...prevFields,
+				tasks: [...tasks, { [`printTask${newValue}`]: {} }],
+			}));
+		}
+	}; */
+
 	return (
 		<div className={styles.formPage}>
 			<div className={styles.a4Sheet}>
@@ -163,27 +172,25 @@ function OrderForm() {
 						setFields={setFields}
 					/>
 					{Array.from(
-						{ length: fields.printTaskCount },
+						{ length: fields.printTasks.length },
 						(_, index) => (
 							<PrintTaskModule
 								key={index}
 								selectStyles={selectStyles}
-								fields={fields[`printTask${index + 1}`]}
+								fields={fields}
+								module={index + 1}
 								setFields={setFields}
 								index={index}
 							/>
 						)
 					)}
-					{Array.from(
-						{ length: fields.otherTaskCount },
-						(_, index) => (
-							<OtherTaskModule
-								key={index}
-								selectStyles={selectStyles}
-								fields={fields}
-							/>
-						)
-					)}
+					<Button variant="contained">
+						Nuevo modulo de impresión
+					</Button>
+					<OperationsModule
+						selectStyles={selectStyles}
+						setFields={setFields}
+					/>
 				</div>
 			</div>
 			<Button

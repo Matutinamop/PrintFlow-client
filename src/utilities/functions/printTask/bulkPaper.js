@@ -3,10 +3,13 @@ export function bulkPaperQuantity(
 	sheetQuantity,
 	excess
 ) {
-	console.log(Math.ceil(sheetQuantity / sheetPerBulk));
-	return (
-		Math.ceil(sheetQuantity / sheetPerBulk) +
-		parseInt(excess)
+	console.log(
+		Math.ceil(
+			(sheetQuantity + parseInt(excess)) / sheetPerBulk
+		)
+	);
+	return Math.ceil(
+		(sheetQuantity + parseInt(excess)) / sheetPerBulk
 	);
 }
 

@@ -129,13 +129,24 @@ const useCalculateFields = (fields, setFields) => {
 
 		if (
 			fields.grammage &&
+			fields.bulkPaperSize &&
 			fields.material &&
 			material?.pricePerTon
 		) {
+			const [width, height] = fields.bulkPaperSize
+				.replace(/,/g, '.')
+				.split('x')
+				.map((value) => Number(value.trim()));
+
+			const area = (width * height) / 10000;
+			const paperWeight = fields.grammage * area;
+
+			console.log(area, paperWeight);
+
 			setFields((prev) => ({
 				...prev,
 				costPerBulkPaper: paperCostByWeight(
-					fields.grammage,
+					paperWeight,
 					material.pricePerTon
 				),
 			}));
@@ -150,6 +161,20 @@ const useCalculateFields = (fields, setFields) => {
 				paperCost:
 					fields.bulkPaperQuantity *
 					fields.costPerBulkPaper,
+			}));
+		}
+
+		if (fields.sheetQuantity && fields.postures) {
+			console.log(
+				(fields.sheetQuantity + parseInt(fields.excess)) *
+					fields.postures
+			);
+
+			setFields((prev) => ({
+				...prev,
+				printRun:
+					(fields.sheetQuantity + parseInt(fields.excess)) *
+					fields.postures,
 			}));
 		}
 	}, [
