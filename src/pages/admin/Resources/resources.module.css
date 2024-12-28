@@ -1,16 +1,20 @@
 .resourcesPage {
-    display: flex;
-    justify-content: space-around;
-    width: 90vw;
-    height: 88vh;
-    color: #EDF0F1;
-    padding-top: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100vw;
+	height: 88vh;
+	color: #edf0f1;
+	padding-top: 20px;
+	overflow-y: auto;
 }
 
-.stationsList {
-    flex: 1;
-}
-
-.materialsList {
-    flex: 2;
+.materialsList,
+.operationsList {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	flex-wrap: wrap;
+	width: 90%;
+	margin-bottom: 20px;
 }

@@ -6,8 +6,10 @@ import {
 } from '../functions/printTask/bulkPaper';
 import { useSelector } from 'react-redux';
 
-const useCalculateFields = (fields, setFields) => {
+const useCalculateFields = (fields, index, setFields) => {
 	const [material, setMaterial] = useState({});
+
+	const module = fields.printTasks[index];
 
 	const { materials } = useSelector(
 		(state) => state.materials
@@ -18,13 +20,13 @@ const useCalculateFields = (fields, setFields) => {
 	);
 
 	useEffect(() => {
-		if (fields.material) {
+		if (module.material) {
 			const newMaterial = materials?.find(
-				(material) => fields.material === material._id
+				(material) => module.material === material._id
 			);
 			setMaterial(newMaterial);
 		}
-	}, [fields.material]);
+	}, [module.material]);
 
 	useEffect(() => {
 		if (material) {
@@ -35,10 +37,18 @@ const useCalculateFields = (fields, setFields) => {
 					label: grammage,
 				})
 			);
-			setFields((prev) => ({
-				...prev,
-				grammageOptions: newOptions,
-			}));
+
+			console.log('grammages', newOptions);
+
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].grammageOptions =
+					newOptions;
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
 		}
 	}, [material]);
 
@@ -51,10 +61,17 @@ const useCalculateFields = (fields, setFields) => {
 					label: size,
 				})
 			);
-			setFields((prev) => ({
-				...prev,
-				sizeMaterialOptions: newOptions,
-			}));
+			console.log('sizes', newOptions);
+
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].sizeMaterialOptions =
+					newOptions;
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
 		}
 	}, [material]);
 
@@ -64,10 +81,17 @@ const useCalculateFields = (fields, setFields) => {
 			value: material._id,
 			label: material.name,
 		}));
-		setFields((prev) => ({
-			...prev,
-			materialOptions: newOptions,
-		}));
+
+		console.log('material', newOptions);
+
+		setFields((prev) => {
+			const updatedPrintTasks = [...prev.printTasks];
+			updatedPrintTasks[index].materialOptions = newOptions;
+			return {
+				...prev,
+				printTasks: updatedPrintTasks,
+			};
+		});
 	}, [materials]);
 
 	useEffect(() => {
@@ -78,119 +102,153 @@ const useCalculateFields = (fields, setFields) => {
 				value: station._id,
 				label: station.name,
 			}));
-		setFields((prev) => ({
-			...prev,
-			stationOptions: newOptions,
-		}));
+
+		setFields((prev) => {
+			const updatedPrintTasks = [...prev.printTasks];
+			updatedPrintTasks[index].stationOptions = newOptions;
+			return {
+				...prev,
+				printTasks: updatedPrintTasks,
+			};
+		});
 	}, [stations]);
 
 	useEffect(() => {
-		if (fields.bulkPaperSize && fields.sheetSize) {
-			setFields((prev) => ({
-				...prev,
-				sheetPerBulkPaper: calculateItemInArea(
-					fields.bulkPaperSize,
-					fields.sheetSize
-				),
-			}));
+		if (module.bulkPaperSize && module.sheetSize) {
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].sheetPerBulkPaper =
+					calculateItemInArea(
+						module.bulkPaperSize,
+						module.sheetSize
+					);
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
 		}
-		if (fields.sheetSize && fields.sizeWithMargins) {
-			setFields((prev) => ({
-				...prev,
-				unitsPerSheet: calculateItemInArea(
-					fields.sheetSize,
-					fields.sizeWithMargins
-				),
-			}));
+		if (module.sheetSize && module.sizeWithMargins) {
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].unitsPerSheet =
+					calculateItemInArea(
+						module.sheetSize,
+						module.sizeWithMargins
+					);
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
 		}
-		if (fields.quantity && fields.unitsPerSheet) {
-			setFields((prev) => ({
-				...prev,
-				sheetQuantity: Math.ceil(
-					fields.quantity / fields.unitsPerSheet
-				),
-			}));
+		if (module.quantity && module.unitsPerSheet) {
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].sheetQuantity = Math.ceil(
+					module.quantity / module.unitsPerSheet
+				);
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
 		}
 
 		if (
-			fields.excess &&
-			fields.sheetQuantity &&
-			fields.sheetPerBulkPaper
+			module.excess &&
+			module.sheetQuantity &&
+			module.sheetPerBulkPaper
 		) {
-			setFields((prev) => ({
-				...prev,
-				bulkPaperQuantity: bulkPaperQuantity(
-					fields.sheetPerBulkPaper,
-					fields.sheetQuantity,
-					fields.excess
-				),
-			}));
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].bulkPaperQuantity =
+					bulkPaperQuantity(
+						module.sheetPerBulkPaper,
+						module.sheetQuantity,
+						module.excess
+					);
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
 		}
 
 		if (
-			fields.grammage &&
-			fields.bulkPaperSize &&
-			fields.material &&
+			module.grammage &&
+			module.bulkPaperSize &&
+			module.material &&
 			material?.pricePerTon
 		) {
-			const [width, height] = fields.bulkPaperSize
+			const [width, height] = module.bulkPaperSize
 				.replace(/,/g, '.')
 				.split('x')
 				.map((value) => Number(value.trim()));
 
 			const area = (width * height) / 10000;
-			const paperWeight = fields.grammage * area;
+			const paperWeight = module.grammage * area;
 
-			console.log(area, paperWeight);
-
-			setFields((prev) => ({
-				...prev,
-				costPerBulkPaper: paperCostByWeight(
-					paperWeight,
-					material.pricePerTon
-				),
-			}));
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].costPerBulkPaper =
+					paperCostByWeight(
+						paperWeight,
+						material.pricePerTon
+					);
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
 		}
 
 		if (
-			fields.bulkPaperQuantity &&
-			fields.costPerBulkPaper
+			module.bulkPaperQuantity &&
+			module.costPerBulkPaper
 		) {
-			setFields((prev) => ({
-				...prev,
-				paperCost:
-					fields.bulkPaperQuantity *
-					fields.costPerBulkPaper,
-			}));
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].paperCost =
+					module.bulkPaperQuantity *
+					module.costPerBulkPaper;
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
 		}
 
-		if (fields.sheetQuantity && fields.postures) {
+		if (module.sheetQuantity && module.postures) {
 			console.log(
-				(fields.sheetQuantity + parseInt(fields.excess)) *
-					fields.postures
+				(module.sheetQuantity + parseInt(module.excess)) *
+					module.postures
 			);
-
-			setFields((prev) => ({
-				...prev,
-				printRun:
-					(fields.sheetQuantity + parseInt(fields.excess)) *
-					fields.postures,
-			}));
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].printRun =
+					(module.sheetQuantity + parseInt(module.excess)) *
+					module.postures;
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
 		}
 	}, [
-		fields.costPerBulkPaper,
-		fields.bulkPaperQuantity,
+		module.costPerBulkPaper,
+		module.bulkPaperQuantity,
 		material,
-		fields.material,
-		fields.grammage,
-		fields.sheetPerBulkPaper,
-		fields.sheetQuantity,
-		fields.excess,
-		fields.bulkPaperSize,
-		fields.sheetSize,
-		fields.sizeWithMargins,
-		fields.quantity,
-		fields.unitsPerSheet,
+		module.material,
+		module.grammage,
+		module.sheetPerBulkPaper,
+		module.sheetQuantity,
+		module.excess,
+		module.bulkPaperSize,
+		module.sheetSize,
+		module.sizeWithMargins,
+		module.quantity,
+		module.unitsPerSheet,
 	]);
 };
 

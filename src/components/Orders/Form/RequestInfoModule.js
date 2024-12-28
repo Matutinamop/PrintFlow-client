@@ -2,6 +2,7 @@ import {
 	Button,
 	List,
 	ListItem,
+	ListItemIcon,
 	ListItemText,
 	Typography,
 } from '@mui/material';
@@ -22,7 +23,7 @@ function RequestInfoModule({
 }) {
 	const [selectedFiles, setSelectedFiles] = useState([]);
 
-	const changePrintTaskCount = (e) => {
+	/* 	const changePrintTaskCount = (e) => {
 		const newValue = e.target.value;
 		if (newValue >= 0 && newValue <= 10) {
 			setFields((prevFields) => ({
@@ -41,7 +42,7 @@ function RequestInfoModule({
 				[e.target.name]: newValue,
 			}));
 		}
-	};
+	}; */
 
 	const schemeField = (fileLink, files) => {
 		setFields((prevFields) => ({
@@ -91,7 +92,7 @@ function RequestInfoModule({
 					paddingTop: '15px',
 				}}
 			>
-				<div className={styles.inputNumberContainer}>
+				{/* <div className={styles.inputNumberContainer}>
 					<label>Tareas de impresión:</label>
 					<input
 						className={styles.inputNumber}
@@ -114,8 +115,8 @@ function RequestInfoModule({
 							changeOtherTaskCount(e);
 						}}
 					/>
-				</div>
-				<div>
+				</div> */}
+				<div style={{ width: '100%' }}>
 					<input
 						type="file"
 						id="upload-button"
@@ -144,21 +145,52 @@ function RequestInfoModule({
 							style={{
 								marginTop: '20px',
 								textAlign: 'left',
+								width: '100%',
 							}}
 						>
 							<Typography>
 								Archivos seleccionados:
 							</Typography>
-							<List>
+							<List sx={{ width: '100%' }}>
 								{selectedFiles.map((file, index) => (
-									<ListItem key={index}>
+									<ListItem
+										key={index}
+										sx={{
+											display: 'flex',
+											justifyContent: 'space-between',
+											width: '100%',
+										}}
+									>
 										<ListItemText
 											primary={file.name}
 											secondary={`Tamaño: ${(
 												file.size / 1024
 											).toFixed(2)} KB`}
 										/>
-										<button
+										<ListItemIcon>
+											{file.type.startsWith('image/') ? (
+												<img
+													src={URL.createObjectURL(file)}
+													alt={file.name}
+													style={{
+														width: '50px',
+														height: '50px',
+														objectFit: 'cover',
+														borderRadius: '4px',
+													}}
+												/>
+											) : (
+												<UploadFileIcon />
+											)}
+										</ListItemIcon>
+										<Button
+											sx={{
+												minWidth: '30px',
+												height: '30px',
+											}}
+											variant="contained"
+											color="error"
+											size="small"
 											onClick={() =>
 												removeFile(
 													index,
@@ -168,22 +200,26 @@ function RequestInfoModule({
 											}
 										>
 											x
-										</button>
+										</Button>
 									</ListItem>
 								))}
 							</List>
 						</div>
 					)}
-					<Button
-						variant="contained"
-						color="success"
-						style={{ marginTop: '20px' }}
-						onClick={() =>
-							handleUpload(selectedFiles, schemeField)
-						}
-					>
-						Subir
-					</Button>
+					{selectedFiles.length > 0 ? (
+						<Button
+							variant="contained"
+							color="success"
+							style={{ marginTop: '20px' }}
+							onClick={() =>
+								handleUpload(selectedFiles, schemeField)
+							}
+						>
+							Subir
+						</Button>
+					) : (
+						''
+					)}
 				</div>
 			</div>
 		</div>

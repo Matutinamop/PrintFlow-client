@@ -11,6 +11,18 @@
 	padding: 15px;
 }
 
+.blockPrintTask {
+	z-index: 0;
+}
+
+.contain {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	gap: 5px;
+	flex-wrap: wrap;
+}
+
 .blockTitle {
 	display: flex;
 	justify-content: center;
@@ -56,8 +68,10 @@
 
 .closePrintTask {
 	position: absolute;
+	z-index: 1;
 	top: 10px;
 	right: 10px;
+	cursor: pointer;
 }
 
 .label {
@@ -84,6 +98,7 @@
 }
 
 .table {
+	/* z-index: 5; */
 	font-size: 14px;
 	font-weight: 400;
 }

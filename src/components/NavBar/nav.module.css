@@ -1,104 +1,106 @@
 .navBar {
-    display: flex;
-    gap: 20px;
-    padding: 5px 2%;
-    align-items: center;
-    height: 100%;
-    width: 100vw;
-    background-color: #24252A;
-    color: #EDF0F1;
+	position: relative;
+	display: flex;
+	gap: 20px;
+	padding: 5px 2%;
+	z-index: 9;
+	align-items: center;
+	height: 100%;
+	width: 100vw;
+	background-color: #24252a;
+	color: #edf0f1;
 }
 
 .navBarUnknown {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 5px 2%;
-    align-items: center;
-    height: 100%;
-    width: 100vw;
-    background-color: #24252A;
-    color: #EDF0F1;
+	display: flex;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 5px 2%;
+	align-items: center;
+	height: 100%;
+	width: 100vw;
+	background-color: #24252a;
+	color: #edf0f1;
 }
 
 .logo {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    width: 25vw;
-    font-size: 24px;
+	display: flex;
+	align-items: center;
+	height: 100%;
+	width: 25vw;
+	font-size: 24px;
 }
 
 .navLinks {
-    display: flex;
-    width: 70vw;
-    gap: 30px;
-    font-weight: 600;
-    font-size: 1.8vw;
-    padding-top: 25px;
+	display: flex;
+	width: 70vw;
+	gap: 30px;
+	font-weight: 600;
+	font-size: 1.8vw;
+	padding-top: 25px;
 }
 
 .logout {
-    width: 165px;
+	width: 165px;
 }
 
 .nav {
-    display: flex;
-    gap: 20px;
-    padding: 5px 2%;
-    align-items: center;
-    height: 100%;
-    width: 100vw;
-    background-color: #24252A;
-    color: #EDF0F1;
+	display: flex;
+	gap: 20px;
+	padding: 5px 2%;
+	align-items: center;
+	height: 100%;
+	width: 100vw;
+	background-color: #24252a;
+	color: #edf0f1;
 }
 
 .verticalNav {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    left: 0;
-    top: 7vh;
-    padding: 20px;
-    background-color: #24252A;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	left: 0;
+	top: 7vh;
+	padding: 20px;
+	background-color: #24252a;
 }
 
 .burgerMenu {
-    height: 40px;
-    width: 40px;
-    border-radius: 5px;
+	height: 40px;
+	width: 40px;
+	border-radius: 5px;
 
-    &:hover {
-        border: 1px solid #0088a9;
-        cursor: pointer;
-    }
+	&:hover {
+		border: 1px solid #0088a9;
+		cursor: pointer;
+	}
 }
 
 .open {
-    background-color: #3a3b41;
+	background-color: #3a3b41;
 }
 
-
-
 .navLinks a {
-    text-decoration: none;
-    /* color: #EDF0F1; */
-    transition: all 0.3s ease 0s;
+	text-decoration: none;
+	/* color: #EDF0F1; */
+	transition: all 0.3s ease 0s;
 
-    &:hover {
-        color: #0088a9
-    }
+	&:hover {
+		color: #0088a9;
+	}
 }
 
 .active {
-    font-weight: bold;
-    color: #0088a9;
+	font-weight: bold;
+	color: #0088a9;
 }
 
 @media (max-width: 1000px) {
+	.logo {
+		font-size: 18px;
+	}
 
-    .logo{
-      font-size: 18px;
-  }
-  }
-
+	.verticalNav {
+		font-size: 16px;
+	}
+}

@@ -1,0 +1,65 @@
+.allOperations {
+	width: 95%;
+	padding: 10px;
+	background-color: rgba(255, 255, 255, 1);
+	border: 1px solid #101204;
+	border-radius: 8px;
+	color: #101204;
+	box-shadow: 0 1px 5px 0 #101204;
+}
+
+.formContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 10px;
+	background-color: rgba(255, 255, 255, 1);
+	border: 1px solid #101204;
+	border-radius: 8px;
+	color: #101204;
+	font-weight: bold;
+	box-shadow: 0 1px 5px 0 #101204;
+	width: 600px;
+}
+
+.formContainer h2 {
+	margin-bottom: 15px;
+}
+
+.formContainer form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 550px;
+}
+
+.labelInput {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 550px;
+	margin-bottom: 10px;
+}
+
+.input {
+	width: 250px;
+}
+
+.priceInput {
+	width: 120px;
+}
+
+.formContainer th {
+	text-align: left;
+	font-size: 14px;
+	width: 140px;
+}
+
+.tdButton {
+	width: 120px;
+}
+
+.tdDelete {
+	width: 40px;
+	height: 40px;
+}

@@ -12,6 +12,7 @@ import { Button } from '@mui/material';
 import { fetchMaterials } from '../../../redux/materials/materialsSlice';
 import { fetchStations } from '../../../redux/workStations/workStationSlice';
 import OperationsModule from '../../../components/Orders/Form/OperationsModule';
+import zIndex from '@mui/material/styles/zIndex';
 
 function OrderForm() {
 	const dispatch = useDispatch();
@@ -25,7 +26,7 @@ function OrderForm() {
 	const today = format(new Date(), 'dd/MM/yyyy');
 
 	const [fields, setFields] = useState({
-		printTasks: [{ id: 1 }],
+		printTasks: [{ id: 0 }],
 		client: '',
 	});
 
@@ -70,8 +71,19 @@ function OrderForm() {
 	};
 
 	const selectStyles = {
+		menu: (provided, state) => ({
+			...provided,
+			height: '150px',
+		}),
+
+		menuList: (provided, state) => ({
+			...provided,
+			height: '150px',
+		}),
+
 		control: (provided, state) => ({
 			...provided,
+
 			minHeight: '25px',
 			height: '25px',
 			minWidth: '100%',
@@ -108,6 +120,26 @@ function OrderForm() {
 			...provided,
 			fontSize: '12px',
 		}),
+	};
+
+	const newPrintTask = () => {
+		const newTask = { id: fields.printTasks.length };
+		console.log(Array.isArray(fields.printTasks));
+		setFields((prev) => ({
+			...prev,
+			printTasks: [...prev.printTasks, newTask],
+		}));
+	};
+
+	const deletePrintModule = (i) => {
+		console.log(i);
+		const newModules = fields.printTasks.filter(
+			(mod, index) => index !== i
+		);
+		setFields((prev) => ({
+			...prev,
+			printTasks: newModules,
+		}));
 	};
 
 	/* 	const changePrintTaskCount = (e) => {
@@ -171,20 +203,23 @@ function OrderForm() {
 						fields={fields}
 						setFields={setFields}
 					/>
-					{Array.from(
-						{ length: fields.printTasks.length },
-						(_, index) => (
-							<PrintTaskModule
-								key={index}
-								selectStyles={selectStyles}
-								fields={fields}
-								module={index + 1}
-								setFields={setFields}
-								index={index}
-							/>
-						)
-					)}
-					<Button variant="contained">
+					{fields?.printTasks?.map((task, index) => (
+						<PrintTaskModule
+							info={task}
+							key={index}
+							selectStyles={selectStyles}
+							fields={fields}
+							module={task.id}
+							setFields={setFields}
+							index={index}
+							deleteModule={deletePrintModule}
+						/>
+					))}
+					<Button
+						variant="contained"
+						onClick={newPrintTask}
+						sx={{ mt: '10px' }}
+					>
 						Nuevo modulo de impresión
 					</Button>
 					<OperationsModule

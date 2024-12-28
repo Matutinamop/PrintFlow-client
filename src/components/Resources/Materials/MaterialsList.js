@@ -24,11 +24,11 @@ function MaterialsList() {
 						<Loader />
 					</div>
 				) : (
-					<div className={styles.tables}>
+					<div className={styles.table}>
 						<Table>
 							<Thead>
 								<Tr>
-									<Th size={'big'}>Nombre</Th>
+									<Th size={'small'}>Nombre</Th>
 									<Th size={'small'}>Tipo</Th>
 									<Th size={'small'}>Precio por ton.</Th>
 									<Th size={'small'}>Precio por un.</Th>
@@ -40,7 +40,7 @@ function MaterialsList() {
 							<Tbody>
 								{materials?.map((material) => (
 									<Tr key={material?._id}>
-										<Td size={'big'}>{material?.name}</Td>
+										<Td size={'small'}>{material?.name}</Td>
 										<Td size={'small'}>{material?.type}</Td>
 										<Td size={'small'}>
 											{material?.pricePerTon ?? '-'}

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './stations.module.css';
+import styles from './operations.module.css';
 import {
 	Table,
 	Tbody,
@@ -11,15 +11,15 @@ import {
 import Loader from '../../shared/Loader';
 import { useSelector } from 'react-redux';
 
-function StationsList() {
-	const { loadingStation, stations } = useSelector(
-		(state) => state.workStations
+function OperationsList() {
+	const { loadingOperation, operations } = useSelector(
+		(state) => state.operations
 	);
 
 	return (
-		<div className={styles.allStations}>
-			<div className={styles.allStationsTable}>
-				{loadingStation ? (
+		<div className={styles.allOperations}>
+			<div className={styles.allOperationsTable}>
+				{loadingOperation ? (
 					<div className={styles.loader}>
 						<Loader />
 					</div>
@@ -34,12 +34,12 @@ function StationsList() {
 								</Tr>
 							</Thead>
 							<Tbody>
-								{stations.map((station) => (
-									<Tr key={station?._id}>
-										<Td size={'big'}>{station?.name}</Td>
-										<Td size={'big'}>{station?.type}</Td>
+								{operations.map((operation) => (
+									<Tr key={operation?._id}>
+										<Td size={'big'}>{operation?.name}</Td>
+										<Td size={'big'}>{operation?.type}</Td>
 										<Td size={'big'}>
-											{station?.responsible}
+											{operation?.responsible}
 										</Td>
 									</Tr>
 								))}
@@ -52,4 +52,4 @@ function StationsList() {
 	);
 }
 
-export default StationsList;
+export default OperationsList;

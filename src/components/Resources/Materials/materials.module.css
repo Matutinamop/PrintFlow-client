@@ -1,9 +1,37 @@
 .allMaterials {
-    width: 95%;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 1);
-  border: 1px solid #101204;
-  border-radius: 8px;
-  color: #101204;
-  box-shadow: 0 1px 5px 0 #101204;
+	width: 95%;
+	height: 70vh;
+	padding: 10px;
+	background-color: rgba(255, 255, 255, 1);
+	border: 1px solid #101204;
+	border-radius: 8px;
+	color: #101204;
+	box-shadow: 0 1px 5px 0 #101204;
+}
+
+.allMaterialsTable {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	height: 100%;
+	overflow-x: auto;
+}
+
+.allMaterialsTable::-webkit-scrollbar {
+	width: 12px;
+	border-radius: 20px;
+}
+
+.allMaterialsTable::-webkit-scrollbar-track {
+	border-radius: 20px;
+}
+
+.allMaterialsTable::-webkit-scrollbar-thumb {
+	background-color: black;
+	border-radius: 20px;
+	border: 3px solid #ddd;
+}
+
+.allMaterialsTable::-webkit-scrollbar:window-inactive {
+	display: none;
 }

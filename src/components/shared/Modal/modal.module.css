@@ -1,58 +1,59 @@
 .background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000; 
-  }
-  
-  .modalContainer {
-    position: relative;
-    background-color: #101204;
-    color: white;
-    border-radius: 8px;
-    padding: 20px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.3s ease-out; 
-  }
-
-.modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding-bottom: 5px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
 }
 
-  .closeButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: #333;
-    font-size: 24px;
-  }
-  
-  .closeButton:hover {
-    color: #555;
-  }
+.modalContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+	background-color: #101204;
+	color: white;
+	border-radius: 8px;
+	max-width: 600px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	animation: fadeIn 0.3s ease-out;
+}
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
+.modalHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	/* 	padding-bottom: 5px; */
+}
+
+.closeButton {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	color: rgb(243, 81, 81);
+	font-size: 24px;
+}
+
+.closeButton:hover {
+	color: #ff0000;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}

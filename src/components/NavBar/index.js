@@ -115,7 +115,7 @@ function NavBar() {
 									}
 									to="/resources"
 								>
-									Estaciones y Materiales
+									Operaciones y Materiales
 								</Link>
 								<div onClick={() => logout()}>
 									Cerrar sesión
@@ -178,7 +178,7 @@ function NavBar() {
 						}
 						to="/resources"
 					>
-						Estaciones y Materiales
+						Operaciones y Materiales
 					</Link>
 				</div>
 				<div className={styles.logout}>
