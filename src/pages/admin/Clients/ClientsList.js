@@ -28,9 +28,9 @@ function ClientsList() {
 		dispatch(fetchFilteredClients());
 	}, []);
 
-	useEffect(() => {
+	/* 	useEffect(() => {
 		console.log(clients);
-	}, [clients]);
+	}, [clients]); */
 
 	useEffect(() => {
 		dispatch(

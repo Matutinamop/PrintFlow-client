@@ -8,12 +8,13 @@ import {
 	Thead,
 	Tr,
 } from '../shared/Tables';
-import {
+/* import {
 	isUrgent,
 	isWarning,
-} from '../../utilities/functions/dates';
+} from '../../utilities/functions/dates'; */
 import Loader from '../shared/Loader';
 import Dropdown from '../shared/Dropdown';
+import { today } from '../../utilities/functions/dates';
 
 export function AllOrdersList({
 	orders,
@@ -27,6 +28,8 @@ export function AllOrdersList({
 		'Completado',
 		'Cancelado',
 	];
+
+	console.log(today());
 
 	return (
 		<div className={styles.allOrders}>
@@ -60,8 +63,8 @@ export function AllOrdersList({
 								{orders.map((order) => (
 									<Tr
 										key={order?._id}
-										warning={isWarning(order)}
-										urgent={isUrgent(order)}
+										/* warning={isWarning(order)}
+										urgent={isUrgent(order)} */
 									>
 										<Td size={'small'}>
 											{order?.orderNumber}

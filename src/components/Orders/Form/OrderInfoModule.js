@@ -16,9 +16,19 @@ function OrderInfoModule({
 
 	const clientOptions = clients?.map((client) => ({
 		key: client._id,
-		value: client.companyName,
+		value: client._id,
 		label: client.companyName,
 	}));
+
+	const selectClient = (option) => {
+		const clientSelected = clients.find(
+			(client) => client._id === option.value
+		);
+		setFields((prev) => ({
+			...prev,
+			client: clientSelected,
+		}));
+	};
 
 	return (
 		<div className={styles.block}>
@@ -35,13 +45,7 @@ function OrderInfoModule({
 					styles={selectStyles}
 					name="client"
 					onChange={(option) => {
-						const e = {
-							target: {
-								name: 'client',
-								value: option.value,
-							},
-						};
-						changeValue(e, setFields);
+						selectClient(option);
 						dispatch(fetchClientById(option.key));
 					}}
 					options={clientOptions}

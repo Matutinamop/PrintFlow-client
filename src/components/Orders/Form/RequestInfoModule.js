@@ -5,6 +5,7 @@ import {
 	ListItemIcon,
 	ListItemText,
 	Typography,
+	DatePicker,
 } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import styles from './form.module.css';
@@ -65,6 +66,7 @@ function RequestInfoModule({
 				<textarea
 					name="descriptionClient"
 					className={styles.textArea}
+					value={fields.descriptionClient ?? ''}
 					onChange={(e) => changeValue(e, setFields)}
 				/>
 			</div>
@@ -73,6 +75,7 @@ function RequestInfoModule({
 				<textarea
 					name="descriptionWork"
 					className={styles.textArea}
+					value={fields.descriptionWork ?? ''}
 					onChange={(e) => changeValue(e, setFields)}
 				/>
 			</div>
@@ -81,6 +84,25 @@ function RequestInfoModule({
 				<textarea
 					name="descriptionPrivate"
 					className={styles.textArea}
+					value={fields.descriptionPrivate ?? ''}
+					onChange={(e) => changeValue(e, setFields)}
+				/>
+			</div>
+			<div className={styles.datesContainer}>
+				<label>Fecha Estimada:</label>
+				<input
+					className={styles.dateInput}
+					type="date"
+					name="dateEstimate"
+					value={fields.dateEstimate ?? ''}
+					onChange={(e) => changeValue(e, setFields)}
+				/>
+				<label>Fecha Limite:</label>
+				<input
+					className={styles.dateInput}
+					type="date"
+					name="dateFinal"
+					value={fields.dateFinal ?? ''}
 					onChange={(e) => changeValue(e, setFields)}
 				/>
 			</div>
@@ -92,30 +114,6 @@ function RequestInfoModule({
 					paddingTop: '15px',
 				}}
 			>
-				{/* <div className={styles.inputNumberContainer}>
-					<label>Tareas de impresión:</label>
-					<input
-						className={styles.inputNumber}
-						name="printTaskCount"
-						type="number"
-						min={1}
-						value={fields.printTaskCount}
-						onChange={(e) => {
-							changePrintTaskCount(e);
-						}}
-					/>
-					<label>Otras tareas:</label>
-					<input
-						className={styles.inputNumber}
-						name="otherTaskCount"
-						type="number"
-						min={1}
-						value={fields.otherTaskCount}
-						onChange={(e) => {
-							changeOtherTaskCount(e);
-						}}
-					/>
-				</div> */}
 				<div style={{ width: '100%' }}>
 					<input
 						type="file"
@@ -130,6 +128,7 @@ function RequestInfoModule({
 							)
 						}
 					/>
+
 					<label htmlFor="upload-button">
 						<Button
 							variant="contained"

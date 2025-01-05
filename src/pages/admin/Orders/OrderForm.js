@@ -13,6 +13,7 @@ import { fetchMaterials } from '../../../redux/materials/materialsSlice';
 import { fetchStations } from '../../../redux/workStations/workStationSlice';
 import OperationsModule from '../../../components/Orders/Form/OperationsModule';
 import zIndex from '@mui/material/styles/zIndex';
+import { createNewOrder } from '../../../utilities/functions/order/createNewOrder';
 
 function OrderForm() {
 	const dispatch = useDispatch();
@@ -26,8 +27,10 @@ function OrderForm() {
 	const today = format(new Date(), 'dd/MM/yyyy');
 
 	const [fields, setFields] = useState({
+		orderNumber: allOrdersCount + 1,
 		printTasks: [{ id: 0 }],
 		client: '',
+		otherTasks: [{}],
 	});
 
 	useEffect(() => {
@@ -64,10 +67,15 @@ function OrderForm() {
 
 	useEffect(() => {
 		console.log(fields);
-	}, [fields]);
+	}, [JSON.stringify(fields)]);
 
-	const createMOP = () => {
-		console.log(fields);
+	const createMOP = async () => {
+		try {
+			const res = await createNewOrder(fields);
+			console.log(res);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	const selectStyles = {
@@ -124,7 +132,7 @@ function OrderForm() {
 
 	const newPrintTask = () => {
 		const newTask = { id: fields.printTasks.length };
-		console.log(Array.isArray(fields.printTasks));
+		/* console.log(Array.isArray(fields.printTasks)); */
 		setFields((prev) => ({
 			...prev,
 			printTasks: [...prev.printTasks, newTask],
@@ -132,7 +140,7 @@ function OrderForm() {
 	};
 
 	const deletePrintModule = (i) => {
-		console.log(i);
+		/* console.log(i); */
 		const newModules = fields.printTasks.filter(
 			(mod, index) => index !== i
 		);
@@ -151,6 +159,25 @@ function OrderForm() {
 			}));
 		}
 	}; */
+
+	useEffect(() => {
+		let price = 0;
+		fields.printTasks.map((task) => {
+			if (task.totalCost) {
+				price += Number(task.totalCost);
+			}
+		});
+		fields.otherTasks.map((task) => {
+			if (task.cost) {
+				return (price += Number(task.cost));
+			}
+			if (task.estimatedCost) {
+				return (price += Number(task.estimatedCost));
+			}
+		});
+
+		setFields((prev) => ({ ...prev, finalPrice: price }));
+	}, [JSON.stringify(fields)]);
 
 	return (
 		<div className={styles.formPage}>
@@ -225,7 +252,9 @@ function OrderForm() {
 					<OperationsModule
 						selectStyles={selectStyles}
 						setFields={setFields}
+						fields={fields}
 					/>
+					<p>Precio Final: $ {fields.finalPrice}</p>
 				</div>
 			</div>
 			<Button

@@ -69,9 +69,9 @@ function OperationsForm({ selectStyles }) {
 		setPriceRanges(newRanges);
 	};
 
-	useEffect(() => {
+	/* 	useEffect(() => {
 		console.log(priceRanges);
-	}, [priceRanges]);
+	}, [priceRanges]); */
 
 	return (
 		<div className={styles.formContainer}>

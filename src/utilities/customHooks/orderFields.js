@@ -5,8 +5,18 @@ import {
 	paperCostByWeight,
 } from '../functions/printTask/bulkPaper';
 import { useSelector } from 'react-redux';
+import {
+	costCalculator,
+	printCost,
+	printModuleCost,
+} from '../functions/costCalculator';
 
-const useCalculateFields = (fields, index, setFields) => {
+const useCalculateFields = (
+	fields,
+	index,
+	setFields,
+	manualChanges
+) => {
 	const [material, setMaterial] = useState({});
 
 	const module = fields.printTasks[index];
@@ -15,8 +25,8 @@ const useCalculateFields = (fields, index, setFields) => {
 		(state) => state.materials
 	);
 
-	const { stations } = useSelector(
-		(state) => state.workStations
+	const { operations } = useSelector(
+		(state) => state.operations
 	);
 
 	useEffect(() => {
@@ -37,8 +47,6 @@ const useCalculateFields = (fields, index, setFields) => {
 					label: grammage,
 				})
 			);
-
-			console.log('grammages', newOptions);
 
 			setFields((prev) => {
 				const updatedPrintTasks = [...prev.printTasks];
@@ -61,7 +69,6 @@ const useCalculateFields = (fields, index, setFields) => {
 					label: size,
 				})
 			);
-			console.log('sizes', newOptions);
 
 			setFields((prev) => {
 				const updatedPrintTasks = [...prev.printTasks];
@@ -82,8 +89,6 @@ const useCalculateFields = (fields, index, setFields) => {
 			label: material.name,
 		}));
 
-		console.log('material', newOptions);
-
 		setFields((prev) => {
 			const updatedPrintTasks = [...prev.printTasks];
 			updatedPrintTasks[index].materialOptions = newOptions;
@@ -95,23 +100,24 @@ const useCalculateFields = (fields, index, setFields) => {
 	}, [materials]);
 
 	useEffect(() => {
-		const newOptions = stations
-			?.filter((station) => station.type === 'Impresión')
-			.map((station, index) => ({
+		const newOptions = operations
+			?.filter((operation) => operation.isPrintable)
+			.map((operation, index) => ({
 				key: index,
-				value: station._id,
-				label: station.name,
+				value: operation._id,
+				label: operation.name,
 			}));
 
 		setFields((prev) => {
 			const updatedPrintTasks = [...prev.printTasks];
-			updatedPrintTasks[index].stationOptions = newOptions;
+			updatedPrintTasks[index].operationOptions =
+				newOptions;
 			return {
 				...prev,
 				printTasks: updatedPrintTasks,
 			};
 		});
-	}, [stations]);
+	}, [operations]);
 
 	useEffect(() => {
 		if (module.bulkPaperSize && module.sheetSize) {
@@ -220,10 +226,6 @@ const useCalculateFields = (fields, index, setFields) => {
 		}
 
 		if (module.sheetQuantity && module.postures) {
-			console.log(
-				(module.sheetQuantity + parseInt(module.excess)) *
-					module.postures
-			);
 			setFields((prev) => {
 				const updatedPrintTasks = [...prev.printTasks];
 				updatedPrintTasks[index].printRun =
@@ -235,21 +237,76 @@ const useCalculateFields = (fields, index, setFields) => {
 				};
 			});
 		}
-	}, [
-		module.costPerBulkPaper,
-		module.bulkPaperQuantity,
-		material,
-		module.material,
-		module.grammage,
-		module.sheetPerBulkPaper,
-		module.sheetQuantity,
-		module.excess,
-		module.bulkPaperSize,
-		module.sheetSize,
-		module.sizeWithMargins,
-		module.quantity,
-		module.unitsPerSheet,
-	]);
+
+		if (module.operation && module.plates) {
+			const selectedOperation = operations.find(
+				(op) => op._id === module.operation
+			);
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].plateCost =
+					selectedOperation.plateCost * module.plates;
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
+		}
+
+		if (
+			module.operation &&
+			module.postures &&
+			module.printRun
+		) {
+			const selectedOperation = operations.find(
+				(op) => op._id === module.operation
+			);
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].postureCost =
+					costCalculator(
+						selectedOperation,
+						module.printRun
+					);
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
+		}
+
+		setFields((prev) => {
+			const updatedPrintTasks = [...prev.printTasks];
+			updatedPrintTasks[index].printCost =
+				printCost(module);
+			return {
+				...prev,
+				printTasks: updatedPrintTasks,
+			};
+		});
+
+		setFields((prev) => {
+			const updatedPrintTasks = [...prev.printTasks];
+			updatedPrintTasks[index].estimatedCost =
+				printModuleCost(module);
+			return {
+				...prev,
+				printTasks: updatedPrintTasks,
+			};
+		});
+
+		if (!manualChanges.totalCost) {
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].totalCost =
+					printModuleCost(module);
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
+		}
+	}, [JSON.stringify(module), material]);
 };
 
 export default useCalculateFields;

@@ -34,10 +34,10 @@ function OtherTaskModule({ selectStyles }) {
 
 	/* 	useCalculateFields(fields, setFields, material);
 	 */
-	useEffect(() => {
+	/* 	useEffect(() => {
 		console.log(fields);
 	}, [fields]);
-
+ */
 	return (
 		<div>
 			<div className={styles.block}>

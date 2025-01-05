@@ -20,6 +20,9 @@ function PrintTaskModule({
 	const [selectedOptions, setSelectedOptions] = useState(
 		[]
 	);
+	const [manualChanges, setManualChanges] = useState({
+		totalCost: false,
+	});
 
 	useEffect(() => {
 		setFields((prev) => {
@@ -31,6 +34,12 @@ function PrintTaskModule({
 		});
 	}, [selectedOptions]);
 
+	const handleManualChange = (e) => {
+		setManualChanges((prev) => ({
+			...prev,
+			[e.target.name]: true,
+		}));
+	};
 	/* useEffect(() => {
 		if (!deepEqual(info, printTaskFields)) {
 			setFields((prev) => {
@@ -86,7 +95,12 @@ function PrintTaskModule({
 		});
 	};
 
-	useCalculateFields(fields, index, setFields);
+	useCalculateFields(
+		fields,
+		index,
+		setFields,
+		manualChanges
+	);
 
 	return (
 		<div
@@ -258,6 +272,7 @@ function PrintTaskModule({
 					onChange={(e) => changeValue(e)}
 					value={info.sheetPerBulkPaper || ''}
 					size="adjusted"
+					isDisabled
 				>
 					Pli. x Hoja:
 				</Input>
@@ -266,6 +281,7 @@ function PrintTaskModule({
 					onChange={(e) => changeValue(e)}
 					value={info.unitsPerSheet || ''}
 					size="adjusted"
+					isDisabled
 				>
 					Unid. x Pli.:
 				</Input>
@@ -274,6 +290,7 @@ function PrintTaskModule({
 					size="adjusted"
 					onChange={(e) => changeValue(e)}
 					value={info.sheetQuantity || ''}
+					isDisabled
 				>
 					Cant. Pli. de impresión:
 				</Input>
@@ -331,14 +348,14 @@ function PrintTaskModule({
 						<label className={styles.label}>Maquina:</label>
 						<CreatableSelect
 							styles={selectStyles}
-							name="station"
-							value={info.selectedOptions?.station || ''}
+							name="operation"
+							value={info.selectedOptions?.operation || ''}
 							onChange={(option) => {
 								setFields((prev) => {
 									const updatedPrintTasks = [
 										...prev.printTasks,
 									];
-									updatedPrintTasks[index]['station'] =
+									updatedPrintTasks[index]['operation'] =
 										option.value;
 									return {
 										...prev,
@@ -347,13 +364,13 @@ function PrintTaskModule({
 								});
 								setSelectedOptions((prev) => ({
 									...prev,
-									station: {
+									operation: {
 										label: option.label,
 										value: option.value,
 									},
 								}));
 							}}
-							options={info.stationOptions}
+							options={info.operationOptions}
 							placeholder={''}
 						/>
 					</div>
@@ -404,6 +421,7 @@ function PrintTaskModule({
 					onChange={(e) => changeValue(e)}
 					value={info.printRun || ''}
 					size="adjusted"
+					isDisabled
 				>
 					Tiraje:
 				</Input>
@@ -412,13 +430,14 @@ function PrintTaskModule({
 					onChange={(e) => changeValue(e)}
 					value={info.postureCost || ''}
 					size="adjusted"
+					isDisabled
 				>
 					Costo Postura:
 				</Input>
 				<Input
-					name="inkCost"
+					name="printCost"
 					onChange={(e) => changeValue(e)}
-					value={info.inkCost || ''}
+					value={info.printCost || ''}
 					size="adjusted"
 					isDisabled
 				>
@@ -433,12 +452,12 @@ function PrintTaskModule({
 					Descripción del modulo:
 				</Input>
 				<Input
-					name="sheetRepeat"
+					name="moduleRepeat"
 					onChange={(e) => changeValue(e)}
-					value={info.sheetRepeat || ''}
+					value={info.moduleRepeat || ''}
 					size="normal"
 				>
-					Repetir costo del modulo:
+					Repetir costo de impresión:
 				</Input>
 				<Input
 					name="estimatedCost"
@@ -451,7 +470,10 @@ function PrintTaskModule({
 				</Input>
 				<Input
 					name="totalCost"
-					onChange={(e) => changeValue(e)}
+					onChange={(e) => {
+						changeValue(e);
+						handleManualChange(e);
+					}}
 					value={info.totalCost || ''}
 					size="adjusted"
 				>

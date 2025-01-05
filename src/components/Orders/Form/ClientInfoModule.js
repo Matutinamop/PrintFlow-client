@@ -62,7 +62,7 @@ function ClientInfoModule({
 			<div className={styles.inputContainer}>
 				<label>Datos de entrega:</label>
 				<textarea
-					name="request"
+					name="deliveryData"
 					onChange={(e) => changeValue(e, setFields)}
 					className={styles.textArea}
 				/>
