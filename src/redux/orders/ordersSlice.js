@@ -9,6 +9,7 @@ const url = process.env.REACT_APP_API_URL;
 const initialState = {
 	loadingOrders: true,
 	orders: [],
+	activeOrders: [],
 	errorOrders: '',
 	ordersCount: 0,
 	allOrdersCount: 0,
@@ -23,6 +24,20 @@ const fetchOrdersPage = createAsyncThunk(
 				{
 					params: from ? { from } : {},
 				}
+			);
+			return response.data;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+);
+
+const fetchActiveOrders = createAsyncThunk(
+	'orders/fetchActiveOrders',
+	async () => {
+		try {
+			const response = await axios.get(
+				`${url}/api/order/active`
 			);
 			return response.data;
 		} catch (error) {
@@ -93,6 +108,23 @@ const ordersSlice = createSlice({
 				state.ordersCount = 0;
 			}
 		);
+		builder.addCase(fetchActiveOrders.pending, (state) => {
+			state.loadingOrders = true;
+		});
+		builder.addCase(
+			fetchActiveOrders.fulfilled,
+			(state, action) => {
+				state.loadingOrders = false;
+				state.activeOrders = action.payload.orders;
+			}
+		);
+		builder.addCase(
+			fetchActiveOrders.rejected,
+			(state, action) => {
+				state.loadingOrders = false;
+				state.errorOrders = action.error.message;
+			}
+		);
 		builder.addCase(
 			fetchFilteredOrders.pending,
 			(state) => {
@@ -147,6 +179,7 @@ const ordersSlice = createSlice({
 export const { reducer: ordersReducer } = ordersSlice;
 export {
 	fetchOrdersPage,
+	fetchActiveOrders,
 	fetchFilteredOrders,
 	fetchOrderByOrderNumber,
 };

@@ -10,19 +10,55 @@ import {
 	IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { changeValue } from '../../../utilities/functions/forms/fields';
+import { fetchStationById } from '../../../redux/workStations/workStationSlice';
+import { useDispatch } from 'react-redux';
+import { createNewOperation } from '../../../utilities/functions/resources/createNewOperation';
 
-function OperationsForm({ selectStyles }) {
+function OperationsForm({
+	selectStyles,
+	setOpenOperationModal,
+	fields,
+	setFields,
+}) {
+	const dispatch = useDispatch();
 	const [isEdit, setIsEdit] = useState(false);
 	const [stationsOptions, setStationsOptions] = useState(
 		[]
 	);
-	const [priceRanges, setPriceRanges] = useState([{}]);
-	const [progressivePrice, setProgressivePrice] =
+	const [progressiveCheck, setProgressiveCheck] =
 		useState(false);
 
-	const { stations } = useSelector(
+	console.log('fields', fields);
+
+	const { stations, station } = useSelector(
 		(state) => state.workStations
 	);
+
+	useEffect(() => {
+		if (fields.pricingRules.length > 0) {
+			setFields((prev) => ({
+				...prev,
+				progressivePrice: true,
+			}));
+			setProgressiveCheck(true);
+		}
+	}, []);
+
+	useEffect(() => {
+		dispatch(
+			fetchStationById(
+				fields.workStation._id ?? fields.workStation
+			)
+		);
+	}, [fields.workStation]);
+
+	useEffect(() => {
+		setFields((prev) => ({
+			...prev,
+			isPrintable: station.isPrintable,
+		}));
+	}, [station]);
 
 	const unitTypeOptions = [
 		{ key: 1, label: 'Horas', value: 'Horas' },
@@ -33,6 +69,7 @@ function OperationsForm({ selectStyles }) {
 			value: 'Metro cuadrado',
 		},
 		{ key: 4, label: 'Tiraje', value: 'Tiraje' },
+		{ key: 5, label: 'Unitario', value: 'Unitario' },
 	];
 
 	useEffect(() => {
@@ -45,33 +82,71 @@ function OperationsForm({ selectStyles }) {
 	}, [stations]);
 
 	const handleCheckBox = (e) => {
-		setProgressivePrice(e.target.checked);
+		const { name, checked } = e.target;
+		setFields((prev) => {
+			return {
+				...prev,
+				[name]: checked,
+			};
+		});
+		if (name === 'progressivePrice') {
+			setProgressiveCheck(checked);
+		}
 	};
 
+	useEffect(() => {
+		console.log(fields);
+	}, [fields]);
+
 	const handleRangeChange = (e, index) => {
-		const updatedRanges = [...priceRanges];
+		const updatedRanges = [...fields.pricingRules];
 		updatedRanges[index] = {
 			...updatedRanges[index],
 			[e.target.name]: e.target.value,
 		};
 
-		setPriceRanges(updatedRanges);
+		setFields((prev) => ({
+			...prev,
+			pricingRules: updatedRanges,
+		}));
 	};
 
 	const handleNewRange = () => {
-		setPriceRanges((prev) => [...prev, {}]);
+		const newRanges = [...fields.pricingRules, {}];
+
+		setFields((prev) => ({
+			...prev,
+			pricingRules: newRanges,
+		}));
 	};
 
 	const deleteRangeRow = (i) => {
-		const newRanges = priceRanges.filter(
+		const newRanges = fields.pricingRules.filter(
 			(range, index) => i !== index
 		);
-		setPriceRanges(newRanges);
+		setFields((prev) => ({
+			...prev,
+			pricingRules: newRanges,
+		}));
 	};
 
-	/* 	useEffect(() => {
-		console.log(priceRanges);
-	}, [priceRanges]); */
+	const setSelect = (option, e) => {
+		const { name } = e;
+		setFields((prev) => ({
+			...prev,
+			[name]: option.value,
+		}));
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			createNewOperation(fields);
+			setOpenOperationModal(false);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<div className={styles.formContainer}>
@@ -83,37 +158,82 @@ function OperationsForm({ selectStyles }) {
 			<form>
 				<div className={styles.labelInput}>
 					<label>Nombre:</label>
-					<input className={styles.input} />
+					<input
+						name="name"
+						value={fields.name ?? ''}
+						className={styles.input}
+						onChange={(e) => changeValue(e, setFields)}
+					/>
 				</div>
 				<div className={styles.labelInput}>
 					<label>Estación</label>
 					<div className={styles.input}>
 						<Select
+							name="workStation"
+							value={
+								stationsOptions.find(
+									(station) =>
+										station.value ===
+											fields.workStation._id ||
+										station.value === fields.workStation
+								) ?? ''
+							}
 							styles={selectStyles}
 							options={stationsOptions}
+							onChange={(option, e) => setSelect(option, e)}
 						/>
 					</div>
 				</div>
+				{fields.isPrintable ? (
+					<div className={styles.labelInput}>
+						<label>Precio chapa:</label>
+						<input
+							name="plateCost"
+							value={fields.plateCost ?? ''}
+							className={styles.input}
+							onChange={(e) => changeValue(e, setFields)}
+						/>
+					</div>
+				) : (
+					''
+				)}
 				<div className={styles.labelInput}>
 					<label>Tipo de unidad</label>
 					<div className={styles.input}>
 						<Select
+							name="unitType"
+							value={
+								unitTypeOptions.find(
+									(unit) => unit.value === fields.unitType
+								) ?? ''
+							}
 							styles={selectStyles}
 							options={unitTypeOptions}
+							onChange={(option, e) => setSelect(option, e)}
 						/>
 					</div>
 				</div>
 				<div className={styles.labelInput}>
 					<label>Precio por unidad:</label>
-					<input className={styles.input} />
+					<input
+						name="unitCost"
+						value={fields.unitCost ?? ''}
+						className={styles.input}
+						onChange={(e) => changeValue(e, setFields)}
+					/>
 				</div>
+
 				<div className={styles.labelInput}>
-					<label>Precio progresivo</label>
+					<label>Precio progresivo?</label>
 					<div className={styles.input}>
-						<Checkbox onChange={handleCheckBox} />
+						<Checkbox
+							checked={progressiveCheck}
+							name="progressivePrice"
+							onChange={handleCheckBox}
+						/>
 					</div>
 				</div>
-				{progressivePrice ? (
+				{fields.progressivePrice ? (
 					<table>
 						<thead>
 							<tr>
@@ -124,7 +244,7 @@ function OperationsForm({ selectStyles }) {
 							</tr>
 						</thead>
 						<tbody>
-							{priceRanges.map((range, index) => (
+							{fields.pricingRules.map((range, index) => (
 								<tr key={index}>
 									<td>
 										<input
@@ -148,9 +268,9 @@ function OperationsForm({ selectStyles }) {
 									</td>
 									<td>
 										<input
-											name="price"
+											name="step"
 											className={styles.priceInput}
-											value={range?.price}
+											value={range?.step}
 											onChange={(e) =>
 												handleRangeChange(e, index)
 											}
@@ -158,9 +278,9 @@ function OperationsForm({ selectStyles }) {
 									</td>
 									<td>
 										<input
-											name="step"
+											name="price"
 											className={styles.priceInput}
-											value={range?.step}
+											value={range?.price}
 											onChange={(e) =>
 												handleRangeChange(e, index)
 											}
@@ -199,9 +319,16 @@ function OperationsForm({ selectStyles }) {
 				<div className={styles.labelInput}>
 					<label>Obligatorio?</label>
 					<div className={styles.input}>
-						<Checkbox onChange={handleCheckBox} />
+						<Checkbox
+							value={fields.isAllTask ?? false}
+							name="isAllTask"
+							onChange={handleCheckBox}
+						/>
 					</div>
 				</div>
+				<Button variant="contained" onClick={handleSubmit}>
+					Crear
+				</Button>
 			</form>
 		</div>
 	);

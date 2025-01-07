@@ -40,7 +40,9 @@ export const costCalculator = (operation, quantity) => {
 		}
 	}
 
-	return price;
+	console.log(price, Math.round(price * 100) / 100);
+
+	return Math.round(price * 100) / 100;
 };
 
 export const printCost = (module) => {
@@ -58,12 +60,12 @@ export const printCost = (module) => {
 		price += module.postureCost;
 	}
 
-	return price;
+	return Math.round(price * 100) / 100;
 };
 
 export const printModuleCost = (module) => {
 	if (module.printCost && module.moduleRepeat) {
 		const price = module.printCost * module.moduleRepeat;
-		return price;
+		return Math.round(price * 100) / 100;
 	}
 };

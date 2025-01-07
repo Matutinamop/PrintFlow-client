@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styles from './resources.module.css';
 import { useDispatch } from 'react-redux';
-import { fetchStations } from '../../../redux/workStations/workStationSlice';
 import { fetchMaterials } from '../../../redux/materials/materialsSlice';
 import MaterialsList from '../../../components/Resources/Materials/MaterialsList';
 import OperationsList from '../../../components/Resources/Operations/OperationsList';
 import { Button } from '@mui/material';
 import Modal from '../../../components/shared/Modal';
 import OperationsForm from '../../../components/Resources/Operations/OperationsForm';
-import { color } from 'framer-motion';
+import { fetchOperations } from '../../../redux/operations/operationsSlice';
 
 function ResourcesList() {
 	const dispatch = useDispatch();
@@ -19,10 +18,17 @@ function ResourcesList() {
 	const [openMaterialModal, setMaterialModal] =
 		useState(false);
 
+	const [fields, setFields] = useState({
+		progressivePrice: false,
+		isPrintable: false,
+		isAllTask: false,
+		pricingRules: [{}],
+	});
+
 	useEffect(() => {
-		dispatch(fetchStations());
+		dispatch(fetchOperations());
 		dispatch(fetchMaterials());
-	}, []);
+	}, [openOperationModal]);
 
 	const selectStyles = {
 		menu: (provided, state) => ({
@@ -88,7 +94,12 @@ function ResourcesList() {
 				isOpen={openOperationModal}
 				onClose={() => setOpenOperationModal(false)}
 			>
-				<OperationsForm selectStyles={selectStyles} />
+				<OperationsForm
+					fields={fields}
+					setFields={setFields}
+					selectStyles={selectStyles}
+					setOpenOperationModal={setOpenOperationModal}
+				/>
 			</Modal>
 			<div className={styles.operationsList}>
 				<h2 className={styles.title}>OPERACIONES</h2>
@@ -98,7 +109,10 @@ function ResourcesList() {
 				>
 					Nueva Operación
 				</Button>
-				<OperationsList />
+				<OperationsList
+					setFields={setFields}
+					setOpenOperationModal={setOpenOperationModal}
+				/>
 			</div>
 			<div className={styles.materialsList}>
 				<h2 className={styles.title}>MATERIALES</h2>

@@ -18,12 +18,16 @@ import {
 import Container from './Container';
 import { Item } from './sortable_item';
 import { fetchTaskById } from '../../redux/tasks/tasksSlice';
+import { fetchActiveOrders } from '../../redux/orders/ordersSlice';
 
 function Manager() {
 	const dispatch = useDispatch();
 
 	const { stations, station } = useSelector(
 		(state) => state.workStations
+	);
+	const { activeOrders } = useSelector(
+		(state) => state.orders
 	);
 	const { task } = useSelector((state) => state.tasks);
 
@@ -38,6 +42,7 @@ function Manager() {
 
 	useEffect(() => {
 		dispatch(fetchStations());
+		dispatch(fetchActiveOrders());
 	}, []);
 
 	useEffect(() => {

@@ -46,8 +46,6 @@ export const createNewOrder = async (fields) => {
 		((budget - budgetEstimate) * 100) / budgetEstimate +
 		'%';
 
-	console.log(deliveryData);
-
 	const body = {
 		orderNumber,
 		product,
@@ -63,8 +61,8 @@ export const createNewOrder = async (fields) => {
 			'asdasd' /* aca tengo que ver si va a ir o no en el formulario */,
 		scheme,
 		dateCreated: today(),
-		dateEstimate: format(dateEstimate, 'dd/mm/yy'),
-		dateFinal: format(dateFinal, 'dd/mm/yy'),
+		dateEstimate: format(dateEstimate, 'dd/MM/yy'),
+		dateFinal: format(dateFinal, 'dd/MM/yy'),
 		descriptionClient,
 		descriptionWork,
 		descriptionPrivate,

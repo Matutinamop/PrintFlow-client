@@ -176,6 +176,9 @@ function OrderForm() {
 			}
 		});
 
+		price = Math.round(price * 100) / 100;
+		price = price.toFixed(2);
+
 		setFields((prev) => ({ ...prev, finalPrice: price }));
 	}, [JSON.stringify(fields)]);
 
