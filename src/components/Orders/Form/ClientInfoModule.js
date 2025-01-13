@@ -23,15 +23,6 @@ function ClientInfoModule({
 				/>
 			</div>
 			<Input
-				name={'RUT'}
-				size={'big'}
-				value={fields.RUT ? fields.RUT : ''}
-				onChange={(e) => changeValue(e, setFields)}
-				isDisabled
-			>
-				RUT
-			</Input>
-			<Input
 				name={'contactName'}
 				size="normal"
 				value={fields.contactName ? fields.contactName : ''}

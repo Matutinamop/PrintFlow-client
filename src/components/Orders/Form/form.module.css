@@ -11,6 +11,32 @@
 	padding: 15px;
 }
 
+.blockContainer {
+	display: flex;
+	width: 100%;
+	gap: 10px;
+}
+
+.leftBlock,
+.rightBlock {
+	display: flex;
+	flex-direction: column;
+	background-color: rgba(0, 0, 0, 0.05);
+	border: 1px solid #aaa;
+	border-radius: 5px;
+	margin-top: 10px;
+	padding: 15px;
+}
+
+.leftBlock {
+	flex: 1;
+}
+
+.rightBlock {
+	flex: 2;
+	gap: 8px;
+}
+
 .blockPrintTask {
 	z-index: 0;
 }
@@ -53,17 +79,16 @@
 	width: 100%;
 	resize: vertical;
 	min-height: 33px;
-	max-height: 150px;
 	padding: 0.5rem;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.datesContainer {
+/* .datesContainer {
 	display: flex;
 	gap: 20px;
-}
+} */
 
 .dateInput {
 	border: 1px solid #ccc;
@@ -81,18 +106,24 @@
 .closePrintTask {
 	position: absolute;
 	z-index: 1;
-	top: 10px;
-	right: 10px;
+	top: 3px;
+	right: 3px;
 	cursor: pointer;
 }
 
-.label {
+.label,
+.printTaskLabel {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	height: 30px;
+	height: 20px;
 	font-size: 12px;
 	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+.printTaskLabel {
+	text-align: center;
 }
 
 .selectContainer,
@@ -104,9 +135,22 @@
 	width: 90px;
 }
 
-.selectClientContainer,
+.clientInput {
+	width: 450px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: border-color 0.3s;
+	font-size: 12px;
+}
+
+.selectClientContainer {
+	width: 450px;
+	height: 55px;
+}
+
 .selectMaterialContainer {
-	width: 300px;
+	width: 250px;
 }
 
 .table {
@@ -165,4 +209,43 @@
 	height: 15px;
 	width: 15px;
 	cursor: pointer;
+}
+
+.printFirstRow,
+.printRow,
+.printLastRow {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+	width: 100%;
+}
+
+.printFirstRow {
+	margin-top: 20px;
+}
+
+.printLastRow {
+	margin-bottom: 20px;
+}
+
+.lastItem {
+	display: flex;
+	flex-direction: column;
+	width: fit-content;
+	margin-left: auto;
+}
+
+.printTaskInput {
+	width: 100%;
+	height: 25px;
+	font-size: 11px;
+	padding: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: border-color 0.3s;
+}
+
+.tintasDiv {
+	width: 250px;
 }

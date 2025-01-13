@@ -25,12 +25,9 @@ export const createNewOrder = async (fields) => {
 	let budgetEstimate = 0,
 		budget = 0;
 
-	console.log(budgetEstimate);
-
 	printTasks.map((task) => {
 		budgetEstimate += task.estimatedCost;
 		budget += task.totalCost;
-		console.log(budgetEstimate);
 	});
 	otherTasks.map((task) => {
 		task.estimatedCost
@@ -39,7 +36,6 @@ export const createNewOrder = async (fields) => {
 		task.cost
 			? (budget += Number(task.cost))
 			: (budget += task.estimatedCost);
-		console.log(budgetEstimate);
 	});
 
 	const deviation =

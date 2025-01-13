@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { fetchOperations } from '../../redux/operations/operationsSlice';
+import { fetchOperations } from '../../../redux/operations/operationsSlice';
 import { useEffect, useState } from 'react';
-import { costCalculator } from '../functions/costCalculator';
+import { costCalculator } from '../../functions/costCalculator';
 
 export const useOperationsModule = (setFields) => {
 	const dispatch = useDispatch();
@@ -19,14 +19,7 @@ export const useOperationsModule = (setFields) => {
 	useEffect(() => {
 		setOperationOptions(
 			operations
-				?.filter(
-					(operation) =>
-						!operation.isPrintable &&
-						!operationsList.some(
-							(listOp) =>
-								listOp.operation._id === operation._id
-						)
-				)
+				?.filter((operation) => !operation.isPrintable)
 				.map((operation) => ({
 					key: operation._id,
 					value: operation._id,
@@ -34,20 +27,6 @@ export const useOperationsModule = (setFields) => {
 				}))
 		);
 	}, [operationsList]);
-
-	/* const operationOptions = operations
-		?.filter(
-			(operation) =>
-				!operation.isPrintable &&
-				!operationsList.some(
-					(listOp) => listOp.operation._id === operation._id
-				)
-		)
-		.map((operation) => ({
-			key: operation._id,
-			value: operation._id,
-			label: operation.name,
-		})); */
 
 	useEffect(() => {
 		dispatch(fetchOperations());
@@ -85,7 +64,7 @@ export const useOperationsModule = (setFields) => {
 			);
 			return [...prev, ...newList];
 		});
-	}, [operations]);
+	}, []);
 
 	useEffect(() => {
 		if (manualChange.length === 0) {
@@ -94,7 +73,6 @@ export const useOperationsModule = (setFields) => {
 	}, [operationsList]);
 
 	useEffect(() => {
-		console.log(operationsList[0]?.quantity);
 		operationsList.map((op, index) => {
 			if (op.quantity) {
 				setOperationsList((prev) => {
@@ -119,56 +97,40 @@ export const useOperationsModule = (setFields) => {
 	};
 
 	const handleNewRow = (option) => {
-		if (
-			!operationsList.some(
-				(op) => op.operation.name === option.value
-			)
-		) {
-			if (!option.__isNew__) {
-				setOperationsList((prev) => {
-					if (
-						!prev.some(
-							(op) => op.operation._id === option.value
-						)
-					) {
-						return [
-							...prev,
-							{
-								operation: operations.find(
-									(op) => op._id === option.value
-								),
-
-								description: '',
-								unitType: operation.unitType,
-								quantity: 0,
-								estimatedCost: 0,
-								cost: 0,
-							},
-						];
-					}
-					return prev;
-				});
-			} else {
-				const newOperation = {
-					operation: {
-						_id: option.value,
-						name: option.value,
-					},
-
-					description: '',
-					unitType: '',
-					quantity: 0,
-					estimatedCost: 0,
-					cost: 0,
-				};
-
-				setOperationsList((prev) => [
+		if (!option.__isNew__) {
+			setOperationsList((prev) => {
+				return [
 					...prev,
-					newOperation,
-				]);
-			}
-			setManualChange((prev) => [...prev, false]);
+					{
+						operation: operations.find(
+							(op) => op._id === option.value
+						),
+
+						description: '',
+						unitType: operation.unitType,
+						quantity: 0,
+						estimatedCost: 0,
+						cost: 0,
+					},
+				];
+			});
+		} else {
+			const newOperation = {
+				operation: {
+					_id: option.value,
+					name: option.value,
+				},
+
+				description: '',
+				unitType: '',
+				quantity: 0,
+				estimatedCost: 0,
+				cost: 0,
+			};
+
+			setOperationsList((prev) => [...prev, newOperation]);
 		}
+		setManualChange((prev) => [...prev, false]);
 	};
 
 	const handleDirtyField = (index) => {

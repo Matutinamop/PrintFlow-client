@@ -11,6 +11,7 @@ const initialState = {
 	operations: [],
 	operation: {},
 	errorOperation: '',
+	operationsCount: 0,
 };
 
 const fetchOperations = createAsyncThunk(
@@ -21,6 +22,27 @@ const fetchOperations = createAsyncThunk(
 				`${url}/api/operation`
 			);
 			return response.data.operations;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+);
+
+const fetchFilteredOperations = createAsyncThunk(
+	'operations/fetchFilteredOperations',
+	async ({ searchTerm, page, limit }) => {
+		try {
+			const response = await axios.get(
+				`${url}/api/operation/filtered`,
+				{
+					params: {
+						...(page && { page }),
+						...(searchTerm && { searchTerm }),
+						...(limit && { limit }),
+					},
+				}
+			);
+			return response.data;
 		} catch (error) {
 			console.error(error);
 		}
@@ -64,6 +86,30 @@ const operationSlice = createSlice({
 				state.errorOperation = action.error.message;
 			}
 		);
+		builder.addCase(
+			fetchFilteredOperations.pending,
+			(state) => {
+				state.loadingOperation = true;
+			}
+		);
+		builder.addCase(
+			fetchFilteredOperations.fulfilled,
+			(state, action) => {
+				state.loadingOperation = false;
+				state.operations = action.payload.operations;
+				state.errorOperation = '';
+				state.operationsCount = action.payload.count;
+			}
+		);
+		builder.addCase(
+			fetchFilteredOperations.rejected,
+			(state, action) => {
+				state.loadingOperation = false;
+				state.operations = [];
+				state.errorOperation = action.error.message;
+				state.operationsCount = 0;
+			}
+		);
 		builder.addCase(fetchOperationById.pending, (state) => {
 			state.operation = {};
 		});
@@ -83,4 +129,8 @@ const operationSlice = createSlice({
 });
 
 export const { reducer: operationReducer } = operationSlice;
-export { fetchOperations, fetchOperationById };
+export {
+	fetchOperations,
+	fetchOperationById,
+	fetchFilteredOperations,
+};

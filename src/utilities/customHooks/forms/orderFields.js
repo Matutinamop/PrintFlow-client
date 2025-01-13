@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import calculateItemInArea from '../functions/printTask/calculateItemInArea';
+import calculateItemInArea from '../../functions/printTask/calculateItemInArea';
 import {
 	bulkPaperQuantity,
 	paperCostByWeight,
-} from '../functions/printTask/bulkPaper';
+} from '../../functions/printTask/bulkPaper';
 import { useSelector } from 'react-redux';
 import {
 	costCalculator,
 	printCost,
 	printModuleCost,
-} from '../functions/costCalculator';
+} from '../../functions/costCalculator';
 
 const useCalculateFields = (
 	fields,
@@ -216,8 +216,11 @@ const useCalculateFields = (
 			setFields((prev) => {
 				const updatedPrintTasks = [...prev.printTasks];
 				updatedPrintTasks[index].paperCost =
-					module.bulkPaperQuantity *
-					module.costPerBulkPaper;
+					Math.round(
+						module.bulkPaperQuantity *
+							module.costPerBulkPaper *
+							100
+					) / 100;
 				return {
 					...prev,
 					printTasks: updatedPrintTasks,
@@ -245,7 +248,11 @@ const useCalculateFields = (
 			setFields((prev) => {
 				const updatedPrintTasks = [...prev.printTasks];
 				updatedPrintTasks[index].plateCost =
-					selectedOperation.plateCost * module.plates;
+					Math.round(
+						selectedOperation.plateCost *
+							module.plates *
+							100
+					) / 100;
 				return {
 					...prev,
 					printTasks: updatedPrintTasks,

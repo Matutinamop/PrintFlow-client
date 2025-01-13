@@ -1,13 +1,13 @@
 import styles from './form.module.css';
 import CreatableSelect from 'react-select/creatable';
 import { costCalculator } from '../../../utilities/functions/costCalculator';
-import { useOperationsModule } from '../../../utilities/customHooks/operationsModule';
-
-function OperationsModule({
+import { useOperationsModule } from '../../../utilities/customHooks/forms/operationsModule';
+import {
+	operationStyle,
 	selectStyles,
-	fields,
-	setFields,
-}) {
+} from '../../../utilities/selectStyles/selectStyles';
+
+function OperationsModule({ setFields }) {
 	const {
 		operationsList,
 		manualChange,
@@ -94,7 +94,7 @@ function OperationsModule({
 					<tr>
 						<td>
 							<CreatableSelect
-								styles={selectStyles}
+								styles={operationStyle}
 								onChange={(option) => handleNewRow(option)}
 								options={operationOptions}
 								placeholder={'Nueva Operación'}

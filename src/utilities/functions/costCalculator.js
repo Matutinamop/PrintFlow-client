@@ -1,8 +1,5 @@
 export const costCalculator = (operation, quantity) => {
 	let price = 0;
-	if (operation.minPrice) {
-		price += operation.minPrice;
-	}
 
 	if (operation.unitCost) {
 		price += operation.unitCost * quantity;
@@ -40,7 +37,9 @@ export const costCalculator = (operation, quantity) => {
 		}
 	}
 
-	console.log(price, Math.round(price * 100) / 100);
+	if (operation.minPrice && price < operation.minPrice) {
+		price = operation.minPrice;
+	}
 
 	return Math.round(price * 100) / 100;
 };

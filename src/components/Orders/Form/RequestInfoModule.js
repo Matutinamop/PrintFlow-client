@@ -88,24 +88,6 @@ function RequestInfoModule({
 					onChange={(e) => changeValue(e, setFields)}
 				/>
 			</div>
-			<div className={styles.datesContainer}>
-				<label>Fecha Estimada:</label>
-				<input
-					className={styles.dateInput}
-					type="date"
-					name="dateEstimate"
-					value={fields.dateEstimate ?? ''}
-					onChange={(e) => changeValue(e, setFields)}
-				/>
-				<label>Fecha Limite:</label>
-				<input
-					className={styles.dateInput}
-					type="date"
-					name="dateFinal"
-					value={fields.dateFinal ?? ''}
-					onChange={(e) => changeValue(e, setFields)}
-				/>
-			</div>
 			<div
 				style={{
 					display: 'flex',

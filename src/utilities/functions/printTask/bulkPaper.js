@@ -12,5 +12,9 @@ export function paperCostByWeight(
 	grammage,
 	paperCostPerTon
 ) {
-	return (paperCostPerTon / 1000) * (grammage / 1000);
+	return (
+		Math.round(
+			(paperCostPerTon / 1000) * (grammage / 1000) * 1000
+		) / 1000
+	);
 }

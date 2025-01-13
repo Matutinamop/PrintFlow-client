@@ -65,9 +65,9 @@ function OrderForm() {
 		}
 	}, [client]);
 
-	useEffect(() => {
+	/* 	useEffect(() => {
 		console.log(fields);
-	}, [JSON.stringify(fields)]);
+	}, [JSON.stringify(fields)]); */
 
 	const createMOP = async () => {
 		try {
@@ -78,7 +78,7 @@ function OrderForm() {
 		}
 	};
 
-	const selectStyles = {
+	/* const selectStyles = {
 		menu: (provided, state) => ({
 			...provided,
 			height: '150px',
@@ -128,7 +128,7 @@ function OrderForm() {
 			...provided,
 			fontSize: '12px',
 		}),
-	};
+	}; */
 
 	const newPrintTask = () => {
 		const newTask = { id: fields.printTasks.length };
@@ -218,18 +218,15 @@ function OrderForm() {
 					<OrderInfoModule
 						fields={fields}
 						clients={clients}
-						selectStyles={selectStyles}
 						setFields={setFields}
 					/>
 					<ClientInfoModule
 						setContactInfo={setContactInfo}
 						client={client}
-						selectStyles={selectStyles}
 						fields={fields}
 						setFields={setFields}
 					/>
 					<RequestInfoModule
-						selectStyles={selectStyles}
 						fields={fields}
 						setFields={setFields}
 					/>
@@ -237,7 +234,6 @@ function OrderForm() {
 						<PrintTaskModule
 							info={task}
 							key={index}
-							selectStyles={selectStyles}
 							fields={fields}
 							module={task.id}
 							setFields={setFields}
@@ -253,7 +249,6 @@ function OrderForm() {
 						Nuevo modulo de impresión
 					</Button>
 					<OperationsModule
-						selectStyles={selectStyles}
 						setFields={setFields}
 						fields={fields}
 					/>

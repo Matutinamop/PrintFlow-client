@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import styles from './operations.module.css';
-import { Input } from '../../shared/Inputs';
 import Select from 'react-select';
-import { useSelector } from 'react-redux';
-import { CheckBox } from '@mui/icons-material';
 import {
 	Button,
 	Checkbox,
@@ -11,142 +7,31 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { changeValue } from '../../../utilities/functions/forms/fields';
-import { fetchStationById } from '../../../redux/workStations/workStationSlice';
-import { useDispatch } from 'react-redux';
-import { createNewOperation } from '../../../utilities/functions/resources/createNewOperation';
+import { useOperationsForm } from '../../../utilities/customHooks/forms/operationsForm';
 
 function OperationsForm({
+	isEdit,
 	selectStyles,
 	setOpenOperationModal,
 	fields,
 	setFields,
 }) {
-	const dispatch = useDispatch();
-	const [isEdit, setIsEdit] = useState(false);
-	const [stationsOptions, setStationsOptions] = useState(
-		[]
+	const {
+		stationsOptions,
+		progressiveCheck,
+		unitTypeOptions,
+		handleCheckBox,
+		handleRangeChange,
+		handleNewRange,
+		deleteRangeRow,
+		setSelect,
+		handleSubmit,
+	} = useOperationsForm(
+		fields,
+		setFields,
+		isEdit,
+		setOpenOperationModal
 	);
-	const [progressiveCheck, setProgressiveCheck] =
-		useState(false);
-
-	console.log('fields', fields);
-
-	const { stations, station } = useSelector(
-		(state) => state.workStations
-	);
-
-	useEffect(() => {
-		if (fields.pricingRules.length > 0) {
-			setFields((prev) => ({
-				...prev,
-				progressivePrice: true,
-			}));
-			setProgressiveCheck(true);
-		}
-	}, []);
-
-	useEffect(() => {
-		dispatch(
-			fetchStationById(
-				fields.workStation._id ?? fields.workStation
-			)
-		);
-	}, [fields.workStation]);
-
-	useEffect(() => {
-		setFields((prev) => ({
-			...prev,
-			isPrintable: station.isPrintable,
-		}));
-	}, [station]);
-
-	const unitTypeOptions = [
-		{ key: 1, label: 'Horas', value: 'Horas' },
-		{ key: 2, label: 'Clicks', value: 'Clicks' },
-		{
-			key: 3,
-			label: 'Metro cuadrado',
-			value: 'Metro cuadrado',
-		},
-		{ key: 4, label: 'Tiraje', value: 'Tiraje' },
-		{ key: 5, label: 'Unitario', value: 'Unitario' },
-	];
-
-	useEffect(() => {
-		const newOptions = stations.map((station) => ({
-			key: station._id,
-			label: station.name,
-			value: station._id,
-		}));
-		setStationsOptions(newOptions);
-	}, [stations]);
-
-	const handleCheckBox = (e) => {
-		const { name, checked } = e.target;
-		setFields((prev) => {
-			return {
-				...prev,
-				[name]: checked,
-			};
-		});
-		if (name === 'progressivePrice') {
-			setProgressiveCheck(checked);
-		}
-	};
-
-	useEffect(() => {
-		console.log(fields);
-	}, [fields]);
-
-	const handleRangeChange = (e, index) => {
-		const updatedRanges = [...fields.pricingRules];
-		updatedRanges[index] = {
-			...updatedRanges[index],
-			[e.target.name]: e.target.value,
-		};
-
-		setFields((prev) => ({
-			...prev,
-			pricingRules: updatedRanges,
-		}));
-	};
-
-	const handleNewRange = () => {
-		const newRanges = [...fields.pricingRules, {}];
-
-		setFields((prev) => ({
-			...prev,
-			pricingRules: newRanges,
-		}));
-	};
-
-	const deleteRangeRow = (i) => {
-		const newRanges = fields.pricingRules.filter(
-			(range, index) => i !== index
-		);
-		setFields((prev) => ({
-			...prev,
-			pricingRules: newRanges,
-		}));
-	};
-
-	const setSelect = (option, e) => {
-		const { name } = e;
-		setFields((prev) => ({
-			...prev,
-			[name]: option.value,
-		}));
-	};
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		try {
-			createNewOperation(fields);
-			setOpenOperationModal(false);
-		} catch (error) {
-			console.log(error);
-		}
-	};
 
 	return (
 		<div className={styles.formContainer}>
@@ -174,7 +59,7 @@ function OperationsForm({
 								stationsOptions.find(
 									(station) =>
 										station.value ===
-											fields.workStation._id ||
+											fields.workStation?._id ||
 										station.value === fields.workStation
 								) ?? ''
 							}
@@ -222,7 +107,15 @@ function OperationsForm({
 						onChange={(e) => changeValue(e, setFields)}
 					/>
 				</div>
-
+				<div className={styles.labelInput}>
+					<label>Precio mínimo:</label>
+					<input
+						name="minPrice"
+						value={fields.minPrice ?? ''}
+						className={styles.input}
+						onChange={(e) => changeValue(e, setFields)}
+					/>
+				</div>
 				<div className={styles.labelInput}>
 					<label>Precio progresivo?</label>
 					<div className={styles.input}>
@@ -326,9 +219,21 @@ function OperationsForm({
 						/>
 					</div>
 				</div>
-				<Button variant="contained" onClick={handleSubmit}>
-					Crear
-				</Button>
+				{isEdit ? (
+					<Button
+						variant="contained"
+						onClick={handleSubmit}
+					>
+						Editar
+					</Button>
+				) : (
+					<Button
+						variant="contained"
+						onClick={handleSubmit}
+					>
+						Crear
+					</Button>
+				)}
 			</form>
 		</div>
 	);

@@ -11,6 +11,7 @@ const initialState = {
 	materials: [],
 	material: {},
 	errorMaterial: '',
+	materialsCount: 0,
 };
 
 const fetchMaterials = createAsyncThunk(
@@ -21,6 +22,27 @@ const fetchMaterials = createAsyncThunk(
 				`${url}/api/material`
 			);
 			return response.data.materials;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+);
+
+const fetchFilteredMaterials = createAsyncThunk(
+	'materials/fetchFilteredMaterials',
+	async ({ searchTerm = '', page, limit } = {}) => {
+		try {
+			const response = await axios.get(
+				`${url}/api/material/filtered`,
+				{
+					params: {
+						...(page && { page }),
+						...(searchTerm && { searchTerm }),
+						...(limit && { limit }),
+					},
+				}
+			);
+			return response.data;
 		} catch (error) {
 			console.error(error);
 		}
@@ -64,6 +86,30 @@ const materialSlice = createSlice({
 				state.errorMaterial = action.error.message;
 			}
 		);
+		builder.addCase(
+			fetchFilteredMaterials.pending,
+			(state) => {
+				state.loadingMaterial = true;
+			}
+		);
+		builder.addCase(
+			fetchFilteredMaterials.fulfilled,
+			(state, action) => {
+				state.loadingMaterial = false;
+				state.materials = action.payload.materials;
+				state.errorMaterial = '';
+				state.materialsCount = action.payload.count;
+			}
+		);
+		builder.addCase(
+			fetchFilteredMaterials.rejected,
+			(state, action) => {
+				state.loadingMaterial = false;
+				state.materials = [];
+				state.errorMaterial = action.error.message;
+				state.materialsCount = 0;
+			}
+		);
 		builder.addCase(fetchMaterialById.pending, (state) => {
 			state.material = {};
 		});
@@ -80,4 +126,8 @@ const materialSlice = createSlice({
 });
 
 export const { reducer: materialReducer } = materialSlice;
-export { fetchMaterials, fetchMaterialById };
+export {
+	fetchMaterials,
+	fetchMaterialById,
+	fetchFilteredMaterials,
+};
