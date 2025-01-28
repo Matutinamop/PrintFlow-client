@@ -1,18 +1,54 @@
 * {
-  margin: 0;
-  box-sizing: border-box;
+	margin: 0;
+	box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	font-family: 'Klavika', BlinkMacSystemFont, 'Segoe UI',
+		'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+		'Droid Sans', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 a {
-  text-decoration: none;
-  color: #EDF0F1;
+	text-decoration: none;
+	color: #edf0f1;
+}
+
+input:-webkit-autofill {
+	background-color: white !important; /* Fondo igual al normal */
+	color: #333 !important; /* Texto igual al normal */
+	border: 1px solid #ccc !important; /* Borde igual al normal */
+	-webkit-box-shadow: 0 0 0px 1000px white inset !important; /* Elimina el fondo amarillento */
+	box-shadow: 0 0 0px 1000px white inset !important; /* Compatibilidad adicional */
+}
+
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+	background-color: white !important;
+	color: #333 !important;
+}
+
+/* Elimina cambios de estilo en otros navegadores */
+input:-moz-autofill {
+	background-color: white !important;
+	color: #333 !important;
+}
+
+@font-face {
+	font-family: 'Klavika';
+	src: url(/public/fonts/Klavika-Medium.otf)
+		format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Klavika';
+	src: url(/public/fonts/Klavika-Bold.otf)
+		format('opentype');
+	font-weight: bold;
+	font-style: normal;
 }

@@ -29,7 +29,7 @@
 	border: 1px solid #101204;
 	border-radius: 8px;
 	color: #101204;
-	font-weight: bold;
+	/* 	font-weight: bold; */
 	box-shadow: 0 1px 5px 0 #101204;
 	width: 600px;
 }

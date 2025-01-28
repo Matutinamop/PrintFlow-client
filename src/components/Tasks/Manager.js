@@ -14,6 +14,10 @@ import {
 	closestCorners,
 	DndContext,
 	DragOverlay,
+	MouseSensor,
+	TouchSensor,
+	useSensor,
+	useSensors,
 } from '@dnd-kit/core';
 import Container from './Container';
 import { Item } from './sortable_item';
@@ -22,6 +26,10 @@ import { fetchActiveOrders } from '../../redux/orders/ordersSlice';
 
 function Manager() {
 	const dispatch = useDispatch();
+	const sensors = useSensors(
+		useSensor(MouseSensor),
+		useSensor(TouchSensor)
+	);
 
 	const { stations, station } = useSelector(
 		(state) => state.workStations
@@ -37,6 +45,8 @@ function Manager() {
 	});
 	const [newStations, setNewStations] = useState([]);
 	const [activeTask, setActiveTask] = useState();
+	const [stationSource, setStationSource] = useState();
+	const [stationDestiny, setStationDestiny] = useState();
 	const [destinationIndex, setDestinationIndex] =
 		useState();
 
@@ -54,58 +64,6 @@ function Manager() {
 
 		setInfoModal({ open: false, info: {} });
 	};
-
-	return (
-		<div className={styles.taskManager}>
-			<Modal
-				isOpen={infoModal.open}
-				onClose={() => (
-					setInfoModal({ open: false, info: {} }),
-					dispatch(fetchStations())
-				)}
-				title={'Estás seguro?'}
-			>
-				<p>
-					Mover <strong>{task?.name}</strong> a {''}
-					<strong>{station?.name}</strong>?
-				</p>
-				<TextArea orientation="vertical" width="300px">
-					Quieres dejar un comentario?
-				</TextArea>
-				<Button onClick={handleMoved}>Aceptar</Button>
-				<Button
-					onClick={() => (
-						setInfoModal({ open: false, info: {} }),
-						dispatch(fetchStations())
-					)}
-				>
-					Cancelar
-				</Button>
-			</Modal>
-			<div className={styles.paperGrid}>
-				<DndContext
-					collisionDetection={closestCorners}
-					onDragStart={handleDragStart}
-					onDragMove={handleDragOver}
-					onDragEnd={handleDragEnd}
-				>
-					{newStations?.map((station) => (
-						<Container
-							key={station._id}
-							id={station._id}
-							station={station}
-							items={station.tasks}
-						/>
-					))}
-					<DragOverlay>
-						{activeTask ? (
-							<Item id={activeTask._id} task={activeTask} />
-						) : null}
-					</DragOverlay>
-				</DndContext>
-			</div>
-		</div>
-	);
 
 	function findContainer(id) {
 		const station = newStations.find(
@@ -131,7 +89,14 @@ function Manager() {
 			(task) => task._id === id
 		);
 
+		const newSource = newStations.find((station) =>
+			station.tasks.some(
+				(task) => task._id === taskActivated._id
+			)
+		);
+
 		setActiveTask(taskActivated);
+		setStationSource(newSource);
 	}
 
 	function handleDragOver(event) {
@@ -141,10 +106,17 @@ function Manager() {
 		const { clientX, clientY } = event.activatorEvent;
 		let activeContainer, overContainer;
 		const { x, y } = event.delta;
-
 		const overIsStation = newStations.find(
 			(station) => station._id === overId
 		);
+		const idStation =
+			over?.data?.current?.sortable?.containerId;
+
+		const station = newStations.find(
+			(station) => station._id === idStation
+		);
+
+		setStationDestiny(station);
 
 		const updatedStations = newStations.map((station) => ({
 			...station,
@@ -153,12 +125,7 @@ function Manager() {
 			),
 		}));
 
-		if (overIsStation) {
-			const activeTask = newStations
-				.find((station) =>
-					station.tasks.some((task) => task._id === id)
-				)
-				.tasks.find((task) => task._id === id);
+		if (overIsStation && activeTask) {
 			const stationIndex = newStations.findIndex(
 				(station) => station._id === overId
 			);
@@ -189,13 +156,6 @@ function Manager() {
 			x: clientX + x,
 			y: clientY + y,
 		};
-
-		const activeStation = newStations.find(
-			(station) => station._id === activeContainer
-		);
-		const activeTask = activeStation.tasks.find(
-			(task) => task._id === id
-		);
 
 		const stationIndex = newStations.findIndex(
 			(station) => station._id === overContainer._id
@@ -239,53 +199,87 @@ function Manager() {
 		setNewStations(updatedStations);
 	}
 
-	function handleDragEnd(event) {
-		const { over, active } = event;
+	function handleDragEnd() {
+		if (stationDestiny && stationSource && activeTask) {
+			const taskSourceIndex = stations
+				.find(
+					(station) => station._id === stationSource._id
+				)
+				.tasks.findIndex(
+					(task) => task._id === activeTask._id
+				);
 
-		dispatch(fetchTaskById(activeTask._id));
-		dispatch(
-			fetchStationById(
-				over.data.current.sortable.containerId
-			)
-		);
+			const result = {
+				destination: {
+					index: destinationIndex,
+					droppableId: stationDestiny._id,
+				},
+				source: {
+					index: taskSourceIndex,
+					droppableId: stationSource._id,
+				},
+				draggableId: activeTask._id,
+			};
 
-		const sourceId = (() => {
-			for (let station of stations) {
-				if (
-					station.tasks.some(
-						(task) => task._id === activeTask._id
-					)
-				) {
-					return station._id;
-				}
-			}
-			return null;
-		})();
+			setInfoModal({ open: true, info: result });
 
-		const sourceIndex = stations
-			.find((station) => station._id === sourceId)
-			.tasks.findIndex(
-				(task) => task._id === activeTask._id
-			);
+			setDestinationIndex();
 
-		const result = {
-			destination: {
-				index: destinationIndex,
-				droppableId: over.data.current.sortable.containerId,
-			},
-			source: {
-				index: sourceIndex,
-				droppableId: sourceId,
-			},
-			draggableId: activeTask._id,
-		};
-
-		setInfoModal({ open: true, info: result });
-
-		setDestinationIndex();
-
-		setActiveTask(null);
+			setActiveTask(null);
+		}
 	}
-}
 
+	return (
+		<div className={styles.taskManager}>
+			<Modal
+				isOpen={infoModal.open}
+				onClose={() => (
+					setInfoModal({ open: false, info: {} }),
+					dispatch(fetchStations())
+				)}
+				title={'Estás seguro?'}
+			>
+				<p>
+					Mover <strong>{task?.name}</strong> a {''}
+					<strong>{station?.name}</strong>?
+				</p>
+				<TextArea orientation="vertical" width="300px">
+					Quieres dejar un comentario?
+				</TextArea>
+				<Button onClick={handleMoved}>Aceptar</Button>
+				<Button
+					onClick={() => (
+						setInfoModal({ open: false, info: {} }),
+						dispatch(fetchStations())
+					)}
+				>
+					Cancelar
+				</Button>
+			</Modal>
+			<div className={styles.paperGrid}>
+				<DndContext
+					collisionDetection={closestCorners}
+					sensors={sensors}
+					onDragStart={handleDragStart}
+					onDragMove={handleDragOver}
+					onDragEnd={handleDragEnd}
+				>
+					{newStations?.map((station) => (
+						<Container
+							key={station._id}
+							id={station._id}
+							station={station}
+							items={station.tasks}
+						/>
+					))}
+					<DragOverlay>
+						{activeTask ? (
+							<Item id={activeTask._id} task={activeTask} />
+						) : null}
+					</DragOverlay>
+				</DndContext>
+			</div>
+		</div>
+	);
+}
 export default Manager;

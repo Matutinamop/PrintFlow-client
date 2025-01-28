@@ -1,42 +1,42 @@
 .formPage {
-    width: 100%;
-    overflow: auto;
-  }
-  
-  .a4Sheet {
-    width: 794px;
-    min-height: 1123px;
-    border: 1px solid black;
-    background-color: white;
-    margin: 2% auto; /* Centramos la hoja */
-    
-  }
-  
-  .documentContent {
-    width: 100%;
-    height: 100%;
-    padding: 20px 20px 76px;
-    font-weight: bold;
-    box-sizing: border-box;
-  }
-  
-  .mopHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .headerBlock {
-    width: 280px;
-  }
-  
-  .infoHeader {
-    display: flex;
-    flex-direction: column;
-    font-size: 12px;
-  }
-  /* 
+	width: 100%;
+	overflow: auto;
+	height: 88vh;
+}
+
+.a4Sheet {
+	width: 794px;
+	min-height: 1123px;
+	border: 1px solid black;
+	background-color: white;
+	margin: 2% auto; /* Centramos la hoja */
+}
+
+.documentContent {
+	width: 100%;
+	height: 100%;
+	padding: 20px 20px 40px;
+	/* font-weight: bold; */
+	box-sizing: border-box;
+}
+
+.mopHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.headerBlock {
+	width: 280px;
+}
+
+.infoHeader {
+	display: flex;
+	flex-direction: column;
+	font-size: 12px;
+}
+/* 
   .block {
     position: relative;
     display: flex;
@@ -110,14 +110,13 @@
     width: 300px;
   }
    */
-  
-  @media print {
-    .a4Sheet {
-      visibility: visible;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-    }
-  }
-    
+
+@media print {
+	.a4Sheet {
+		visibility: visible;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+	}
+}

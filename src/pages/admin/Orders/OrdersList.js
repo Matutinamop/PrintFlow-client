@@ -80,7 +80,7 @@ function OrdersList() {
 				style={{
 					display: 'flex',
 					alignItems: 'center',
-					width: '85vw',
+					width: '95%',
 				}}
 			>
 				<Link to="./form">

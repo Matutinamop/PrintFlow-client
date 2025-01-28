@@ -40,7 +40,9 @@ export default function Container(props) {
 			strategy={verticalListSortingStrategy}
 		>
 			<div ref={setNodeRef} className={styles.container}>
-				<h2>{props.station.name}</h2>
+				<h2 className={styles.containerTitle}>
+					{props.station.name}
+				</h2>
 				{items.map((item) => (
 					<SortableItem
 						task={item}

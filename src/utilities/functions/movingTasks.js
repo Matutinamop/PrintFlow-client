@@ -6,17 +6,18 @@ import {
 export const movingTasks = (result, newStations) => {
 	const { destination, source, draggableId } = result;
 
-	if (!destination || !source) return;
+	if (!destination || !source || !destination.droppableId)
+		return;
 	if (
 		destination.droppableId === source.droppableId &&
 		destination.index === source.index
 	) {
 		return;
 	}
-
 	const stationSrc = newStations.find(
 		(station) => station._id === source.droppableId
 	);
+
 	const stationDest = newStations.find(
 		(station) => station._id === destination.droppableId
 	);
@@ -31,7 +32,7 @@ export const movingTasks = (result, newStations) => {
 		);
 
 		const newDestTasks = [...stationDest.tasks];
-		newDestTasks.splice(destination.index, 0, movedTask);
+		newDestTasks.splice(destination?.index, 0, movedTask);
 
 		changedStations = newStations.map((station) => {
 			if (station === stationSrc) {

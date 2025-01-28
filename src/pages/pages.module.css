@@ -1,62 +1,59 @@
 .loginPage {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 90vw;
-    height: 88vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 90%;
+	height: 88vh;
 }
 
 .loginChart {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #EDF0F1;
-    width: 350px;
-    border-radius: 15px;
-    padding: 15px;
-    gap: 30px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #edf0f1;
+	width: 350px;
+	border-radius: 15px;
+	padding: 15px;
+	gap: 30px;
 }
 
 .loginForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
 }
 
 .label {
-    margin-left: 10px;
-    margin-bottom: 0.5rem;
-    font-size: 18px;
-    font-weight: bold;
-
+	margin-left: 10px;
+	margin-bottom: 0.5rem;
+	font-size: 18px;
 }
 
 .ordersList {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    width: 90vw;
-    height: 88vh;
-    color: #EDF0F1;
-    padding-top: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	width: 90%;
+	height: 88vh;
+	color: #edf0f1;
+	padding-top: 20px;
 }
 
 .ordersListSearch {
-    display: flex;
-    width: 85vw;
+	display: flex;
+	width: 85%;
 }
 
 @media (max-width: 1000px) {
-    .ordersListSearch {
-        flex-direction: column;
-    }
+	.ordersListSearch {
+		flex-direction: column;
+	}
 }
 
 @media print {
-    .orderForm {
-        visibility: hidden;
-    }
+	.orderForm {
+		visibility: hidden;
+	}
 }
-

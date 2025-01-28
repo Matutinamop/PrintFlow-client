@@ -64,7 +64,7 @@ function ClientsList() {
 				style={{
 					display: 'flex',
 					alignItems: 'center',
-					width: '85vw',
+					width: '85%',
 				}}
 			>
 				<Link to="./form">

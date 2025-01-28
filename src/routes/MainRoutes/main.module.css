@@ -1,0 +1,12 @@
+.mainContent {
+	position: fixed;
+	width: 80%;
+	height: 100%;
+	top: 7vh;
+	right: 0;
+	transition: width 2s;
+}
+
+.fullScreen {
+	width: 100%;
+}

@@ -40,24 +40,6 @@ function PrintTaskModule({
 			[e.target.name]: true,
 		}));
 	};
-	/* useEffect(() => {
-		if (!deepEqual(info, printTaskFields)) {
-			setFields((prev) => {
-				const updatedPrintTasks = [...prev.printTasks];
-				updatedPrintTasks[module] = printTaskFields;
-
-				return { ...prev, printTasks: updatedPrintTasks };
-			});
-		}
-	}, [printTaskFields]); */
-
-	/* useEffect(() => {
-		console.log(deepEqual(info, printTaskFields));
-		console.log(info, printTaskFields);
-		if (!deepEqual(info, printTaskFields)) {
-			return setPrintTaskFields(info);
-		}
-	}, [fields]); */
 
 	const genericOptions = [
 		{
@@ -73,17 +55,6 @@ function PrintTaskModule({
 			label: 'Tres',
 		},
 	];
-
-	/* 	const deleteModule = () => {
-		const newModules = fields.printTasks.filter(
-			(mod, index) => index !== module
-		);
-		console.log(newModules);
-		setFields((prev) => ({
-			...prev,
-			printTasks: newModules,
-		}));
-	}; */
 
 	const changeValue = (e) => {
 		const name = e.target.name;
@@ -117,284 +88,303 @@ function PrintTaskModule({
 					Borrar
 				</Button>
 			</div>
-			<div className={styles.contain}>
-				<div className={styles.printFirstRow}>
-					<Input
-						name="quantity"
-						onChange={(e) => changeValue(e)}
-						value={info.quantity || ''}
-						size="adjusted"
-					>
-						Unidades:{' '}
-					</Input>
-					<Input
-						name="finalSize"
-						onChange={(e) => changeValue(e)}
-						value={info.finalSize || ''}
-						size="adjusted"
-					>
-						Medida Final{' '}
-					</Input>
-					<Input
-						name="sizeWithMargins"
-						onChange={(e) => changeValue(e)}
-						value={info.sizeWithMargins || ''}
-						size="adjusted"
-					>
-						Medida con márgenes
-					</Input>
 
-					<div className={styles.selectMaterialContainer}>
-						<label className={styles.label}>
-							Material:
-						</label>
-						<CreatableSelect
-							styles={selectStyles}
-							name="material"
-							value={info.selectedOptions?.material || ''}
-							onChange={(option) => {
-								setFields((prev) => {
-									const updatedPrintTasks = [
-										...prev.printTasks,
-									];
-									updatedPrintTasks[index]['material'] =
-										option.value;
-									return {
-										...prev,
-										printTasks: updatedPrintTasks,
-									};
-								});
-								setSelectedOptions((prev) => ({
-									...prev,
-									material: {
-										label: option.label,
-										value: option.value,
-									},
-								}));
-							}}
-							options={info.materialOptions}
-							placeholder={''}
-						/>
-					</div>
-					<div className={styles.selectContainer}>
-						<label className={styles.label}>Gramaje:</label>
-						<CreatableSelect
-							styles={selectStyles}
-							name="grammage"
-							value={info.selectedOptions?.grammage || ''}
-							onChange={(option) => {
-								setFields((prev) => {
-									const updatedPrintTasks = [
-										...prev.printTasks,
-									];
-									updatedPrintTasks[index]['grammage'] =
-										option.value;
-									return {
-										...prev,
-										printTasks: updatedPrintTasks,
-									};
-								});
-								setSelectedOptions((prev) => ({
-									...prev,
-									grammage: {
-										label: option.label,
-										value: option.label,
-									},
-								}));
-							}}
-							options={info.grammageOptions}
-							placeholder={''}
-						/>
-					</div>
-				</div>
-				<div className={styles.printRow}>
-					<div className={styles.selectContainer}>
-						<label className={styles.label}>
-							Tam. hoja:
-						</label>
-						<CreatableSelect
-							styles={selectStyles}
-							name="bulkPaperSize"
-							value={
-								info.selectedOptions?.bulkPaperSize || ''
-							}
-							onChange={(option) => {
-								setFields((prev) => {
-									const updatedPrintTasks = [
-										...prev.printTasks,
-									];
-									updatedPrintTasks[index][
-										'bulkPaperSize'
-									] = option.value;
-									return {
-										...prev,
-										printTasks: updatedPrintTasks,
-									};
-								});
-								setSelectedOptions((prev) => ({
-									...prev,
-									bulkPaperSize: {
-										label: option.label,
-										value: option.label,
-									},
-								}));
-							}}
-							options={info.sizeMaterialOptions}
-							placeholder={''}
-						/>
-					</div>
-					<div className={styles.selectContainer}>
-						<label className={styles.label}>
-							Pliego de impresión:
-						</label>
-						<CreatableSelect
-							styles={selectStyles}
-							name="sheetSize"
-							value={info.selectedOptions?.sheetSize || ''}
-							onChange={(option) => {
-								setFields((prev) => {
-									const updatedPrintTasks = [
-										...prev.printTasks,
-									];
-									updatedPrintTasks[index]['sheetSize'] =
-										option.value;
-									return {
-										...prev,
-										printTasks: updatedPrintTasks,
-									};
-								});
-								setSelectedOptions((prev) => ({
-									...prev,
-									sheetSize: {
-										label: option.label,
-										value: option.label,
-									},
-								}));
-							}}
-							options={genericOptions}
-							placeholder={''}
-						/>
-					</div>
+			<div className={styles.contain}>
+				<div
+					style={{
+						display: 'flex',
+						justifyContent: 'space-between',
+						width: '100%',
+					}}
+				>
+					<h2 className={styles.printTitle}>
+						Módulo de impresión
+					</h2>
 					<Input
-						name="sheetPerBulkPaper"
+						name="sheetDescription"
 						onChange={(e) => changeValue(e)}
-						value={info.sheetPerBulkPaper || ''}
-						size="adjusted"
-						isDisabled
+						value={info.sheetDescription || ''}
+						size="bigSize"
 					>
-						Pli. x Hoja:
-					</Input>
-					<Input
-						name="unitsPerSheet"
-						onChange={(e) => changeValue(e)}
-						value={info.unitsPerSheet || ''}
-						size="adjusted"
-						isDisabled
-					>
-						Unid. x Pli.:
-					</Input>
-					<Input
-						name="sheetQuantity"
-						size="adjusted"
-						onChange={(e) => changeValue(e)}
-						value={info.sheetQuantity || ''}
-						isDisabled
-					>
-						Cant. Pli. de impresión:
-					</Input>
-					<Input
-						name="excess"
-						onChange={(e) => changeValue(e)}
-						value={info.excess || ''}
-						size="adjusted"
-					>
-						Demasía:
+						Descripción del modulo:
 					</Input>
 				</div>
-				<div className={styles.printLastRow}>
-					<Input
-						name="bulkPaperQuantity"
-						onChange={(e) => changeValue(e)}
-						value={info.bulkPaperQuantity || ''}
-						size="adjusted"
-						isDisabled
-					>
-						Hojas:
-					</Input>
-					<Input
-						name="costPerBulkPaper"
-						onChange={(e) => changeValue(e)}
-						value={info.costPerBulkPaper || ''}
-						size="adjusted"
-						isDisabled
-					>
-						Costo x hoja:
-					</Input>
-					<div className={styles.lastItem}>
-						<label className={styles.label}>
-							Costo papel:
-						</label>
-						<input
-							className={styles.printTaskInput}
-							name="paperCost"
-							onChange={(e) => changeValue(e)}
-							value={info.paperCost || ''}
-							disabled
-						></input>
-					</div>
-				</div>
-				<div className={styles.printRow}>
-					<div className={styles.selectMaterialContainer}>
-						<label className={styles.label}>Maquina:</label>
-						<CreatableSelect
-							styles={selectStyles}
-							name="operation"
-							value={info.selectedOptions?.operation || ''}
-							onChange={(option) => {
-								setFields((prev) => {
-									const updatedPrintTasks = [
-										...prev.printTasks,
-									];
-									updatedPrintTasks[index]['operation'] =
-										option.value;
-									return {
-										...prev,
-										printTasks: updatedPrintTasks,
-									};
-								});
-								setSelectedOptions((prev) => ({
+				{/* <div className={styles.printFirstRow}> */}
+				<Input
+					name="quantity"
+					onChange={(e) => changeValue(e)}
+					value={info.quantity || ''}
+					size="mediumSize"
+				>
+					Unidades:{' '}
+				</Input>
+				<Input
+					name="finalSize"
+					onChange={(e) => changeValue(e)}
+					value={info.finalSize || ''}
+					size="mediumSize"
+				>
+					Medida Final{' '}
+				</Input>
+				<Input
+					name="sizeWithMargins"
+					onChange={(e) => changeValue(e)}
+					value={info.sizeWithMargins || ''}
+					size="mediumSize"
+				>
+					Medida con márgenes
+				</Input>
+
+				<div
+					className={`${styles.selectContainer} ${styles.selectMaterialContainer}`}
+				>
+					<label className={styles.label}>Material:</label>
+					<CreatableSelect
+						styles={selectStyles}
+						name="material"
+						value={info.selectedOptions?.material || ''}
+						onChange={(option) => {
+							setFields((prev) => {
+								const updatedPrintTasks = [
+									...prev.printTasks,
+								];
+								updatedPrintTasks[index]['material'] =
+									option.value;
+								return {
 									...prev,
-									operation: {
-										label: option.label,
-										value: option.value,
-									},
-								}));
-							}}
-							options={info.operationOptions}
-							placeholder={''}
-						/>
-					</div>
-					<Input
-						name="plates"
-						onChange={(e) => changeValue(e)}
-						value={info.plates || ''}
-						size="adjusted"
-					>
-						Chapas:
-					</Input>
-					<div className={styles.lastItem}>
-						<label className={styles.label}>
-							Costo chapa:
-						</label>
-						<input
-							className={styles.printTaskInput}
-							name="plateCost"
-							onChange={(e) => changeValue(e)}
-							value={info.plateCost || ''}
-							disabled
-						></input>
-					</div>
+									printTasks: updatedPrintTasks,
+								};
+							});
+							setSelectedOptions((prev) => ({
+								...prev,
+								material: {
+									label: option.label,
+									value: option.value,
+								},
+							}));
+						}}
+						options={info.materialOptions}
+						placeholder={''}
+					/>
 				</div>
+				<div
+					className={`${styles.selectContainer} ${styles.smallNumberSelectContainer}`}
+				>
+					<label className={styles.label}>Gramaje:</label>
+					<CreatableSelect
+						styles={selectStyles}
+						name="grammage"
+						value={info.selectedOptions?.grammage || ''}
+						onChange={(option) => {
+							setFields((prev) => {
+								const updatedPrintTasks = [
+									...prev.printTasks,
+								];
+								updatedPrintTasks[index]['grammage'] =
+									option.value;
+								return {
+									...prev,
+									printTasks: updatedPrintTasks,
+								};
+							});
+							setSelectedOptions((prev) => ({
+								...prev,
+								grammage: {
+									label: option.label,
+									value: option.label,
+								},
+							}));
+						}}
+						options={info.grammageOptions}
+						placeholder={''}
+					/>
+				</div>
+				{/* </div> */}
+				{/* <div className={styles.printRow}> */}
+				<div className={styles.selectContainer}>
+					<label className={styles.label}>Tam. hoja:</label>
+					<CreatableSelect
+						styles={selectStyles}
+						name="bulkPaperSize"
+						value={
+							info.selectedOptions?.bulkPaperSize || ''
+						}
+						onChange={(option) => {
+							setFields((prev) => {
+								const updatedPrintTasks = [
+									...prev.printTasks,
+								];
+								updatedPrintTasks[index]['bulkPaperSize'] =
+									option.value;
+								return {
+									...prev,
+									printTasks: updatedPrintTasks,
+								};
+							});
+							setSelectedOptions((prev) => ({
+								...prev,
+								bulkPaperSize: {
+									label: option.label,
+									value: option.label,
+								},
+							}));
+						}}
+						options={info.sizeMaterialOptions}
+						placeholder={''}
+					/>
+				</div>
+				<div className={styles.selectContainer}>
+					<label className={styles.label}>
+						Pliego de impresión:
+					</label>
+					<CreatableSelect
+						styles={selectStyles}
+						name="sheetSize"
+						value={info.selectedOptions?.sheetSize || ''}
+						onChange={(option) => {
+							setFields((prev) => {
+								const updatedPrintTasks = [
+									...prev.printTasks,
+								];
+								updatedPrintTasks[index]['sheetSize'] =
+									option.value;
+								return {
+									...prev,
+									printTasks: updatedPrintTasks,
+								};
+							});
+							setSelectedOptions((prev) => ({
+								...prev,
+								sheetSize: {
+									label: option.label,
+									value: option.label,
+								},
+							}));
+						}}
+						options={genericOptions}
+						placeholder={''}
+					/>
+				</div>
+				<Input
+					name="sheetPerBulkPaper"
+					onChange={(e) => changeValue(e)}
+					value={info.sheetPerBulkPaper || ''}
+					size="numberSize"
+					isDisabled
+				>
+					Pli. x Hoja:
+				</Input>
+				<Input
+					name="unitsPerSheet"
+					onChange={(e) => changeValue(e)}
+					value={info.unitsPerSheet || ''}
+					size="numberSize"
+					isDisabled
+				>
+					Unid. x Pli.:
+				</Input>
+				<Input
+					name="sheetQuantity"
+					size="mediumSize"
+					onChange={(e) => changeValue(e)}
+					value={info.sheetQuantity || ''}
+					isDisabled
+				>
+					Cant. Pli. de impresión:
+				</Input>
+				<Input
+					name="excess"
+					onChange={(e) => changeValue(e)}
+					value={info.excess || ''}
+					size="numberSize"
+				>
+					Demasía:
+				</Input>
+				{/* </div> */}
+				{/* <div className={styles.printLastRow}> */}
+				<Input
+					name="bulkPaperQuantity"
+					onChange={(e) => changeValue(e)}
+					value={info.bulkPaperQuantity || ''}
+					size="numberSize"
+					isDisabled
+				>
+					Hojas:
+				</Input>
+				<Input
+					name="costPerBulkPaper"
+					onChange={(e) => changeValue(e)}
+					value={`$ ${info.costPerBulkPaper || ''}`}
+					size="mediumSize"
+					isDisabled
+				>
+					Costo x hoja:
+				</Input>
+				<div className={styles.lastItem}>
+					<Input
+						name="paperCost"
+						onChange={(e) => changeValue(e)}
+						value={`$ ${info.paperCost || ''}`}
+						size="priceSize"
+						isDisabled
+					>
+						Costo papel:
+					</Input>
+				</div>
+				{/* </div> */}
+				{/* <div className={styles.printRow}> */}
+				<div
+					className={`${styles.selectContainer} ${styles.selectMaterialContainer}`}
+				>
+					<label className={styles.label}>Maquina:</label>
+					<CreatableSelect
+						styles={selectStyles}
+						name="operation"
+						value={info.selectedOptions?.operation || ''}
+						onChange={(option) => {
+							setFields((prev) => {
+								const updatedPrintTasks = [
+									...prev.printTasks,
+								];
+								updatedPrintTasks[index]['operation'] =
+									option.value;
+								return {
+									...prev,
+									printTasks: updatedPrintTasks,
+								};
+							});
+							setSelectedOptions((prev) => ({
+								...prev,
+								operation: {
+									label: option.label,
+									value: option.value,
+								},
+							}));
+						}}
+						options={info.operationOptions}
+						placeholder={''}
+					/>
+				</div>
+				<Input
+					name="plates"
+					onChange={(e) => changeValue(e)}
+					value={info.plates || ''}
+					size="numberSize"
+				>
+					Chapas:
+				</Input>
+				<div className={styles.lastItem}>
+					<Input
+						name="plateCost"
+						onChange={(e) => changeValue(e)}
+						value={`$ ${info.plateCost || ''}`}
+						isDisabled
+						size="priceSize"
+					>
+						Costo chapas:
+					</Input>
+				</div>
+				{/* </div> */}
 				<div
 					className={styles.printFirstRow}
 					style={{ alignItems: 'flex-end' }}
@@ -405,84 +395,102 @@ function PrintTaskModule({
 							<label className={styles.label}>
 								Frente:
 							</label>
-							<input
-								className={styles.printTaskInput}
+							<textarea
+								className={styles.textArea}
 								name="front"
 								onChange={(e) => changeValue(e)}
 								value={info.front || ''}
-							></input>
+							></textarea>
 						</div>
 						<div>
 							<label className={styles.label}>Dorso:</label>
-							<input
-								className={styles.printTaskInput}
+							<textarea
+								className={styles.textArea}
 								name="back"
 								onChange={(e) => changeValue(e)}
 								value={info.back || ''}
-							></input>
+							></textarea>
 						</div>
 					</div>
-					<Input
-						name="postures"
-						onChange={(e) => changeValue(e)}
-						value={info.postures || ''}
-						size="adjusted"
-					>
-						Posturas:
-					</Input>
-					<Input
-						name="printRun"
-						onChange={(e) => changeValue(e)}
-						value={info.printRun || ''}
-						size="adjusted"
-						isDisabled
-					>
-						Tiraje:
-					</Input>
-					<Input
-						name="postureCost"
-						onChange={(e) => changeValue(e)}
-						value={info.postureCost || ''}
-						size="adjusted"
-						isDisabled
-					>
-						Costo Postura:
-					</Input>
-					<Input
-						name="printCost"
-						onChange={(e) => changeValue(e)}
-						value={info.printCost || ''}
-						size="adjusted"
-						isDisabled
-					>
-						Costo impresion:
-					</Input>
+					<div className={styles.rightRow}>
+						<div className={styles.rightRowContainer}>
+							<Input
+								name="postures"
+								onChange={(e) => changeValue(e)}
+								value={info.postures || ''}
+								size="numberSize"
+							>
+								Posturas:
+							</Input>
+							<Input
+								name="printRun"
+								onChange={(e) => changeValue(e)}
+								value={info.printRun || ''}
+								size="mediumSize"
+								isDisabled
+							>
+								Tiraje:
+							</Input>
+
+							<Input
+								name="postureCost"
+								onChange={(e) => changeValue(e)}
+								value={`$ ${info.postureCost || ''}`}
+								size="priceSize"
+								isDisabled
+							>
+								Costo Postura:
+							</Input>
+						</div>
+						<div className={styles.rightRowContainer}>
+							<Input
+								name="moduleRepeat"
+								onChange={(e) => changeValue(e)}
+								value={info.moduleRepeat}
+								size="numberSize"
+							>
+								Repetir modulo:
+							</Input>
+							<Input
+								name="estimatedCost"
+								onChange={(e) => changeValue(e)}
+								value={`$ ${info.estimatedCost || ''}`}
+								size="priceSize"
+								isDisabled
+							>
+								Costo (estimado):
+							</Input>
+							<Input
+								name="totalCost"
+								onChange={(e) => {
+									changeValue(e);
+									handleManualChange(e);
+								}}
+								value={`$ ${info.totalCost || ''}`}
+								size="priceSize"
+							>
+								Costo modulo:
+							</Input>
+						</div>
+					</div>
 				</div>
-				<div className={styles.printFirstRow}>
-					<Input
-						name="sheetDescription"
-						onChange={(e) => changeValue(e)}
-						value={info.sheetDescription || ''}
-						size="normal"
-					>
-						Descripción del modulo:
-					</Input>
+				{/* <div className={styles.printLastRow}>
 					<Input
 						name="moduleRepeat"
 						onChange={(e) => changeValue(e)}
-						value={info.moduleRepeat || ''}
-						size="normal"
+						value={info.moduleRepeat}
+						size="numberSize"
 					>
-						Repetir costo de impresión:
+						Repetir modulo:
 					</Input>
 					<Input
 						name="estimatedCost"
 						onChange={(e) => changeValue(e)}
-						value={info.estimatedCost || ''}
-						size="adjusted"
+						value={`$ ${info.estimatedCost || ''}`}
+						size="priceSize"
 						isDisabled
 					>
-						Costo modulo (estimado):
+						Costo (estimado):
 					</Input>
 					<Input
 						name="totalCost"
@@ -490,13 +498,20 @@ function PrintTaskModule({
 							changeValue(e);
 							handleManualChange(e);
 						}}
-						value={info.totalCost || ''}
-						size="adjusted"
-						isDisabled
+						value={`$ ${info.totalCost || ''}`}
+						size="priceSize"
 					>
 						Costo modulo:
 					</Input>
 				</div>
+
+				<div className={styles.tintasDiv2}>
+					<label>Frente:</label>
+					<textarea></textarea>
+					<label>Dorso:</label>
+					<textarea></textarea>
+				</div>
+				<div></div> */}
 			</div>
 		</div>
 	);

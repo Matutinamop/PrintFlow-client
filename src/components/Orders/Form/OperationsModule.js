@@ -19,7 +19,9 @@ function OperationsModule({ setFields }) {
 	} = useOperationsModule(setFields);
 
 	return (
-		<div className={styles.block}>
+		<div
+			className={`${styles.block} ${styles.blockPrintTask}`}
+		>
 			<table className={styles.table}>
 				<thead>
 					<tr>

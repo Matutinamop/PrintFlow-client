@@ -8,7 +8,7 @@ import {
 	rolToken,
 } from '../../utilities/functions/login';
 
-function NavBar() {
+function NavBar({ setHideSideBar, hideSideBar }) {
 	const [windowSize, setWindowSize] = useState({
 		width: window.innerWidth,
 		height: window.innerHeight,
@@ -62,7 +62,7 @@ function NavBar() {
 	}, []);
 
 	if (role) {
-		if (windowSize.width < 1000) {
+		if (!windowSize.width < 1000) {
 			return (
 				<div className={styles.navBar}>
 					<div>
@@ -71,7 +71,7 @@ function NavBar() {
 							className={`${styles.burgerMenu} ${
 								menuOpen ? styles.open : ''
 							}`}
-							onClick={() => setMenuOpen(!menuOpen)}
+							onClick={() => setHideSideBar(!hideSideBar)}
 						/>
 						{menuOpen ? (
 							<div

@@ -8,12 +8,17 @@ import OrderItem from '../../pages/admin/Orders/OrderItem';
 import { Switch } from 'wouter';
 import OrderForm from '../../pages/admin/Orders/OrderForm';
 import Login from '../../pages/Login';
+import styles from './main.module.css';
 
-function MainRoutes() {
+function MainRoutes({ hideSideBar }) {
 	const [role, setRole] = useState('ADMIN');
 
 	return (
-		<>
+		<div
+			className={`${styles.mainContent} ${
+				hideSideBar ? styles.fullScreen : ''
+			}`}
+		>
 			<AdminRoutes />
 			<WorkerRoutes />
 			<Route path="/">
@@ -22,7 +27,7 @@ function MainRoutes() {
 			<Route path="/login">
 				<Login />
 			</Route>
-		</>
+		</div>
 	);
 }
 

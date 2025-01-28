@@ -26,6 +26,7 @@ export function Input({
 				)}
 			</label>
 			<input
+				autoComplete="off"
 				disabled={isDisabled}
 				name={name}
 				min={min}
@@ -34,7 +35,9 @@ export function Input({
 				type={type}
 				value={value}
 				onChange={onChange}
-				className={styles.input}
+				className={`${styles.input} ${
+					isDisabled ? styles.disabled : ''
+				}`}
 				required={required}
 			></input>
 		</div>

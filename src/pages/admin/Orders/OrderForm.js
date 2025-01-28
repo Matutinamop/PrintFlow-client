@@ -28,7 +28,7 @@ function OrderForm() {
 
 	const [fields, setFields] = useState({
 		orderNumber: allOrdersCount + 1,
-		printTasks: [{ id: 0 }],
+		printTasks: [{ id: 0, moduleRepeat: 1 }],
 		client: '',
 		otherTasks: [{}],
 	});
@@ -218,14 +218,16 @@ function OrderForm() {
 					<OrderInfoModule
 						fields={fields}
 						clients={clients}
+						setContactInfo={setContactInfo}
+						client={client}
 						setFields={setFields}
 					/>
-					<ClientInfoModule
+					{/* <ClientInfoModule
 						setContactInfo={setContactInfo}
 						client={client}
 						fields={fields}
 						setFields={setFields}
-					/>
+					/> */}
 					<RequestInfoModule
 						fields={fields}
 						setFields={setFields}
@@ -252,7 +254,15 @@ function OrderForm() {
 						setFields={setFields}
 						fields={fields}
 					/>
-					<p>Precio Final: $ {fields.finalPrice}</p>
+					<div
+						style={{
+							display: 'flex',
+							marginTop: '30px',
+							justifyContent: 'flex-end',
+						}}
+					>
+						<p>Precio Final: $ {fields.finalPrice}</p>
+					</div>
 				</div>
 			</div>
 			<Button

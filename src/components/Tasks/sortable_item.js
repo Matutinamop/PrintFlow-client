@@ -13,7 +13,7 @@ export function Item(props) {
 		alignItems: 'center',
 		justifyContent: 'center',
 		border: '1px solid black',
-		margin: '10px 0',
+		margin: '0',
 		background: 'white',
 	};
 

@@ -9,15 +9,66 @@ import {
 	clientStyle,
 	selectStyles,
 } from '../../../utilities/selectStyles/selectStyles';
+import { Description } from '@mui/icons-material';
+import Dropdown from '../../shared/Dropdown';
 
-function OrderInfoModule({ clients, fields, setFields }) {
+function OrderInfoModule({
+	clients,
+	fields,
+	setFields,
+	client,
+	setContactInfo,
+}) {
 	const dispatch = useDispatch();
 
 	const clientOptions = clients?.map((client) => ({
 		key: client._id,
 		value: client._id,
 		label: client.companyName,
+		legalName: client.legalName,
+		address: client.address,
+		phone: client.phone,
 	}));
+	const formatOptionLabel = ({
+		label,
+		legalName,
+		address,
+		phone,
+	}) => (
+		<div
+			style={{ display: 'flex', flexDirection: 'column' }}
+		>
+			<span
+				style={{ fontWeight: 'bold', fontSize: '1rem' }}
+			>
+				{label}
+			</span>
+			<span
+				style={{
+					fontSize: '0.8rem',
+					fontWeight: 'lighter',
+				}}
+			>
+				{legalName}
+			</span>
+			<span
+				style={{
+					fontSize: '0.8rem',
+					fontWeight: 'lighter',
+				}}
+			>
+				{address}
+			</span>
+			<span
+				style={{
+					fontSize: '0.8rem',
+					fontWeight: 'lighter',
+				}}
+			>
+				{phone}
+			</span>
+		</div>
+	);
 
 	const selectClient = (option) => {
 		const clientSelected = clients.find(
@@ -33,11 +84,11 @@ function OrderInfoModule({ clients, fields, setFields }) {
 		<div className={styles.blockContainer}>
 			<div className={styles.leftBlock}>
 				{' '}
-				<label className={styles.label}>
+				<h3 className={styles.sectionTitle}>
 					Familia:
-				</label>{' '}
+				</h3>{' '}
 				<input
-					className={styles.printTaskInput}
+					className={styles.familyInput}
 					name={'product'}
 					onChange={(e) => changeValue(e, setFields)}
 				></input>
@@ -63,34 +114,73 @@ function OrderInfoModule({ clients, fields, setFields }) {
 				/>
 			</div>
 			<div className={styles.rightBlock}>
-				<div className={styles.selectClientContainer}>
-					<label className={styles.label}>Cliente:</label>
-					<CreatableSelect
-						styles={clientStyle}
-						name="client"
-						onChange={(option) => {
-							selectClient(option);
-							dispatch(fetchClientById(option.key));
-						}}
-						options={clientOptions}
-						placeholder={''}
+				<h3 className={styles.sectionTitle}>Cliente:</h3>
+				<CreatableSelect
+					styles={clientStyle}
+					name="client"
+					onChange={(option) => {
+						selectClient(option);
+						dispatch(fetchClientById(option.key));
+					}}
+					options={clientOptions}
+					formatOptionLabel={formatOptionLabel}
+					placeholder={''}
+				/>
+				<div className={styles.blockTitle}>
+					<h3>Información de contacto: </h3>
+					<Dropdown
+						handleIndex={setContactInfo}
+						options={client?.contact?.map(
+							(contact) => contact.name
+						)}
 					/>
 				</div>
-				<input
-					className={styles.clientInput}
-					disabled
-					value={fields.client.legalName}
-				></input>
-				<input
-					className={styles.clientInput}
-					disabled
-					value={fields.client.address}
-				></input>
-				<input
-					className={styles.clientInput}
-					disabled
-					value={fields.client.phone}
-				></input>
+				<div
+					style={{
+						display: 'flex',
+						justifyContent: 'space-between',
+						gap: '5px',
+					}}
+				>
+					<Input
+						name={'contactName'}
+						size="normal"
+						value={
+							fields.contactName ? fields.contactName : ''
+						}
+						onChange={(e) => changeValue(e, setFields)}
+					>
+						Nombre:{' '}
+					</Input>
+					<Input
+						name={'contactPhone'}
+						value={
+							fields.contactPhone ? fields.contactPhone : ''
+						}
+						size="normal"
+						onChange={(e) => changeValue(e, setFields)}
+					>
+						Teléfono:
+					</Input>
+					<Input
+						name={'contactEmail'}
+						value={
+							fields.contactEmail ? fields.contactEmail : ''
+						}
+						size="normal"
+						onChange={(e) => changeValue(e, setFields)}
+					>
+						Email:{' '}
+					</Input>
+				</div>
+			</div>
+			<div className={styles.deliveryContainer}>
+				<h3>Datos de entrega:</h3>
+				<textarea
+					name="deliveryData"
+					onChange={(e) => changeValue(e, setFields)}
+					className={styles.textArea}
+				/>
 			</div>
 		</div>
 	);

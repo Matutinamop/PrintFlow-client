@@ -4,10 +4,12 @@
 	align-items: flex-start;
 	gap: 0.7rem;
 	overflow: visible;
+	/* height: 60px; */
 }
 
 .vertical {
 	flex-direction: column;
+	justify-content: flex-end;
 	width: fit-content;
 	gap: 0;
 }
@@ -16,10 +18,9 @@
 	display: flex;
 
 	align-items: center;
-	margin-bottom: 0.5rem;
+	/* margin-bottom: 5px; */
 	font-size: 18px;
-	font-weight: bold;
-	height: 20px;
+	/* height: 30px; */
 	text-align: center;
 	font-size: 12px;
 }
@@ -60,11 +61,12 @@
 	border-radius: 4px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border-color 0.3s;
+	color: #6d6d6d;
 }
 
 .input {
 	height: 25px;
-	font-size: 11px;
+	font-size: 12px;
 }
 
 .input:focus {
@@ -76,7 +78,27 @@
 	margin-left: 0.2rem;
 }
 
-.small {
+.disabled {
+	background-color: #ddd;
+}
+
+.numberSize {
+	width: 50px;
+}
+
+.mediumSize {
+	width: 90px;
+}
+
+.priceSize {
+	width: 120px;
+}
+
+.bigSize {
+	width: 480px;
+}
+
+/* .small {
 	width: 20%;
 	font-size: 12px;
 }
@@ -94,4 +116,4 @@
 .big {
 	width: 49%;
 	font-size: 12px;
-}
+} */

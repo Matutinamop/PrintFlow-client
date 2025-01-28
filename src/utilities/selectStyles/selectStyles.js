@@ -1,3 +1,5 @@
+import { height, width } from '@mui/system';
+
 export const selectStyles = {
 	control: (provided, state) => ({
 		...provided,
@@ -20,7 +22,7 @@ export const selectStyles = {
 
 	container: (provided, state) => ({
 		...provided,
-		height: '18px',
+		height: '25px',
 	}),
 
 	input: (provided, state) => ({
@@ -38,6 +40,10 @@ export const selectStyles = {
 		...provided,
 		fontSize: '12px',
 	}),
+	menu: (provided, state) => ({
+		...provided,
+		marginTop: '0',
+	}),
 };
 
 export const clientStyle = {
@@ -45,14 +51,32 @@ export const clientStyle = {
 	control: (provided, state) => ({
 		...provided,
 		minHeight: '25px',
-		height: '25px',
 		minWidth: '100%',
+		height: '80px',
 		width: '100%',
 		fontSize: '16px',
 		border: '1px solid #ccc',
 		borderRadius: '4px',
 		boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
 	}),
+	input: (provided, state) => ({
+		...provided,
+	}),
+	valueContainer: (provided, state) => ({
+		...provided,
+		padding: '0 6px',
+	}),
+	container: (provided, state) => ({
+		...provided,
+	}),
+	/* 	option: (provided, state) => ({
+		...provided,
+		backgroundColor: state.isSelected
+			? '#c4c4c4'
+			: state.isFocused
+			? '#F4F4F4'
+			: 'white',
+	}), */
 };
 
 export const operationStyle = {

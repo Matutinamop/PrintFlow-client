@@ -2,30 +2,40 @@
 	position: relative;
 	display: flex;
 	justify-content: space-between;
-	gap: 5px;
+	gap: 2px;
 	flex-wrap: wrap;
-	background-color: rgba(0, 0, 0, 0.05);
+	margin-top: 10px;
+	padding: 5px;
+	background-color: rgba(67, 74, 211, 0.1);
 	border: 1px solid #aaa;
 	border-radius: 5px;
-	margin-top: 10px;
-	padding: 15px;
 }
 
 .blockContainer {
 	display: flex;
+	flex-wrap: wrap;
 	width: 100%;
 	gap: 10px;
+	background-color: rgba(67, 74, 211, 0.1);
+	border: 1px solid #aaa;
+	border-radius: 5px;
 }
 
 .leftBlock,
 .rightBlock {
 	display: flex;
 	flex-direction: column;
-	background-color: rgba(0, 0, 0, 0.05);
-	border: 1px solid #aaa;
-	border-radius: 5px;
-	margin-top: 10px;
-	padding: 15px;
+	justify-content: space-between;
+	padding: 0 5px 0;
+}
+
+.deliveryContainer {
+	padding: 0 5px 0;
+	width: 100%;
+}
+
+.sectionTitle {
+	margin-bottom: 10px;
 }
 
 .leftBlock {
@@ -34,10 +44,13 @@
 
 .rightBlock {
 	flex: 2;
-	gap: 8px;
+	/* gap: 8px; */
 }
 
 .blockPrintTask {
+	background-color: rgba(67, 74, 211, 0.1);
+	border: 1px solid #aaa;
+	border-radius: 5px;
 	z-index: 0;
 }
 
@@ -45,7 +58,8 @@
 	position: relative;
 	display: flex;
 	justify-content: space-between;
-	gap: 5px;
+	gap: 0 5px;
+	padding-top: 20px;
 	flex-wrap: wrap;
 }
 
@@ -78,11 +92,17 @@
 .inputNumber {
 	width: 100%;
 	resize: vertical;
-	min-height: 33px;
+	min-height: 25px;
+	height: 25px;
+	overflow: hidden;
 	padding: 0.5rem;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.textArea {
+	padding: 0.2rem;
 }
 
 /* .datesContainer {
@@ -90,24 +110,40 @@
 	gap: 20px;
 } */
 
+.familyInput {
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: border-color 0.3s;
+	height: 37px;
+	font-size: 16px;
+}
+
 .dateInput {
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border-color 0.3s;
+	height: 37px;
+	font-size: 16px;
+	width: 150px;
 }
 
 .inputNumber {
-	font-weight: bold;
 	width: 50px;
 	height: 14px;
+	color: #6d6d6d;
+}
+
+.printTitle {
+	font-size: 20px;
 }
 
 .closePrintTask {
 	position: absolute;
 	z-index: 1;
-	top: 3px;
-	right: 3px;
+	top: 5px;
+	right: 5px;
 	cursor: pointer;
 }
 
@@ -116,23 +152,32 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	height: 20px;
 	font-size: 12px;
-	margin-bottom: 5px;
-	font-weight: bold;
 }
 
 .printTaskLabel {
 	text-align: center;
 }
 
-.selectContainer,
-.selectClientContainer,
-.selectMaterialContainer {
+.selectContainer {
 	display: flex;
 	flex-direction: column;
-	gap: 3px;
+	justify-content: flex-end;
+	height: 60px;
 	width: 90px;
+}
+
+.smallNumberSelectContainer {
+	width: 50px;
+}
+
+.selectClientContainer {
+	width: 450px;
+	height: 55px;
+}
+
+.selectMaterialContainer {
+	width: 400px;
 }
 
 .clientInput {
@@ -142,15 +187,7 @@
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border-color 0.3s;
 	font-size: 12px;
-}
-
-.selectClientContainer {
-	width: 450px;
-	height: 55px;
-}
-
-.selectMaterialContainer {
-	width: 250px;
+	color: #6d6d6d;
 }
 
 .table {
@@ -191,6 +228,7 @@
 	border-radius: 4px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border-color 0.3s;
+	color: #6d6d6d;
 }
 
 .nameTd {
@@ -216,16 +254,32 @@
 .printLastRow {
 	display: flex;
 	justify-content: space-between;
-	gap: 10px;
+	gap: 5px;
 	width: 100%;
 }
 
-.printFirstRow {
+/* .printFirstRow {
 	margin-top: 20px;
-}
+} */
 
 .printLastRow {
-	margin-bottom: 20px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.rightRow {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	width: 300px;
+	column-gap: 20px;
+}
+
+.rightRowContainer {
+	display: flex;
+	justify-content: space-between;
+	gap: 5px;
+	margin-left: auto;
 }
 
 .lastItem {
@@ -233,6 +287,7 @@
 	flex-direction: column;
 	width: fit-content;
 	margin-left: auto;
+	margin-top: auto;
 }
 
 .printTaskInput {
@@ -244,8 +299,20 @@
 	border-radius: 4px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border-color 0.3s;
+	color: #6d6d6d;
 }
 
 .tintasDiv {
-	width: 250px;
+	margin-top: 10px;
+	width: 400px;
+}
+
+.tintasInput {
+	width: 480px;
+	height: 25px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: border-color 0.3s;
+	color: #6d6d6d;
 }
