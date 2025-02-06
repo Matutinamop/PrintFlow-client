@@ -96,3 +96,28 @@
 .priceInput {
 	width: 120px;
 }
+
+
+@media (max-width: 1000px) {
+	.formContainer {
+		width: 80%;
+	}
+	.labelInput {
+		width: 80%;
+	}
+	.input {
+		width: 200px;
+	}
+
+	.formContainer th {
+		width: 100px;
+	}
+	.priceInput {
+		width: 100px;
+	}
+	.tdButton {
+		margin-top: 5px;
+		width: 100px;
+	}
+
+}
