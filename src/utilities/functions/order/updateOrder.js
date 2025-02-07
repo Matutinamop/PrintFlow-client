@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { today } from '../dates';
 import { format } from 'date-fns';
+import { activateOrder } from './activateOrder';
+import { deactivateOrder } from './deactivateOrder';
 
-export const createNewOrder = async (fields) => {
+export const updateOrder = async (id, fields) => {
 	const {
-		orderNumber,
 		product,
 		client,
 		contactName,
@@ -19,6 +19,7 @@ export const createNewOrder = async (fields) => {
 		descriptionPrivate,
 		printTasks,
 		otherTasks,
+		status,
 	} = fields;
 
 	const tasks = [...printTasks, ...otherTasks];
@@ -38,18 +39,11 @@ export const createNewOrder = async (fields) => {
 			: (budget += task.estimatedCost);
 	});
 
-	const stationsList = tasks.map((task, index) => ({
-		station: task.operation._id ?? task.operation,
-		completed: false,
-		number: index,
-	}));
-
 	const deviation =
 		((budget - budgetEstimate) * 100) / budgetEstimate +
 		'%';
 
 	const body = {
-		orderNumber,
 		product,
 		client,
 		contact: {
@@ -62,7 +56,6 @@ export const createNewOrder = async (fields) => {
 		request:
 			'asdasd' /* aca tengo que ver si va a ir o no en el formulario */,
 		scheme,
-		dateCreated: today(),
 		dateEstimate: format(dateEstimate, 'dd/MM/yy'),
 		dateFinal: dateFinal
 			? format(dateFinal, 'dd/MM/yy')
@@ -71,19 +64,30 @@ export const createNewOrder = async (fields) => {
 		descriptionWork,
 		descriptionPrivate,
 		tasks,
-		stationsList,
 		budgetEstimate,
 		budget,
 		deviation,
+		status,
 		fields,
 	};
 
 	try {
-		const response = await axios.post(
-			`${process.env.REACT_APP_API_URL}/api/order`,
+		const response = await axios.put(
+			`${process.env.REACT_APP_API_URL}/api/order/${id}`,
 			body
 		);
-		return response;
+		if (response) {
+			console.log(response, 'response');
+			if (status === 'En proceso') {
+				activateOrder(response.data.updatedOrder);
+				return;
+			}
+			if (status === 'En espera') {
+				deactivateOrder(id);
+				return;
+			}
+			return;
+		}
 	} catch (error) {
 		console.log(error);
 	}

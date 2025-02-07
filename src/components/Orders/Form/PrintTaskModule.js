@@ -142,7 +142,21 @@ function PrintTaskModule({
 					<CreatableSelect
 						styles={selectStyles}
 						name="material"
-						value={info.selectedOptions?.material || ''}
+						value={
+							info?.materialOptions &&
+							Array.isArray(info.materialOptions)
+								? info.materialOptions.find(
+										(material) =>
+											material.value === info?.material
+								  ) ?? {
+										label: info?.material,
+										value: info?.material,
+								  }
+								: {
+										label: info?.material,
+										value: info?.material,
+								  }
+						}
 						onChange={(option) => {
 							setFields((prev) => {
 								const updatedPrintTasks = [
@@ -174,7 +188,21 @@ function PrintTaskModule({
 					<CreatableSelect
 						styles={selectStyles}
 						name="grammage"
-						value={info.selectedOptions?.grammage || ''}
+						value={
+							info?.grammageOptions &&
+							Array.isArray(info.grammageOptions)
+								? info.grammageOptions.find(
+										(grammage) =>
+											grammage.value === info?.grammage
+								  ) ?? {
+										label: info?.grammage,
+										value: info?.grammage,
+								  }
+								: {
+										label: info?.grammage,
+										value: info?.grammage,
+								  }
+						}
 						onChange={(option) => {
 							setFields((prev) => {
 								const updatedPrintTasks = [
@@ -207,7 +235,19 @@ function PrintTaskModule({
 						styles={selectStyles}
 						name="bulkPaperSize"
 						value={
-							info.selectedOptions?.bulkPaperSize || ''
+							info?.sizeMaterialOptions &&
+							Array.isArray(info.sizeMaterialOptions)
+								? info.sizeMaterialOptions.find(
+										(size) =>
+											size.value === info?.bulkPaperSize
+								  ) ?? {
+										label: info?.bulkPaperSize,
+										value: info?.bulkPaperSize,
+								  }
+								: {
+										label: info?.bulkPaperSize,
+										value: info?.bulkPaperSize,
+								  }
 						}
 						onChange={(option) => {
 							setFields((prev) => {
@@ -240,7 +280,20 @@ function PrintTaskModule({
 					<CreatableSelect
 						styles={selectStyles}
 						name="sheetSize"
-						value={info.selectedOptions?.sheetSize || ''}
+						value={
+							genericOptions &&
+							Array.isArray(genericOptions)
+								? genericOptions.find(
+										(size) => size.value === info?.sheetSize
+								  ) ?? {
+										label: info?.sheetSize,
+										value: info?.sheetSize,
+								  }
+								: {
+										label: info?.sheetSize,
+										value: info?.sheetSize,
+								  }
+						}
 						onChange={(option) => {
 							setFields((prev) => {
 								const updatedPrintTasks = [
@@ -340,7 +393,21 @@ function PrintTaskModule({
 					<CreatableSelect
 						styles={selectStyles}
 						name="operation"
-						value={info.selectedOptions?.operation || ''}
+						value={
+							info.operationOptions &&
+							Array.isArray(info.operationOptions)
+								? info.operationOptions.find(
+										(station) =>
+											station.value === info?.operation
+								  ) ?? {
+										label: info?.operation,
+										value: info?.operation,
+								  }
+								: {
+										label: info?.operation,
+										value: info?.operation,
+								  }
+						}
 						onChange={(option) => {
 							setFields((prev) => {
 								const updatedPrintTasks = [
@@ -426,12 +493,11 @@ function PrintTaskModule({
 								name="printRun"
 								onChange={(e) => changeValue(e)}
 								value={info.printRun || ''}
-								size="mediumSize"
+								size="priceSize"
 								isDisabled
 							>
 								Tiraje:
 							</Input>
-
 							<Input
 								name="postureCost"
 								onChange={(e) => changeValue(e)}

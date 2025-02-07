@@ -9,6 +9,8 @@ import {
 	Tr,
 } from '../shared/Tables';
 import Loader from '../shared/Loader';
+import { IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 
 export function AllClientsList({ clients, loadingClient }) {
 	return (
@@ -27,6 +29,7 @@ export function AllClientsList({ clients, loadingClient }) {
 									<Th size={'big'}>Razon social</Th>
 									<Th size={'small'}>RUT</Th>
 									<Th>Telefono</Th>
+									<th className={styles.editTh}>Editar</th>
 								</Tr>
 							</Thead>
 							<Tbody>
@@ -40,6 +43,19 @@ export function AllClientsList({ clients, loadingClient }) {
 										</Td>
 										<Td size={'small'}>{client?.RUT}</Td>
 										<Td>{client?.phone}</Td>
+										<td className={styles.editTd}>
+											<IconButton
+												style={{ padding: 0 }}
+												/* onClick={() =>
+													handleEditClick(order)
+												} */
+											>
+												<EditIcon
+													fontSize="small"
+													sx={{ color: '#101204' }}
+												/>
+											</IconButton>
+										</td>
 									</Tr>
 								))}
 							</Tbody>

@@ -1,12 +1,26 @@
-import React from 'react'
-import { Redirect, Route } from 'wouter'
+import React from 'react';
+import { Route, Navigate, Routes } from 'react-router-dom';
 
-function PrivateRoute({component: Component, condition, redirectTo, ...rest}) {
-  return (
-    <Route {...rest}>
-        {condition ? <Component/> : <Redirect to={redirectTo}/>}
-    </Route>
-  )
+function PrivateRoute({
+	element,
+	condition,
+	redirectTo,
+	...rest
+}) {
+	return (
+		<Routes>
+			<Route
+				{...rest}
+				element={
+					condition ? (
+						element // Si la condición es verdadera, renderiza el componente
+					) : (
+						<Navigate to={redirectTo} /> // Si no, redirige
+					)
+				}
+			/>
+		</Routes>
+	);
 }
 
-export default PrivateRoute
+export default PrivateRoute;

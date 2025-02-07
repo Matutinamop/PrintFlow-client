@@ -6,8 +6,9 @@ import {
 	operationStyle,
 	selectStyles,
 } from '../../../utilities/selectStyles/selectStyles';
+import { useEffect } from 'react';
 
-function OperationsModule({ setFields }) {
+function OperationsModule({ fields, setFields }) {
 	const {
 		operationsList,
 		manualChange,
@@ -16,7 +17,7 @@ function OperationsModule({ setFields }) {
 		deleteRow,
 		changeValue,
 		handleDirtyField,
-	} = useOperationsModule(setFields);
+	} = useOperationsModule(fields, setFields);
 
 	return (
 		<div
@@ -38,7 +39,7 @@ function OperationsModule({ setFields }) {
 							<td
 								className={`${styles.td} ${styles.nameTd}`}
 							>
-								{op.operation.name}{' '}
+								{op.operation?.name}{' '}
 								<button
 									className={styles.deleteRow}
 									onClick={(e) => deleteRow(index)}

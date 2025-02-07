@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { navigate } from 'wouter/use-browser-location';
+import { useNavigate } from 'react-router-dom';
 
 export async function login(username, pw) {
 	const url = process.env.REACT_APP_API_URL;
@@ -33,11 +33,6 @@ export async function login(username, pw) {
 			error: errorMessage,
 		};
 	}
-}
-
-export async function logout() {
-	localStorage.removeItem('sessionToken');
-	navigate('/');
 }
 
 export function rolToken() {

@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './pages.module.css';
 import { Button, Input } from '@mui/material';
 import { login } from '../utilities/functions/login';
-import { navigate } from 'wouter/use-browser-location';
+import { useNavigate } from 'react-router-dom'; // Cambio aquí
 import { changeValue } from '../utilities/functions/forms/fields';
 
 function Login() {
@@ -12,6 +12,8 @@ function Login() {
 	const usernames =
 		JSON.parse(localStorage.getItem('loggedUsernames')) ||
 		[];
+
+	const navigate = useNavigate(); // Cambio aquí para usar el hook de React Router
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -32,7 +34,7 @@ function Login() {
 		if (res.token) {
 			setError(false);
 			setMessage(res.message);
-			navigate('/task/manager');
+			navigate('/task/manager'); // Cambio aquí para navegar con React Router
 		}
 	};
 

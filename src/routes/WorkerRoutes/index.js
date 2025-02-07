@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TaskManager from '../../pages/TaskManager';
 import LoadingPage from '../../pages/LoadingPage';
-import { Route, Switch } from 'wouter';
+import { Route, Routes } from 'react-router-dom';
 import { rolToken } from '../../utilities/functions/login';
 
 function WorkerRoutes() {
@@ -22,12 +22,12 @@ function WorkerRoutes() {
 			{isLoading ? (
 				<LoadingPage />
 			) : (
-				<Switch>
+				<Routes>
 					<Route
 						path="/task/manager"
-						component={TaskManager}
+						element={<TaskManager />}
 					/>
-				</Switch>
+				</Routes>
 			)}
 		</>
 	);

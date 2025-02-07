@@ -24,6 +24,8 @@ function RequestInfoModule({
 }) {
 	const [selectedFiles, setSelectedFiles] = useState([]);
 
+	console.log(fields);
+
 	/* 	const changePrintTaskCount = (e) => {
 		const newValue = e.target.value;
 		if (newValue >= 0 && newValue <= 10) {

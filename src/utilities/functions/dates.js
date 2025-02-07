@@ -22,7 +22,7 @@ export const today = () => {
 };
 
 export const isUrgent = (order) => {
-	if (order) {
+	if (order.dateFinal) {
 		const { dateFinal, status } = order;
 		if (status === 'En espera' || status === 'En proceso') {
 			const startDate = parseDate(now);

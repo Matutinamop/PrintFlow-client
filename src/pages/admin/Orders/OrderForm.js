@@ -4,18 +4,20 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import OrderInfoModule from '../../../components/Orders/Form/OrderInfoModule';
-import ClientInfoModule from '../../../components/Orders/Form/ClientInfoModule';
 import RequestInfoModule from '../../../components/Orders/Form/RequestInfoModule';
 import PrintTaskModule from '../../../components/Orders/Form/PrintTaskModule';
 import { fetchClients } from '../../../redux/clients/clientsSlice';
-import { Button } from '@mui/material';
+import { Button, Switch } from '@mui/material';
 import { fetchMaterials } from '../../../redux/materials/materialsSlice';
 import { fetchStations } from '../../../redux/workStations/workStationSlice';
 import OperationsModule from '../../../components/Orders/Form/OperationsModule';
-import zIndex from '@mui/material/styles/zIndex';
 import { createNewOrder } from '../../../utilities/functions/order/createNewOrder';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { updateOrder } from '../../../utilities/functions/order/updateOrder';
 
 function OrderForm() {
+	const location = useLocation();
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { allOrdersCount } = useSelector(
 		(state) => state.orders
@@ -24,14 +26,31 @@ function OrderForm() {
 		(state) => state.clients
 	);
 
+	console.log(location.state);
+
 	const today = format(new Date(), 'dd/MM/yyyy');
 
-	const [fields, setFields] = useState({
-		orderNumber: allOrdersCount + 1,
-		printTasks: [{ id: 0, moduleRepeat: 1 }],
-		client: '',
-		otherTasks: [{}],
-	});
+	const [checked, setChecked] = useState(
+		location?.state?.fields.status === 'En proceso'
+			? true
+			: false
+	);
+	const [fields, setFields] = useState(
+		location.state
+			? location.state.fields
+			: {
+					orderNumber: allOrdersCount + 1,
+					printTasks: [{ id: 0, moduleRepeat: 1 }],
+					client: '',
+					otherTasks: [{}],
+					status: checked ? 'En proceso' : 'En espera',
+			  }
+	);
+
+	useEffect(() => {
+		console.log(location.state);
+		console.log(fields);
+	}, [JSON.stringify(fields)]);
 
 	useEffect(() => {
 		dispatch(fetchClients());
@@ -52,87 +71,26 @@ function OrderForm() {
 
 	useEffect(() => {
 		if (client?.contact?.length > 0) {
-			/*{
-			const { name, email, phone } = client?.contact[0];
-
-			setFields((prev) => ({
-				...prev,
-				['contactName']: name,
-				['contactEmail']: email,
-				['contactPhone']: phone,
-			}));
-		} */ setContactInfo(0);
+			setContactInfo(0);
 		}
 	}, [client]);
 
-	/* 	useEffect(() => {
-		console.log(fields);
-	}, [JSON.stringify(fields)]); */
-
-	const createMOP = async () => {
+	const handleSubmit = async (id) => {
 		try {
+			if (location.state) {
+				const res = await updateOrder(id, fields);
+				navigate('/admin/orders/all');
+				return;
+			}
 			const res = await createNewOrder(fields);
-			console.log(res);
+			navigate('/admin/orders/all');
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	/* const selectStyles = {
-		menu: (provided, state) => ({
-			...provided,
-			height: '150px',
-		}),
-
-		menuList: (provided, state) => ({
-			...provided,
-			height: '150px',
-		}),
-
-		control: (provided, state) => ({
-			...provided,
-
-			minHeight: '25px',
-			height: '25px',
-			minWidth: '100%',
-			width: '100%',
-			fontSize: '11px',
-			border: '1px solid #ccc',
-			borderRadius: '4px',
-			boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-		}),
-
-		valueContainer: (provided, state) => ({
-			...provided,
-			height: '25px',
-			padding: '0 6px',
-		}),
-
-		container: (provided, state) => ({
-			...provided,
-			height: '18px',
-		}),
-
-		input: (provided, state) => ({
-			...provided,
-			margin: '0px',
-		}),
-		indicatorSeparator: (state) => ({
-			display: 'none',
-		}),
-		indicatorsContainer: (provided, state) => ({
-			...provided,
-			height: '25px',
-		}),
-		option: (provided, state) => ({
-			...provided,
-			fontSize: '12px',
-		}),
-	}; */
-
 	const newPrintTask = () => {
 		const newTask = { id: fields.printTasks.length };
-		/* console.log(Array.isArray(fields.printTasks)); */
 		setFields((prev) => ({
 			...prev,
 			printTasks: [...prev.printTasks, newTask],
@@ -140,7 +98,6 @@ function OrderForm() {
 	};
 
 	const deletePrintModule = (i) => {
-		/* console.log(i); */
 		const newModules = fields.printTasks.filter(
 			(mod, index) => index !== i
 		);
@@ -150,36 +107,39 @@ function OrderForm() {
 		}));
 	};
 
-	/* 	const changePrintTaskCount = (e) => {
-		const newValue = e.target.value;
-		if (newValue >= 0 && newValue <= 10) {
-			setFields((prevFields) => ({
-				...prevFields,
-				tasks: [...tasks, { [`printTask${newValue}`]: {} }],
-			}));
-		}
-	}; */
+	useEffect(() => {
+		setFields((prev) => ({
+			...prev,
+			status: checked ? 'En proceso' : 'En espera',
+		}));
+	}, [checked]);
+
+	const handleCheck = () => {
+		setChecked(!checked);
+	};
 
 	useEffect(() => {
-		let price = 0;
-		fields.printTasks.map((task) => {
-			if (task.totalCost) {
-				price += Number(task.totalCost);
-			}
-		});
-		fields.otherTasks.map((task) => {
-			if (task.cost) {
-				return (price += Number(task.cost));
-			}
-			if (task.estimatedCost) {
-				return (price += Number(task.estimatedCost));
-			}
-		});
+		if (fields.printTasks) {
+			let price = 0;
+			fields.printTasks.map((task) => {
+				if (task.totalCost) {
+					price += Number(task.totalCost);
+				}
+			});
+			fields.otherTasks.map((task) => {
+				if (task.cost) {
+					return (price += Number(task.cost));
+				}
+				if (task.estimatedCost) {
+					return (price += Number(task.estimatedCost));
+				}
+			});
 
-		price = Math.round(price * 100) / 100;
-		price = price.toFixed(2);
+			price = Math.round(price * 100) / 100;
+			price = price.toFixed(2);
 
-		setFields((prev) => ({ ...prev, finalPrice: price }));
+			setFields((prev) => ({ ...prev, finalPrice: price }));
+		}
 	}, [JSON.stringify(fields)]);
 
 	return (
@@ -211,7 +171,16 @@ function OrderForm() {
 									justifyContent: 'space-between',
 								}}
 							>
-								MOP Nº. <span>{allOrdersCount + 1} </span>
+								{location.state ? (
+									<>
+										MOP Nº. <span>{allOrdersCount} </span>
+									</>
+								) : (
+									<>
+										MOP Nº.{' '}
+										<span>{allOrdersCount + 1} </span>
+									</>
+								)}
 							</p>
 						</div>
 					</div>
@@ -222,12 +191,6 @@ function OrderForm() {
 						client={client}
 						setFields={setFields}
 					/>
-					{/* <ClientInfoModule
-						setContactInfo={setContactInfo}
-						client={client}
-						fields={fields}
-						setFields={setFields}
-					/> */}
 					<RequestInfoModule
 						fields={fields}
 						setFields={setFields}
@@ -258,9 +221,26 @@ function OrderForm() {
 						style={{
 							display: 'flex',
 							marginTop: '30px',
-							justifyContent: 'flex-end',
+							justifyContent: 'space-between',
+							alignItems: 'center',
 						}}
 					>
+						{location.state ? (
+							<div>
+								<label>Orden activa: </label>
+								<Switch
+									sx={{
+										backgroundColor: 'rgba(0,0,0,0.2)',
+										borderRadius: '10px',
+									}}
+									checked={checked}
+									onChange={handleCheck}
+								/>{' '}
+							</div>
+						) : (
+							<div></div>
+						)}
+
 						<p>Precio Final: $ {fields.finalPrice}</p>
 					</div>
 				</div>
@@ -268,9 +248,15 @@ function OrderForm() {
 			<Button
 				variant="contained"
 				color="success"
-				onClick={() => createMOP()}
+				onClick={() =>
+					handleSubmit(location?.state?._id ?? null)
+				}
 			>
-				Crear MOP
+				{location.state ? (
+					<>Guardar Cambios</>
+				) : (
+					<>Crear MOP</>
+				)}
 			</Button>
 		</div>
 	);

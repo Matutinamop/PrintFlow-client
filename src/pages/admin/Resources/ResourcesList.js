@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './resources.module.css';
-import { useDispatch } from 'react-redux';
-import { fetchFilteredMaterials } from '../../../redux/materials/materialsSlice';
 import MaterialsList from '../../../components/Resources/Materials/MaterialsList';
 import OperationsList from '../../../components/Resources/Operations/OperationsList';
 import { Button } from '@mui/material';
 import Modal from '../../../components/shared/Modal';
 import OperationsForm from '../../../components/Resources/Operations/OperationsForm';
-import { fetchOperations } from '../../../redux/operations/operationsSlice';
 import { changeValue } from '../../../utilities/functions/forms/fields';
 import MaterialsForm from '../../../components/Resources/Materials/MaterialsForm';
 
 function ResourcesList() {
-	const dispatch = useDispatch();
-
-	const [modalContent, setModalContent] = useState({});
 	const [openOperationModal, setOpenOperationModal] =
 		useState(false);
 	const [openMaterialModal, setOpenMaterialModal] =
@@ -107,9 +101,9 @@ function ResourcesList() {
 		}),
 	};
 
-	useEffect(() => {
+	/* 	useEffect(() => {
 		console.log(isEditOperation);
-	}, [isEditOperation]);
+	}, [isEditOperation]); */
 
 	return (
 		<div className={styles.resourcesPage}>

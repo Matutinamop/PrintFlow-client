@@ -9,7 +9,7 @@ import {
 import { Input } from '../../../components/shared/Inputs';
 import { AllOrdersList } from '../../../components/Orders/AllOrdersList';
 import Pagination from '../../../components/shared/Pagination';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom'; // Cambiar aquí
 import Button from '../../../components/shared/Button';
 import { rolToken } from '../../../utilities/functions/login';
 
@@ -83,7 +83,7 @@ function OrdersList() {
 					width: '95%',
 				}}
 			>
-				<Link to="./form">
+				<Link to="/admin/orders/form">
 					<Button>Crear</Button>
 				</Link>
 				<div className={styles.ordersListSearch}>

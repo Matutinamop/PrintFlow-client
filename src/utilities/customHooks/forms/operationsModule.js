@@ -4,7 +4,7 @@ import { fetchOperations } from '../../../redux/operations/operationsSlice';
 import { useEffect, useState } from 'react';
 import { costCalculator } from '../../functions/costCalculator';
 
-export const useOperationsModule = (setFields) => {
+export const useOperationsModule = (fields, setFields) => {
 	const dispatch = useDispatch();
 	const { operation, operations } = useSelector(
 		(state) => state.operations
@@ -39,6 +39,21 @@ export const useOperationsModule = (setFields) => {
 	}, [JSON.stringify(operationsList)]);
 
 	useEffect(() => {
+		if (fields.otherTasks.length != 1) {
+			console.log(fields.otherTasks);
+			setOperationsList(
+				fields.otherTasks.map((task) => ({
+					operation: task.operation,
+					description: task.description,
+					unitType: task.unitType,
+					quantity: task.quantity,
+					estimatedCost: task.estimatedCost,
+					cost: task.cost,
+				}))
+			);
+			return;
+		}
+
 		if (!operations || operations.length === 0) return;
 
 		const startingList = operations?.filter(

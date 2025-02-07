@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './nav.module.css';
-import { Link, useLocation } from 'wouter';
+import {
+	Link,
+	useLocation,
+	useNavigate,
+} from 'react-router-dom';
 import Button from '../shared/Button';
 import MenuIcon from '@mui/icons-material/Menu';
-import {
-	logout,
-	rolToken,
-} from '../../utilities/functions/login';
+import { rolToken } from '../../utilities/functions/login';
 
 function NavBar({ setHideSideBar, hideSideBar }) {
 	const [windowSize, setWindowSize] = useState({
@@ -17,7 +18,8 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 	const [role, setRole] = useState();
 	const menuRef = useRef(null);
 	const buttonRef = useRef(null);
-	const [location] = useLocation();
+	const location = useLocation();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		setRole(rolToken());
@@ -61,6 +63,11 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 		};
 	}, []);
 
+	function logout() {
+		localStorage.removeItem('sessionToken');
+		navigate('/');
+	}
+
 	if (role) {
 		if (!windowSize.width < 1000) {
 			return (
@@ -90,7 +97,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 									className={(active) =>
 										active ? styles.active : ''
 									}
-									to="/orders/all"
+									to="/admin/orders/all"
 								>
 									MOPS
 								</Link>
@@ -98,7 +105,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 									className={(active) =>
 										active ? styles.active : ''
 									}
-									to="/clients"
+									to="/admin/clients"
 								>
 									Clientes
 								</Link>
@@ -113,7 +120,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 									className={(active) =>
 										active ? styles.active : ''
 									}
-									to="/resources"
+									to="/admin/resources"
 								>
 									Operaciones y Materiales
 								</Link>
@@ -153,7 +160,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 						className={(active) =>
 							active ? styles.active : ''
 						}
-						to="/orders/all"
+						to="/admin/orders/all"
 					>
 						Mops
 					</Link>
@@ -161,7 +168,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 						className={(active) =>
 							active ? styles.active : ''
 						}
-						to="/clients"
+						to="/admin/clients"
 					>
 						Clientes
 					</Link>
@@ -176,7 +183,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 						className={(active) =>
 							active ? styles.active : ''
 						}
-						to="/resources"
+						to="/admin/resources"
 					>
 						Operaciones y Materiales
 					</Link>

@@ -19,9 +19,9 @@ export function Item(props) {
 
 	return (
 		<div className={styles.task} id={id}>
-			<h4>{task?.name}</h4>
+			<h4>{task?.product}</h4>
 			<div className={styles.content}>
-				{task?.description}
+				{task?.client.companyName}
 			</div>
 		</div>
 	);

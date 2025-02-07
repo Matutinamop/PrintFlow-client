@@ -5,9 +5,8 @@
 	width: 20%;
 	background-color: #2d2e32;
 	color: #edf0f1;
-	transition: left 2s;
+	transition: left 1s ease;
 	z-index: 1;
-	
 }
 
 .sideBarHide {
@@ -21,7 +20,7 @@
 	left: 0;
 	top: 7vh;
 	padding: 20px;
-	
+
 	/* background-color: #24252a; */
 }
 

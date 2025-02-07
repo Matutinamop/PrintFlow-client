@@ -1,57 +1,65 @@
 import React, { useEffect } from 'react';
 import styles from './sideBar.module.css';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'react-router-dom';
 
 function SideBar({ hideSideBar }) {
-	useEffect(() => {
-		console.log(hideSideBar);
-	}, [hideSideBar]);
+	const location = useLocation();
 
 	return (
 		<div
 			className={`${styles.sideBar} 
-				${hideSideBar ? styles.sideBarHide : ''}
-			}`}
+        ${hideSideBar ? styles.sideBarHide : ''}`}
 		>
 			<div
 				className={`${styles.verticalNav} ${styles.navLinks}`}
 			>
 				<Link
-					className={(active) =>
-						active ? styles.active : ''
+					className={
+						location.pathname === '/task/manager'
+							? styles.active
+							: ''
 					}
 					to="/task/manager"
 				>
 					Tareas
 				</Link>
 				<Link
-					className={(active) =>
-						active ? styles.active : ''
+					className={
+						location.pathname === '/orders/all'
+							? styles.active
+							: ''
 					}
-					to="/orders/all"
+					to="/admin/orders/all"
 				>
 					MOPS
 				</Link>
 				<Link
-					className={(active) =>
-						active ? styles.active : ''
+					className={
+						location.pathname === '/clients'
+							? styles.active
+							: ''
 					}
-					to="/clients"
+					to="/admin/clients"
 				>
 					Clientes
 				</Link>
 				<Link
-					className={(active) =>
-						active ? styles.active : ''
+					className={
+						location.pathname === '/users'
+							? styles.active
+							: ''
 					}
+					to="/admin/users"
 				>
 					Usuarios
 				</Link>
 				<Link
-					className={(active) =>
-						active ? styles.active : ''
+					className={
+						location.pathname === '/resources'
+							? styles.active
+							: ''
 					}
-					to="/resources"
+					to="/admin/resources"
 				>
 					Operaciones y Materiales
 				</Link>

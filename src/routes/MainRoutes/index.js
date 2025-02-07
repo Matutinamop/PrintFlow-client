@@ -1,32 +1,69 @@
-import React, { useState } from 'react';
-import { Redirect, Route, Router } from 'wouter';
+import React, { useEffect, useState } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import AdminRoutes from '../AdminRoutes';
 import WorkerRoutes from '../WorkerRoutes';
-import PrivateRoute from '../PrivateRoute';
+import PrivateRoute from '../PrivateRoute'; // Si este componente es necesario, lo podemos adaptar también
 import OrdersList from '../../pages/admin/Orders/OrdersList';
 import OrderItem from '../../pages/admin/Orders/OrderItem';
-import { Switch } from 'wouter';
 import OrderForm from '../../pages/admin/Orders/OrderForm';
 import Login from '../../pages/Login';
 import styles from './main.module.css';
+import TaskManager from '../../pages/TaskManager';
+import { rolToken } from '../../utilities/functions/login';
 
 function MainRoutes({ hideSideBar }) {
-	const [role, setRole] = useState('ADMIN');
+	const [isLoading, setIsLoading] = useState(true);
+	const [isAdmin, setIsAdmin] = useState(false);
+	const [isWorker, setIsWorker] = useState(false);
 
-	return (
+	const role = rolToken();
+
+	useEffect(() => {
+		setIsAdmin(role === 'ADMIN' || role === 'SUPERADMIN');
+		setIsWorker(role === 'WORKER');
+		setIsLoading(false);
+	}, [role]);
+
+	return isLoading ? null : (
 		<div
 			className={`${styles.mainContent} ${
 				hideSideBar ? styles.fullScreen : ''
 			}`}
 		>
-			<AdminRoutes />
-			<WorkerRoutes />
-			<Route path="/">
-				<Redirect to="/task/manager" />
-			</Route>
-			<Route path="/login">
-				<Login />
-			</Route>
+			{' '}
+			<Routes>
+				<Route path="/login" element={<Login />} />
+				<Route
+					path="/"
+					element={
+						<Navigate
+							to={
+								isAdmin
+									? '/admin/orders/all'
+									: isWorker
+									? '/task/manager'
+									: '/login'
+							}
+						/>
+					}
+				/>
+				{isAdmin && (
+					<Route
+						path="/admin/*"
+						element={<AdminRoutes />}
+					/>
+				)}
+				{(isWorker || isAdmin) && (
+					<Route
+						path="/task/manager"
+						element={<TaskManager />}
+					/>
+				)}
+				{/* <Route
+					path="*"
+					element={<Navigate to="/login" />}
+				/> */}
+			</Routes>
 		</div>
 	);
 }

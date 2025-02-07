@@ -208,12 +208,9 @@ function MaterialsForm({
 						<CreatableSelect
 							name="sizes"
 							value={
-								sizesOptions.filter(
-									(size) => (
-										console.log(fields),
-										fields?.sizes.some(
-											(item) => size.value === item
-										)
+								sizesOptions.filter((size) =>
+									fields?.sizes.some(
+										(item) => size.value === item
 									)
 								) ?? ''
 							}
@@ -235,12 +232,9 @@ function MaterialsForm({
 						<CreatableSelect
 							name="grammages"
 							value={
-								grammagesOptions.filter(
-									(grammage) => (
-										console.log(fields),
-										fields?.grammages.some(
-											(item) => grammage.value === item
-										)
+								grammagesOptions.filter((grammage) =>
+									fields?.grammages.some(
+										(item) => grammage.value === item
 									)
 								) ?? ''
 							}

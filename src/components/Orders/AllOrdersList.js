@@ -15,6 +15,9 @@ import {
 import Loader from '../shared/Loader';
 import Dropdown from '../shared/Dropdown';
 import { today } from '../../utilities/functions/dates';
+import { IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router-dom'; // Cambio aquí
 
 export function AllOrdersList({
 	orders,
@@ -28,6 +31,12 @@ export function AllOrdersList({
 		'Completado',
 		'Cancelado',
 	];
+
+	const navigate = useNavigate(); // Cambio aquí
+
+	const handleEditClick = (order) => {
+		navigate('/admin/orders/form', { state: order }); // Cambio aquí
+	};
 
 	return (
 		<div className={styles.allOrders}>
@@ -55,6 +64,7 @@ export function AllOrdersList({
 									<Th>Creado</Th>
 									<Th>Fecha límite</Th>
 									<Th>Presupuesto</Th>
+									<th className={styles.editTh}>Editar</th>
 								</Tr>
 							</Thead>
 							<Tbody>
@@ -75,6 +85,19 @@ export function AllOrdersList({
 										<Td>{order?.dateCreated}</Td>
 										<Td>{order?.dateFinal}</Td>
 										<Td>${order?.budget}</Td>
+										<td className={styles.editTd}>
+											<IconButton
+												style={{ padding: 0 }}
+												onClick={() =>
+													handleEditClick(order)
+												} // Cambio aquí
+											>
+												<EditIcon
+													fontSize="small"
+													sx={{ color: '#101204' }}
+												/>
+											</IconButton>
+										</td>
 									</Tr>
 								))}
 							</Tbody>

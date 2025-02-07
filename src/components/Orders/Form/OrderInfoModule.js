@@ -76,7 +76,10 @@ function OrderInfoModule({
 		);
 		setFields((prev) => ({
 			...prev,
-			client: clientSelected,
+			client: clientSelected || {
+				_id: option.value,
+				name: option.label,
+			},
 		}));
 	};
 
@@ -90,6 +93,7 @@ function OrderInfoModule({
 				<input
 					className={styles.familyInput}
 					name={'product'}
+					value={fields.product ?? ''}
 					onChange={(e) => changeValue(e, setFields)}
 				></input>
 				<label className={styles.label}>
@@ -118,6 +122,20 @@ function OrderInfoModule({
 				<CreatableSelect
 					styles={clientStyle}
 					name="client"
+					value={
+						clientOptions && Array.isArray(clientOptions)
+							? clientOptions.find(
+									(client) =>
+										client.value === fields?.client._id
+							  ) ?? {
+									label: fields?.client.name,
+									value: fields?.client.name,
+							  }
+							: {
+									label: fields?.client.name,
+									value: fields?.client.name,
+							  }
+					}
 					onChange={(option) => {
 						selectClient(option);
 						dispatch(fetchClientById(option.key));
@@ -178,6 +196,7 @@ function OrderInfoModule({
 				<h3>Datos de entrega:</h3>
 				<textarea
 					name="deliveryData"
+					value={fields.deliveryData ?? ''}
 					onChange={(e) => changeValue(e, setFields)}
 					className={styles.textArea}
 				/>
