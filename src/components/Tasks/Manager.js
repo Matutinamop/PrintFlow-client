@@ -23,6 +23,8 @@ import Container from './Container';
 import { Item } from './sortable_item';
 import { fetchTaskById } from '../../redux/tasks/tasksSlice';
 import { fetchActiveOrders } from '../../redux/orders/ordersSlice';
+import NextTasks from './NextTasks';
+import { fetchOperations } from '../../redux/operations/operationsSlice';
 
 function Manager() {
 	const dispatch = useDispatch();
@@ -34,10 +36,19 @@ function Manager() {
 	const { stations, station } = useSelector(
 		(state) => state.workStations
 	);
+
+	const { operations } = useSelector(
+		(state) => state.operations
+	);
 	const { activeOrders } = useSelector(
 		(state) => state.orders
 	);
 	const { task } = useSelector((state) => state.tasks);
+
+	const [openNextTasksModal, setOpenNextTasksModal] =
+		useState({ open: false, info: {} });
+	const [activeOrdersToShow, setActiveOrdersToShow] =
+		useState({ orders: [], station: {} });
 
 	const [infoModal, setInfoModal] = useState({
 		open: false,
@@ -50,9 +61,22 @@ function Manager() {
 	const [destinationIndex, setDestinationIndex] =
 		useState();
 
-	useEffect(() => {
+	const fetchAll = () => {
 		dispatch(fetchStations());
 		dispatch(fetchActiveOrders());
+		dispatch(fetchOperations());
+	};
+
+	useEffect(() => {
+		if (!infoModal.open) {
+			setTimeout(() => {
+				fetchAll();
+			}, 500);
+		}
+	}, [infoModal]);
+
+	useEffect(() => {
+		fetchAll();
 	}, []);
 
 	useEffect(() => {
@@ -61,9 +85,34 @@ function Manager() {
 
 	const handleMoved = async () => {
 		await movingTasks(infoModal.info, newStations);
-
 		setInfoModal({ open: false, info: {} });
 	};
+
+	function selectActiveOrders(station) {
+		const allSelectActiveOrders = activeOrders.filter(
+			(order) =>
+				order.stationsList.some(
+					(st) => st.station.workStation === station._id
+				)
+		);
+
+		console.log(allSelectActiveOrders);
+
+		const finalSelectActiveOrders =
+			allSelectActiveOrders.filter(
+				(order) =>
+					!station.tasks.some(
+						(task) => task._id === order._id
+					) &&
+					!order.stationsList.find(
+						(st) => st.station.workStation === station._id
+					).completed
+			);
+		setActiveOrdersToShow({
+			orders: finalSelectActiveOrders,
+			station: station,
+		});
+	}
 
 	function findContainer(id) {
 		const station = newStations.find(
@@ -221,22 +270,32 @@ function Manager() {
 				draggableId: activeTask._id,
 			};
 
-			setInfoModal({ open: true, info: result });
+			if (
+				stationDestiny._id !== stationSource._id ||
+				(Number.isInteger(destinationIndex) &&
+					Number.isInteger(taskSourceIndex) &&
+					destinationIndex !== taskSourceIndex)
+			) {
+				setInfoModal({ open: true, info: result });
 
-			setDestinationIndex();
+				setDestinationIndex();
 
-			setActiveTask(null);
+				setActiveTask(null);
+			}
+		} else {
+			console.log('ACA SE ABRE EL PDF');
 		}
+		setStationDestiny();
+		setStationSource();
 	}
 
 	return (
 		<div className={styles.taskManager}>
 			<Modal
 				isOpen={infoModal.open}
-				onClose={() => (
-					setInfoModal({ open: false, info: {} }),
-					dispatch(fetchStations())
-				)}
+				onClose={() =>
+					setInfoModal({ open: false, info: {} })
+				}
 				title={'Estás seguro?'}
 			>
 				<p>
@@ -248,13 +307,18 @@ function Manager() {
 				</TextArea>
 				<Button onClick={handleMoved}>Aceptar</Button>
 				<Button
-					onClick={() => (
-						setInfoModal({ open: false, info: {} }),
-						dispatch(fetchStations())
-					)}
+					onClick={() =>
+						setInfoModal({ open: false, info: {} })
+					}
 				>
 					Cancelar
 				</Button>
+			</Modal>
+			<Modal
+				isOpen={openNextTasksModal.open}
+				onClose={() => setOpenNextTasksModal(false)}
+			>
+				<NextTasks activeOrders={activeOrdersToShow} />
 			</Modal>
 			<div className={styles.paperGrid}>
 				<DndContext
@@ -266,6 +330,8 @@ function Manager() {
 				>
 					{newStations?.map((station) => (
 						<Container
+							selectActiveOrders={selectActiveOrders}
+							setOpenNextTasksModal={setOpenNextTasksModal}
 							key={station._id}
 							id={station._id}
 							station={station}

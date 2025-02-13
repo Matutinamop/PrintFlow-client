@@ -62,3 +62,38 @@ export const addTask = async (destination, taskId) => {
 		return error;
 	}
 };
+
+export const updateStationsList = async (
+	stationId,
+	orderId
+) => {
+	/* const { data: station } = await axios.get(
+		`${url}/api/workStation/${stationId}`
+	); */
+	const { data: order } = await axios.get(
+		`${url}/api/order/${orderId}`
+	);
+
+	if (order.order) {
+		const orderTasks = order.order.stationsList.map(
+			(stations) => stations.station.workStation
+		);
+		const taskInStation = orderTasks.some(
+			(id) => id === stationId
+		);
+
+		if (taskInStation) {
+			const newStationsList = order.order.stationsList.map(
+				(station) => {
+					if (station.station.workStation === stationId) {
+						return { ...station, completed: true };
+					}
+					return station;
+				}
+			);
+			await axios.put(`${url}/api/order/${orderId}`, {
+				stationsList: newStationsList,
+			});
+		}
+	}
+};

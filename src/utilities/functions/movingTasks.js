@@ -1,10 +1,20 @@
 import {
 	addTask,
 	removeTask,
+	updateStationsList,
 } from './workStation/updateTasks';
 
 export const movingTasks = (result, newStations) => {
 	const { destination, source, draggableId } = result;
+
+	console.log(
+		'destination',
+		destination,
+		'source',
+		source,
+		'draggableId',
+		draggableId
+	);
 
 	if (!destination || !source || !destination.droppableId)
 		return;
@@ -67,6 +77,10 @@ export const movingTasks = (result, newStations) => {
 
 			if (removedTask) {
 				await addTask(destination, draggableId);
+				await updateStationsList(
+					source.droppableId,
+					draggableId
+				);
 			}
 		} catch (error) {
 			console.error(

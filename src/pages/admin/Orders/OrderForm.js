@@ -26,8 +26,6 @@ function OrderForm() {
 		(state) => state.clients
 	);
 
-	console.log(location.state);
-
 	const today = format(new Date(), 'dd/MM/yyyy');
 
 	const [checked, setChecked] = useState(
@@ -47,10 +45,10 @@ function OrderForm() {
 			  }
 	);
 
-	useEffect(() => {
+	/* 	useEffect(() => {
 		console.log(location.state);
 		console.log(fields);
-	}, [JSON.stringify(fields)]);
+	}, [JSON.stringify(fields)]); */
 
 	useEffect(() => {
 		dispatch(fetchClients());

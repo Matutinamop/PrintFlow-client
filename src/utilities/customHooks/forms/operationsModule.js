@@ -40,7 +40,6 @@ export const useOperationsModule = (fields, setFields) => {
 
 	useEffect(() => {
 		if (fields.otherTasks.length != 1) {
-			console.log(fields.otherTasks);
 			setOperationsList(
 				fields.otherTasks.map((task) => ({
 					operation: task.operation,

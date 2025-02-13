@@ -41,6 +41,7 @@
 	cursor: pointer;
 	color: rgb(243, 81, 81);
 	font-size: 24px;
+	z-index: 5;
 }
 
 .closeButton:hover {

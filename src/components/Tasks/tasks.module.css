@@ -29,6 +29,7 @@
 	flex-direction: column;
 	width: 100%;
 	min-height: 20px;
+	cursor: pointer;
 }
 
 .content {
@@ -36,6 +37,19 @@
 }
 
 .task {
+	margin: 0;
+	padding: 8px 12px 4px;
+	background-color: #24252a;
+	border-radius: 10px;
+	width: 100%;
+	color: #9fadbc;
+	cursor: grab;
+}
+
+.nextTasks {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
 	margin: 0;
 	padding: 8px 12px 4px;
 	background-color: #24252a;

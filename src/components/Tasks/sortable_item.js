@@ -41,6 +41,7 @@ export default function SortableItem(props) {
 			? CSS.Transform.toString(transform)
 			: undefined,
 		transition,
+		cursor: 'grab',
 	};
 
 	return (

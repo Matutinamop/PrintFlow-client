@@ -9,6 +9,7 @@ import {
 import SortableItem from './sortable_item';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Modal from '../shared/Modal';
 
 const containerStyle = {
 	background: '#dadada',
@@ -18,14 +19,22 @@ const containerStyle = {
 };
 
 export default function Container(props) {
-	const { id, items } = props;
+	const {
+		id,
+		station,
+		items,
+		setOpenNextTasksModal,
+		selectActiveOrders,
+	} = props;
 	const [anchorEl, setAnchorEl] = useState(null);
 
-	const handleClick = (event) => {
+	const handleOpenMenu = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
 
-	const handleClose = () => {
+	const handleSelectOption = () => {
+		selectActiveOrders(station);
+		setOpenNextTasksModal({ open: true, info: station });
 		setAnchorEl(null);
 	};
 
@@ -57,14 +66,14 @@ export default function Container(props) {
 						right: 5,
 						color: '#9fadbc',
 					}}
-					onClick={handleClick}
+					onClick={handleOpenMenu}
 				>
 					<MoreVertIcon />
 				</IconButton>
 				<Menu
 					anchorEl={anchorEl}
 					open={Boolean(anchorEl)}
-					onClose={handleClose}
+					onClose={() => setAnchorEl(false)}
 					sx={{
 						'& .MuiMenu-paper': {
 							backgroundColor: '#101204',
@@ -81,7 +90,7 @@ export default function Container(props) {
 						},
 					}}
 				>
-					<MenuItem onClick={handleClose}>
+					<MenuItem onClick={handleSelectOption}>
 						Proximas tareas
 					</MenuItem>
 				</Menu>

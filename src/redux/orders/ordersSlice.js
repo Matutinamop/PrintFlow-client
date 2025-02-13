@@ -39,6 +39,7 @@ const fetchActiveOrders = createAsyncThunk(
 			const response = await axios.get(
 				`${url}/api/order/active`
 			);
+			console.log('ordenes', response.data);
 			return response.data;
 		} catch (error) {
 			console.error(error);
