@@ -105,11 +105,12 @@ function PrintTaskModule({
 						onChange={(e) => changeValue(e)}
 						value={info.sheetDescription || ''}
 						size="bigSize"
+						bold
 					>
 						Descripción del modulo:
 					</Input>
 				</div>
-				{/* <div className={styles.printFirstRow}> */}
+
 				<Input
 					name="quantity"
 					onChange={(e) => changeValue(e)}
@@ -227,8 +228,6 @@ function PrintTaskModule({
 						placeholder={''}
 					/>
 				</div>
-				{/* </div> */}
-				{/* <div className={styles.printRow}> */}
 				<div className={styles.selectContainer}>
 					<label className={styles.label}>Tam. hoja:</label>
 					<CreatableSelect
@@ -353,8 +352,6 @@ function PrintTaskModule({
 				>
 					Demasía:
 				</Input>
-				{/* </div> */}
-				{/* <div className={styles.printLastRow}> */}
 				<Input
 					name="bulkPaperQuantity"
 					onChange={(e) => changeValue(e)}
@@ -384,8 +381,6 @@ function PrintTaskModule({
 						Costo papel:
 					</Input>
 				</div>
-				{/* </div> */}
-				{/* <div className={styles.printRow}> */}
 				<div
 					className={`${styles.selectContainer} ${styles.selectMaterialContainer}`}
 				>
@@ -451,7 +446,6 @@ function PrintTaskModule({
 						Costo chapas:
 					</Input>
 				</div>
-				{/* </div> */}
 				<div
 					className={styles.printFirstRow}
 					style={{ alignItems: 'flex-end' }}
@@ -517,15 +511,15 @@ function PrintTaskModule({
 							>
 								Repetir modulo:
 							</Input>
-							<Input
+							{/* 							<Input
 								name="estimatedCost"
 								onChange={(e) => changeValue(e)}
 								value={`$ ${info.estimatedCost || ''}`}
 								size="priceSize"
 								isDisabled
 							>
-								Costo (estimado):
-							</Input>
+								Costo:
+							</Input> */}
 							<Input
 								name="totalCost"
 								onChange={(e) => {
@@ -534,50 +528,13 @@ function PrintTaskModule({
 								}}
 								value={`$ ${info.totalCost || ''}`}
 								size="priceSize"
+								isDisabled
 							>
 								Costo modulo:
 							</Input>
 						</div>
 					</div>
 				</div>
-				{/* <div className={styles.printLastRow}>
-					<Input
-						name="moduleRepeat"
-						onChange={(e) => changeValue(e)}
-						value={info.moduleRepeat}
-						size="numberSize"
-					>
-						Repetir modulo:
-					</Input>
-					<Input
-						name="estimatedCost"
-						onChange={(e) => changeValue(e)}
-						value={`$ ${info.estimatedCost || ''}`}
-						size="priceSize"
-						isDisabled
-					>
-						Costo (estimado):
-					</Input>
-					<Input
-						name="totalCost"
-						onChange={(e) => {
-							changeValue(e);
-							handleManualChange(e);
-						}}
-						value={`$ ${info.totalCost || ''}`}
-						size="priceSize"
-					>
-						Costo modulo:
-					</Input>
-				</div>
-
-				<div className={styles.tintasDiv2}>
-					<label>Frente:</label>
-					<textarea></textarea>
-					<label>Dorso:</label>
-					<textarea></textarea>
-				</div>
-				<div></div> */}
 			</div>
 		</div>
 	);

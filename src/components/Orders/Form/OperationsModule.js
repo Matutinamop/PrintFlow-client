@@ -81,15 +81,16 @@ function OperationsModule({ fields, setFields }) {
 								<input
 									className={styles.smallInput}
 									name="cost"
-									value={
+									value={`$ ${
 										manualChange[index]
 											? op.cost
 											: op.estimatedCost
-									}
+									}`}
 									onChange={(e) => {
 										handleDirtyField(index);
 										changeValue(e, index);
 									}}
+									disabled
 								/>
 							</td>
 						</tr>

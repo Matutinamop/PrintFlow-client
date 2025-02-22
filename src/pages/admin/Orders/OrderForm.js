@@ -29,7 +29,7 @@ function OrderForm() {
 	const today = format(new Date(), 'dd/MM/yyyy');
 
 	const [checked, setChecked] = useState(
-		location?.state?.fields.status === 'En proceso'
+		location?.state?.fields.status === 'Aceptada'
 			? true
 			: false
 	);
@@ -41,7 +41,8 @@ function OrderForm() {
 					printTasks: [{ id: 0, moduleRepeat: 1 }],
 					client: '',
 					otherTasks: [{}],
-					status: checked ? 'En proceso' : 'En espera',
+					status: checked ? 'Aceptada' : 'Abierta',
+					deviation: 0,
 			  }
 	);
 
@@ -108,7 +109,7 @@ function OrderForm() {
 	useEffect(() => {
 		setFields((prev) => ({
 			...prev,
-			status: checked ? 'En proceso' : 'En espera',
+			status: checked ? 'Aceptada' : 'Abierta',
 		}));
 	}, [checked]);
 
@@ -238,8 +239,28 @@ function OrderForm() {
 						) : (
 							<div></div>
 						)}
-
-						<p>Precio Final: $ {fields.finalPrice}</p>
+						<div style={{ width: '200px' }}>
+							<div>
+								<label>% Desviación:</label>
+								<input
+									name="deviation"
+									style={{ width: '50px' }}
+									type="number"
+									onChange={(e) =>
+										setFields((prev) => ({
+											...prev,
+											[e.target.name]: e.target.value,
+										}))
+									}
+								/>
+							</div>
+							<p>
+								Precio Final: ${' '}
+								{(fields.finalPrice *
+									(100 + parseFloat(fields.deviation))) /
+									100}
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>

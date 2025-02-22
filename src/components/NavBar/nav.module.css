@@ -26,9 +26,14 @@
 .logo {
 	display: flex;
 	align-items: center;
+	gap: 15px;
 	height: 100%;
 	width: 25vw;
 	font-size: 24px;
+}
+
+.matuLogo {
+	height: 50px;
 }
 
 .navLinks {

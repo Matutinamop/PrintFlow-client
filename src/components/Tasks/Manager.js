@@ -71,7 +71,7 @@ function Manager() {
 		if (!infoModal.open) {
 			setTimeout(() => {
 				fetchAll();
-			}, 500);
+			}, 1500);
 		}
 	}, [infoModal]);
 

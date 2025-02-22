@@ -24,7 +24,7 @@ export const today = () => {
 export const isUrgent = (order) => {
 	if (order.dateFinal) {
 		const { dateFinal, status } = order;
-		if (status === 'En espera' || status === 'En proceso') {
+		if (status === 'Abierta' || status === 'Aceptada') {
 			const startDate = parseDate(now);
 			const endDate = parseDate(dateFinal);
 			if (endDate > startDate) {
@@ -47,7 +47,7 @@ export const isWarning = (order) => {
 	if (order) {
 		const { dateEstimate, status } = order;
 
-		if (status === 'En espera' || status === 'En proceso') {
+		if (status === 'Abierta' || status === 'Aceptada') {
 			const startDate = parseDate(now);
 			const endDate = parseDate(dateEstimate);
 			if (dateEstimate > now) {

@@ -58,7 +58,7 @@ export const createNewOrder = async (fields) => {
 			email: contactEmail,
 		},
 		deliveryData,
-		status: 'En espera',
+		status: 'Abierta',
 		request:
 			'asdasd' /* aca tengo que ver si va a ir o no en el formulario */,
 		scheme,

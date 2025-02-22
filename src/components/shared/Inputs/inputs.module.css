@@ -82,6 +82,11 @@
 	background-color: #ddd;
 }
 
+.bold {
+	font-weight: bold;
+	color: black;
+}
+
 .numberSize {
 	width: 50px;
 }
@@ -92,6 +97,10 @@
 
 .priceSize {
 	width: 120px;
+}
+
+.mailSize {
+	width: 250px;
 }
 
 .bigSize {

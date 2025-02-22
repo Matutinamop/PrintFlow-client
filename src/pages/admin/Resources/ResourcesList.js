@@ -138,7 +138,7 @@ function ResourcesList() {
 				/>
 			</Modal>
 			<div className={styles.operationsList}>
-				<h2 className={styles.title}>OPERACIONES</h2>
+				<h2 className={styles.title}>TAREAS</h2>
 				<div className={styles.auxiliarRow}>
 					<div className={styles.inputBox}>
 						<label>Buscar:</label>

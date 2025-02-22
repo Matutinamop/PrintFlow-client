@@ -91,7 +91,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 									}
 									to="/task/manager"
 								>
-									Tareas
+									Estaciones
 								</Link>
 								<Link
 									className={(active) =>
@@ -122,7 +122,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 									}
 									to="/admin/resources"
 								>
-									Operaciones y Materiales
+									Tareas y Materiales
 								</Link>
 								<div onClick={() => logout()}>
 									Cerrar sesión
@@ -132,17 +132,22 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 							''
 						)}
 					</div>
-					<div className={styles.logo}>
-						<Link to="/task/manager">
+					<Link to="/task/manager">
+						<div className={styles.logo}>
+							<img
+								className={styles.matuLogo}
+								src="/assets/logos/logo-matutina.png"
+							/>
 							<h1>Matutina</h1>
-						</Link>
-					</div>
+						</div>
+					</Link>
 				</div>
 			);
 		}
 		return (
 			<div className={styles.nav}>
 				<div className={styles.logo}>
+					<img src="/assets/logos/logo-matutina.png" />
 					<Link to="/task/manager">
 						<h1>Matutina</h1>
 					</Link>
@@ -154,7 +159,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 						}
 						to="/task/manager"
 					>
-						Tareas
+						Estaciones
 					</Link>
 					<Link
 						className={(active) =>
@@ -185,7 +190,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 						}
 						to="/admin/resources"
 					>
-						Operaciones y Materiales
+						Tareas y Materiales
 					</Link>
 				</div>
 				<div className={styles.logout}>

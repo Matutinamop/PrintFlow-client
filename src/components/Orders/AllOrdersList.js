@@ -26,10 +26,11 @@ export function AllOrdersList({
 }) {
 	const statusList = [
 		'Todos',
-		'En proceso',
-		'En espera',
-		'Completado',
-		'Cancelado',
+		'Aceptada',
+		'Abierta',
+		'Finalizada',
+		'Detenida',
+		'Facturada',
 	];
 
 	const navigate = useNavigate(); // Cambio aquí
@@ -57,7 +58,7 @@ export function AllOrdersList({
 										<p>Estado</p>{' '}
 										<Dropdown
 											options={statusList}
-											handleClick={changeStatus}
+											handleSelect={changeStatus}
 											dark
 										/>
 									</Th>

@@ -52,7 +52,7 @@ export const updateOrder = async (id, fields) => {
 			email: contactEmail,
 		},
 		deliveryData,
-		status: 'En espera',
+		status: 'Abierta',
 		request:
 			'asdasd' /* aca tengo que ver si va a ir o no en el formulario */,
 		scheme,
@@ -78,11 +78,11 @@ export const updateOrder = async (id, fields) => {
 		);
 		if (response) {
 			console.log(response, 'response');
-			if (status === 'En proceso') {
+			if (status === 'Aceptada') {
 				activateOrder(response.data.updatedOrder);
 				return;
 			}
-			if (status === 'En espera') {
+			if (status === 'Abierta') {
 				deactivateOrder(id);
 				return;
 			}

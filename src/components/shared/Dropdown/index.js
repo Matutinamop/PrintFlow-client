@@ -15,6 +15,7 @@ function Dropdown({
 	};
 
 	const selectOption = (select, index) => {
+		console.log(select, index);
 		setIsOpen(!isOpen);
 		if (handleSelect) {
 			handleSelect(select);

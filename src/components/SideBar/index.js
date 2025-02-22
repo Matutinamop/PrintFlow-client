@@ -21,7 +21,7 @@ function SideBar({ hideSideBar }) {
 					}
 					to="/task/manager"
 				>
-					Tareas
+					Estaciones
 				</Link>
 				<Link
 					className={
@@ -61,7 +61,7 @@ function SideBar({ hideSideBar }) {
 					}
 					to="/admin/resources"
 				>
-					Operaciones y Materiales
+					Tareas y Materiales
 				</Link>
 			</div>
 		</div>

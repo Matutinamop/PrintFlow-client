@@ -162,7 +162,7 @@ function OrderInfoModule({
 				>
 					<Input
 						name={'contactName'}
-						size="normal"
+						size="priceSize"
 						value={
 							fields.contactName ? fields.contactName : ''
 						}
@@ -175,7 +175,7 @@ function OrderInfoModule({
 						value={
 							fields.contactPhone ? fields.contactPhone : ''
 						}
-						size="normal"
+						size="priceSize"
 						onChange={(e) => changeValue(e, setFields)}
 					>
 						Teléfono:
@@ -185,7 +185,7 @@ function OrderInfoModule({
 						value={
 							fields.contactEmail ? fields.contactEmail : ''
 						}
-						size="normal"
+						size="mailSize"
 						onChange={(e) => changeValue(e, setFields)}
 					>
 						Email:{' '}
