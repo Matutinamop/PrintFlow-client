@@ -256,9 +256,10 @@ function OrderForm() {
 							</div>
 							<p>
 								Precio Final: ${' '}
-								{(fields.finalPrice *
-									(100 + parseFloat(fields.deviation))) /
-									100}
+								{Math.round(
+									fields.finalPrice *
+										(100 + parseFloat(fields.deviation))
+								) / 100}
 							</p>
 						</div>
 					</div>

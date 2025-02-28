@@ -77,6 +77,7 @@ export const movingTasks = (result, newStations) => {
 
 			if (removedTask) {
 				await addTask(destination, draggableId);
+
 				await updateStationsList(
 					source.droppableId,
 					draggableId

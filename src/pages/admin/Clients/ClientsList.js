@@ -20,6 +20,16 @@ function ClientsList() {
 	const [totalPages, setTotalPages] = useState(0);
 	const [openClientModal, setOpenClientModal] =
 		useState(false);
+	const [fields, setFields] = useState({
+		contact: [
+			{
+				name: '',
+				phone: '',
+				email: '',
+			},
+		],
+	});
+	const [isEdit, setIsEdit] = useState(false);
 
 	useEffect(() => {
 		const pages = Math.ceil(clientsCount / 50);
@@ -62,9 +72,17 @@ function ClientsList() {
 		<div className={styles.clientsList}>
 			<Modal
 				isOpen={openClientModal}
-				onClose={() => setOpenClientModal(false)}
+				onClose={() => (
+					setOpenClientModal(false), setIsEdit(false)
+				)}
 			>
-				<ClientsForm></ClientsForm>
+				<ClientsForm
+					setOpenModal={setOpenClientModal}
+					fields={fields}
+					setFields={setFields}
+					isEdit={isEdit}
+					setIsEdit={setIsEdit}
+				/>
 			</Modal>
 			<h2 className={styles.allOrdersTitle}>
 				LISTA DE CLIENTES
@@ -95,6 +113,9 @@ function ClientsList() {
 			<AllClientsList
 				loadingClient={loadingClient}
 				clients={clients}
+				setFields={setFields}
+				setIsEdit={setIsEdit}
+				setOpenModal={setOpenClientModal}
 			/>
 			<Pagination
 				count={clientsCount}

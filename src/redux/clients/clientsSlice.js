@@ -66,6 +66,11 @@ const fetchClientById = createAsyncThunk(
 const clientSlice = createSlice({
 	name: 'client',
 	initialState,
+	reducers: {
+		cleanClient: (state) => {
+			state.client = {};
+		},
+	},
 	extraReducers: (builder) => {
 		builder.addCase(fetchClients.pending, (state) => {
 			state.loadingClient = true;
@@ -127,6 +132,7 @@ const clientSlice = createSlice({
 });
 
 export const { reducer: clientReducer } = clientSlice;
+export const { cleanClient } = clientSlice.actions;
 export {
 	fetchClients,
 	fetchClientById,
