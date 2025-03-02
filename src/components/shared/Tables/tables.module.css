@@ -58,6 +58,11 @@
 	flex-shrink: 0;
 }
 
+.sizeNumber {
+	width: 65px;
+	text-align: center;
+}
+
 .tr:nth-child(odd) {
 	background-color: rgba(0, 0, 0, 0.15);
 }

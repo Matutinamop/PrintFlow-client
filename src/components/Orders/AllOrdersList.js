@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './orders.module.css';
 import { Table, Tbody, Td, Th, Thead, Tr } from '../shared/Tables';
 import { isUrgent, isWarning } from '../../utilities/functions/dates';
@@ -9,8 +9,16 @@ import { IconButton } from '@mui/material';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom'; // Cambio aquí
+import { createOrderPDF } from '../../utilities/PDF/orderPDF';
+import WorkShopOrder from './WorkshopOrder';
+import Modal from '../shared/Modal';
 
 export function AllOrdersList({ orders, ordersLoading, changeStatus }) {
+  const [workshopOrderModal, setWorkshopOrderModal] = useState({
+    open: false,
+    order: {},
+  });
+
   const statusList = [
     'Todos',
     'Aceptada',
@@ -26,8 +34,19 @@ export function AllOrdersList({ orders, ordersLoading, changeStatus }) {
     navigate('/admin/orders/form', { state: order }); // Cambio aquí
   };
 
+  const createOrder = (order) => {
+    setWorkshopOrderModal({ open: true, order: order });
+  };
+
+  const closeWorkshopModal = () => {
+    setWorkshopOrderModal((prev) => ({ ...prev, open: false }));
+  };
+
   return (
     <div className={styles.allOrders}>
+      <Modal isOpen={workshopOrderModal.open} onClose={closeWorkshopModal}>
+        <WorkShopOrder order={workshopOrderModal.order} />
+      </Modal>
       <div className={styles.allOrdersTable}>
         {ordersLoading ? (
           <div className={styles.loader}>
@@ -38,9 +57,9 @@ export function AllOrdersList({ orders, ordersLoading, changeStatus }) {
             <Table>
               <Thead>
                 <Tr>
-                  <Th size={'small'}>Nº orden</Th>
+                  <Th size={'sizeNumber'}>Nº MOP</Th>
                   <Th>Producto</Th>
-                  <Th size={'big'}>Cliente</Th>
+                  <Th>Cliente</Th>
                   <Th>
                     <p>Estado</p>{' '}
                     <Dropdown
@@ -65,18 +84,21 @@ export function AllOrdersList({ orders, ordersLoading, changeStatus }) {
                     warning={isWarning(order)}
                     urgent={isUrgent(order)}
                   >
-                    <Td size={'small'}>{order?.orderNumber}</Td>
+                    <Td size={'sizeNumber'}>{order?.orderNumber}</Td>
                     <Td>{order?.product}</Td>
-                    <Td size={'big'}>{order?.client?.companyName}</Td>
+                    <Td>{order?.client?.companyName}</Td>
                     <Td>{order?.status}</Td>
                     <Td>{order?.dateCreated}</Td>
-                    <Td>{order?.dateFinal}</Td>
+                    <Td>{order?.dateFinal ?? '-'}</Td>
                     <Td>${order?.budget}</Td>
                     <Td>
-                      <PictureAsPdfIcon color='error' /* fontSize='large' */ />
+                      <PictureAsPdfIcon
+                        color='error'
+                        onClick={() => createOrder(order)}
+                      />
                     </Td>
                     <Td>
-                      <PictureAsPdfIcon color='error' /* fontSize='large' */ />
+                      <PictureAsPdfIcon color='error' />
                     </Td>
                     <td className={styles.editTd}>
                       <IconButton
