@@ -63,6 +63,19 @@
 	text-align: center;
 }
 
+.sizeStatus,
+.sizeDate {
+	width: 100px;
+}
+
+.sizePDF {
+	width: 70px;
+}
+
+.sizeClient {
+	width: 450px;
+}
+
 .tr:nth-child(odd) {
 	background-color: rgba(0, 0, 0, 0.15);
 }

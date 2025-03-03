@@ -1,3 +1,46 @@
+.a4Sheet {
+	width: 800px;
+	/* min-height: 980px; */
+	/* border: 1px solid black; */
+	background-color: white;
+	margin: 2% auto; /* Centramos la hoja */
+	color: black;
+}
+
+.documentContent {
+	width: 100%;
+	height: 100%;
+	padding: 20px 20px 40px;
+	box-sizing: border-box;
+}
+
+.mopHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.headerBlock {
+	width: 280px;
+}
+
+.infoHeader {
+	display: flex;
+	flex-direction: column;
+	font-size: 12px;
+}
+
+.creatableSubstitute {
+	border: 1px solid #ccc;
+	height: 25px;
+	border-radius: 4px;
+	padding: 3px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: border-color 0.3s;
+	background-color: white;
+}
+
 .block {
 	position: relative;
 	display: flex;
@@ -16,6 +59,7 @@
 	flex-wrap: wrap;
 	width: 100%;
 	gap: 10px;
+	padding: 5px;
 	background-color: rgba(67, 74, 211, 0.1);
 	border: 1px solid #aaa;
 	border-radius: 5px;
@@ -26,26 +70,25 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	padding: 0 5px 0;
 }
 
 .deliveryContainer {
-	padding: 0 5px 0;
 	width: 100%;
 }
 
 .sectionTitle {
 	margin-bottom: 10px;
 }
-/* 
-.leftBlock {
+
+/* .leftBlock {
 	flex: 1;
+}
+
+.rightBlock {
+	flex: 2;
+	
 } */
 
-/* .rightBlock {
-	flex: 2;
-}
- */
 .blockPrintTask {
 	background-color: rgba(67, 74, 211, 0.1);
 	border: 1px solid #aaa;
@@ -58,7 +101,7 @@
 	display: flex;
 	justify-content: space-between;
 	gap: 0 5px;
-	padding-top: 20px;
+	padding-top: 8px;
 	flex-wrap: wrap;
 }
 
@@ -87,31 +130,35 @@
 	gap: 10px;
 }
 
-.textArea,
-.inputNumber {
+.textArea {
+	display: flex;
+	align-items: center;
 	width: 100%;
-	resize: vertical;
 	min-height: 25px;
-	height: 25px;
-	overflow: hidden;
 	padding: 0.5rem;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	background-color: white;
 	white-space: pre-wrap;
+	word-break: break-word;
 }
 
-.textArea {
-	padding: 0.2rem;
-}
+/* .datesContainer {
+	display: flex;
+	gap: 20px;
+} */
 
 .familyInput {
 	border: 1px solid #ccc;
 	border-radius: 4px;
+	background-color: white;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border-color 0.3s;
 	height: 37px;
-	font-size: 16px;
+	width: 200px;
+	font-size: 18px;
+	padding: 5px;
 }
 
 .dateInput {
@@ -120,7 +167,7 @@
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border-color 0.3s;
 	height: 37px;
-	font-size: 16px;
+	font-size: 14px;
 	width: 150px;
 }
 
@@ -147,7 +194,7 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	font-size: 12px;
+	font-size: 11px;
 }
 
 .printTaskLabel {
@@ -158,7 +205,7 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
-	height: 60px;
+	/* height: 60px; */
 	width: 90px;
 }
 
@@ -167,16 +214,16 @@
 }
 
 .selectClientContainer {
-	width: 450px;
+	width: 400px;
 	height: 55px;
 }
 
 .selectMaterialContainer {
-	width: 400px;
+	width: 260px;
 }
 
 .clientInput {
-	width: 450px;
+	width: 400px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -186,6 +233,7 @@
 }
 
 .table {
+	/* z-index: 5; */
 	font-size: 14px;
 	font-weight: 400;
 }
@@ -199,6 +247,17 @@
 	transition: border-color 0.3s;
 	height: 100%;
 	vertical-align: center;
+}
+
+.inputWorkshop {
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	background-color: white;
+	font-size: 14px;
+	padding: 2px 5px;
+	margin-bottom: 5px;
+	min-height: 20px;
 }
 
 .input,
@@ -252,12 +311,19 @@
 	width: 100%;
 }
 
+/* .printFirstRow {
+	margin-top: 20px;
+} */
+
 .printLastRow {
 	display: flex;
 	justify-content: flex-end;
 }
 
 .rightRow {
+	/* 	display: flex;
+	flex-wrap: wrap; */
+	/* 	justify-content: space-between; */
 	width: 300px;
 	column-gap: 20px;
 }
@@ -266,6 +332,7 @@
 	display: flex;
 	justify-content: space-between;
 	gap: 5px;
+	/* margin-left: auto; */
 }
 
 .lastItem {
@@ -301,8 +368,4 @@
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border-color 0.3s;
 	color: #6d6d6d;
-}
-
-.inputError {
-	border: 1px solid red;
 }

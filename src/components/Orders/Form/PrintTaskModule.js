@@ -12,6 +12,7 @@ import { selectStyles } from '../../../utilities/selectStyles/selectStyles';
 function PrintTaskModule({
 	fields,
 	setFields,
+	formErrors,
 	module,
 	info,
 	index,
@@ -73,6 +74,15 @@ function PrintTaskModule({
 		manualChanges
 	);
 
+	const checkError = (fieldName) => {
+		return formErrors.some(
+			(err) =>
+				err.path.includes(fieldName) &&
+				err.path.includes('printTasks') &&
+				err.path.includes(index)
+		);
+	};
+
 	return (
 		<div
 			className={`${styles.block} ${styles.blockPrintTask}`}
@@ -116,6 +126,7 @@ function PrintTaskModule({
 					onChange={(e) => changeValue(e)}
 					value={info.quantity || ''}
 					size="mediumSize"
+					error={checkError('quantity')}
 				>
 					Unidades:{' '}
 				</Input>
@@ -124,6 +135,7 @@ function PrintTaskModule({
 					onChange={(e) => changeValue(e)}
 					value={info.finalSize || ''}
 					size="mediumSize"
+					error={checkError('finalSize')}
 				>
 					Medida Final{' '}
 				</Input>
@@ -132,6 +144,7 @@ function PrintTaskModule({
 					onChange={(e) => changeValue(e)}
 					value={info.sizeWithMargins || ''}
 					size="mediumSize"
+					error={checkError('sizeWithMargins')}
 				>
 					Medida con márgenes
 				</Input>
@@ -349,6 +362,7 @@ function PrintTaskModule({
 					onChange={(e) => changeValue(e)}
 					value={info.excess || ''}
 					size="numberSize"
+					error={checkError('excess')}
 				>
 					Demasía:
 				</Input>
@@ -388,6 +402,7 @@ function PrintTaskModule({
 					<CreatableSelect
 						styles={selectStyles}
 						name="operation"
+						menuPortalTarget={document.body}
 						value={
 							info.operationOptions &&
 							Array.isArray(info.operationOptions)
@@ -432,6 +447,7 @@ function PrintTaskModule({
 					onChange={(e) => changeValue(e)}
 					value={info.plates || ''}
 					size="numberSize"
+					error={checkError('plates')}
 				>
 					Chapas:
 				</Input>
@@ -480,6 +496,7 @@ function PrintTaskModule({
 								onChange={(e) => changeValue(e)}
 								value={info.postures || ''}
 								size="numberSize"
+								error={checkError('postures')}
 							>
 								Posturas:
 							</Input>
@@ -508,18 +525,10 @@ function PrintTaskModule({
 								onChange={(e) => changeValue(e)}
 								value={info.moduleRepeat}
 								size="numberSize"
+								error={checkError('moduleRepeat')}
 							>
 								Repetir modulo:
 							</Input>
-							{/* 							<Input
-								name="estimatedCost"
-								onChange={(e) => changeValue(e)}
-								value={`$ ${info.estimatedCost || ''}`}
-								size="priceSize"
-								isDisabled
-							>
-								Costo:
-							</Input> */}
 							<Input
 								name="totalCost"
 								onChange={(e) => {

@@ -25,6 +25,7 @@ import { fetchTaskById } from '../../redux/tasks/tasksSlice';
 import { fetchActiveOrders } from '../../redux/orders/ordersSlice';
 import NextTasks from './NextTasks';
 import { fetchOperations } from '../../redux/operations/operationsSlice';
+import WorkShopOrder from '../Orders/WorkshopOrder';
 
 function Manager() {
 	const dispatch = useDispatch();
@@ -47,6 +48,7 @@ function Manager() {
 
 	const [openNextTasksModal, setOpenNextTasksModal] =
 		useState({ open: false, info: {} });
+	const [openOrderModal, setOpenOrderModal] = useState({});
 	const [activeOrdersToShow, setActiveOrdersToShow] =
 		useState({ orders: [], station: {} });
 
@@ -283,7 +285,7 @@ function Manager() {
 				setActiveTask(null);
 			}
 		} else {
-			console.log('ACA SE ABRE EL PDF');
+			setOpenOrderModal({ open: true, order: activeTask });
 		}
 		setStationDestiny();
 		setStationSource();
@@ -318,7 +320,17 @@ function Manager() {
 				isOpen={openNextTasksModal.open}
 				onClose={() => setOpenNextTasksModal(false)}
 			>
-				<NextTasks activeOrders={activeOrdersToShow} />
+				<NextTasks
+					activeOrders={activeOrdersToShow}
+					setOpenModal={setOpenNextTasksModal}
+					setOpenOrder={setOpenOrderModal}
+				/>
+			</Modal>
+			<Modal
+				isOpen={openOrderModal.open}
+				onClose={() => setOpenOrderModal({ open: false })}
+			>
+				<WorkShopOrder order={openOrderModal.order} />
 			</Modal>
 			<div className={styles.paperGrid}>
 				<DndContext

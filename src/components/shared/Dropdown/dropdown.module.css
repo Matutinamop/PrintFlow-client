@@ -1,8 +1,9 @@
 .dropdown {
 	position: relative;
 	display: inline-block;
-	width: 50px;
-	z-index: 3;
+	width: 25px;
+	height: 25px;
+	/* z-index: 3; */
 }
 
 .dropdownBtn {
@@ -28,12 +29,16 @@
 	padding: 0; /* Sin padding */
 	list-style: none; /* Sin estilo de lista */
 	font-size: 14px;
+	border-radius: 4px;
 }
 
 .dropdownMenu li {
 	color: black;
-	padding: 10px 15px; /* Espaciado de las opciones */
-	cursor: pointer; /* Cursor de puntero */
+	padding: 5px;
+	cursor: pointer;
+	white-space: nowrap; /* Previene el salto de línea */
+	overflow: hidden; /* Oculta el desbordamiento */
+	text-overflow: ellipsis; /* Muestra "..." si el texto es muy largo */
 }
 
 .dropdownMenu li:hover {

@@ -20,6 +20,7 @@ export const updateOrder = async (id, fields) => {
 		printTasks,
 		otherTasks,
 		status,
+		deviation,
 	} = fields;
 
 	const tasks = [...printTasks, ...otherTasks];
@@ -38,10 +39,6 @@ export const updateOrder = async (id, fields) => {
 			? (budget += Number(task.cost))
 			: (budget += task.estimatedCost);
 	});
-
-	const deviation =
-		((budget - budgetEstimate) * 100) / budgetEstimate +
-		'%';
 
 	const body = {
 		product,
@@ -66,7 +63,7 @@ export const updateOrder = async (id, fields) => {
 		tasks,
 		budgetEstimate,
 		budget,
-		deviation,
+		deviation: `${deviation} %`,
 		status,
 		fields,
 	};
@@ -76,8 +73,7 @@ export const updateOrder = async (id, fields) => {
 			`${process.env.REACT_APP_API_URL}/api/order/${id}`,
 			body
 		);
-		if (response) {
-			console.log(response, 'response');
+		/* if (response) {
 			if (status === 'Aceptada') {
 				activateOrder(response.data.updatedOrder);
 				return;
@@ -87,8 +83,22 @@ export const updateOrder = async (id, fields) => {
 				return;
 			}
 			return;
-		}
+		} */
 	} catch (error) {
 		console.log(error);
+	}
+};
+
+export const acceptOrder = async (id) => {
+	try {
+		const response = await axios.put(
+			`${process.env.REACT_APP_API_URL}/api/order/${id}`,
+			{ status: 'Aceptada' }
+		);
+		if (response) {
+			activateOrder(response.data.updatedOrder);
+		}
+	} catch (error) {
+		console.error(error);
 	}
 };

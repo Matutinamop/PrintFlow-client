@@ -8,7 +8,11 @@ import {
 } from '../../../utilities/selectStyles/selectStyles';
 import { useEffect } from 'react';
 
-function OperationsModule({ fields, setFields }) {
+function OperationsModule({
+	fields,
+	setFields,
+	formErrors,
+}) {
 	const {
 		operationsList,
 		manualChange,
@@ -18,6 +22,19 @@ function OperationsModule({ fields, setFields }) {
 		changeValue,
 		handleDirtyField,
 	} = useOperationsModule(fields, setFields);
+
+	const checkError = (fieldName, index) => {
+		console.log(
+			'error?',
+			formErrors.some((err) => err.path.includes(fieldName))
+		);
+		return formErrors.some(
+			(err) =>
+				err.path.includes(fieldName) &&
+				err.path.includes('otherTasks') &&
+				err.path.includes(index)
+		);
+	};
 
 	return (
 		<div
@@ -69,7 +86,11 @@ function OperationsModule({ fields, setFields }) {
 							</td>
 							<td>
 								<input
-									className={styles.smallInput}
+									className={`${styles.smallInput} ${
+										checkError('quantity', index)
+											? styles.inputError
+											: ''
+									}`}
 									name="quantity"
 									value={op?.quantity ?? ''}
 									onChange={(e) => {

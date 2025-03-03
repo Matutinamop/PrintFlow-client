@@ -15,6 +15,7 @@ export function Input({
 	min = '0',
 	max,
 	bold,
+	error,
 }) {
 	return (
 		<div
@@ -38,7 +39,9 @@ export function Input({
 				onChange={onChange}
 				className={`${styles.input} ${
 					isDisabled ? styles.disabled : ''
-				} ${bold ? styles.bold : ''}`}
+				} ${bold ? styles.bold : ''} ${
+					error ? styles.inputError : ''
+				}`}
 				required={required}
 			></input>
 		</div>

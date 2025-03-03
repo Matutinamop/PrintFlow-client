@@ -6,7 +6,10 @@ import { format } from 'date-fns';
 import OrderInfoModule from '../../../components/Orders/Form/OrderInfoModule';
 import RequestInfoModule from '../../../components/Orders/Form/RequestInfoModule';
 import PrintTaskModule from '../../../components/Orders/Form/PrintTaskModule';
-import { fetchClients } from '../../../redux/clients/clientsSlice';
+import {
+	cleanClient,
+	fetchClients,
+} from '../../../redux/clients/clientsSlice';
 import { Button, Switch } from '@mui/material';
 import { fetchMaterials } from '../../../redux/materials/materialsSlice';
 import { fetchStations } from '../../../redux/workStations/workStationSlice';
@@ -14,6 +17,7 @@ import OperationsModule from '../../../components/Orders/Form/OperationsModule';
 import { createNewOrder } from '../../../utilities/functions/order/createNewOrder';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { updateOrder } from '../../../utilities/functions/order/updateOrder';
+import { orderSchema } from '../../../utilities/validations/orderForm';
 
 function OrderForm() {
 	const location = useLocation();
@@ -33,6 +37,7 @@ function OrderForm() {
 			? true
 			: false
 	);
+	const [formErrors, setFormErrors] = useState([]);
 	const [fields, setFields] = useState(
 		location.state
 			? location.state.fields
@@ -55,10 +60,12 @@ function OrderForm() {
 		dispatch(fetchClients());
 		dispatch(fetchMaterials());
 		dispatch(fetchStations());
+		dispatch(cleanClient());
 	}, []);
 
 	const setContactInfo = (index) => {
-		const { name, email, phone } = client?.contact[index];
+		const { name, email, phone } =
+			fields.client?.contact[index];
 
 		setFields((prev) => ({
 			...prev,
@@ -69,12 +76,20 @@ function OrderForm() {
 	};
 
 	useEffect(() => {
-		if (client?.contact?.length > 0) {
+		if (fields.client?.contact?.length > 0) {
 			setContactInfo(0);
 		}
-	}, [client]);
+	}, [fields.client]);
 
 	const handleSubmit = async (id) => {
+		const result = orderSchema.validate(fields, {
+			abortEarly: false,
+		});
+		if (result.error) {
+			return setFormErrors(
+				result.error.details.map((err) => err)
+			);
+		}
 		try {
 			if (location.state) {
 				const res = await updateOrder(id, fields);
@@ -184,6 +199,7 @@ function OrderForm() {
 						</div>
 					</div>
 					<OrderInfoModule
+						formErrors={formErrors}
 						fields={fields}
 						clients={clients}
 						setContactInfo={setContactInfo}
@@ -191,11 +207,13 @@ function OrderForm() {
 						setFields={setFields}
 					/>
 					<RequestInfoModule
+						formErrors={formErrors}
 						fields={fields}
 						setFields={setFields}
 					/>
 					{fields?.printTasks?.map((task, index) => (
 						<PrintTaskModule
+							formErrors={formErrors}
 							info={task}
 							key={index}
 							fields={fields}
@@ -213,6 +231,7 @@ function OrderForm() {
 						Nuevo modulo de impresión
 					</Button>
 					<OperationsModule
+						formErrors={formErrors}
 						setFields={setFields}
 						fields={fields}
 					/>
@@ -224,27 +243,33 @@ function OrderForm() {
 							alignItems: 'center',
 						}}
 					>
-						{location.state ? (
-							<div>
-								<label>Orden activa: </label>
-								<Switch
-									sx={{
+						<div>
+							{formErrors.map((err, index) => (
+								<p
+									key={index}
+									style={{
+										color: 'red',
+										fontSize: '11px',
 										backgroundColor: 'rgba(0,0,0,0.2)',
-										borderRadius: '10px',
+										borderRadius: '4px',
+										margin: '2px 0',
 									}}
-									checked={checked}
-									onChange={handleCheck}
-								/>{' '}
-							</div>
-						) : (
-							<div></div>
-						)}
+								>
+									{err.message}
+								</p>
+							))}
+						</div>
+
 						<div style={{ width: '200px' }}>
 							<div>
 								<label>% Desviación:</label>
 								<input
 									name="deviation"
-									style={{ width: '50px' }}
+									value={fields.deviation || ''}
+									style={{
+										width: '50px',
+										fontWeight: 'bold',
+									}}
 									type="number"
 									onChange={(e) =>
 										setFields((prev) => ({

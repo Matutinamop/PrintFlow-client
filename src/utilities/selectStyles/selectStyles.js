@@ -1,9 +1,9 @@
+import zIndex from '@mui/material/styles/zIndex';
 import { height, width } from '@mui/system';
 
 export const selectStyles = {
 	control: (provided, state) => ({
 		...provided,
-
 		minHeight: '25px',
 		height: '25px',
 		minWidth: '100%',
@@ -43,7 +43,14 @@ export const selectStyles = {
 	menu: (provided, state) => ({
 		...provided,
 		marginTop: '0',
+		zIndex: 2,
 	}),
+	menuList: (provided, state) => ({
+		...provided,
+		height: '150px',
+		zIndex: 2,
+	}),
+	menuPortal: (base) => ({ ...base, zIndex: 9999 }),
 };
 
 export const clientStyle = {
@@ -69,14 +76,6 @@ export const clientStyle = {
 	container: (provided, state) => ({
 		...provided,
 	}),
-	/* 	option: (provided, state) => ({
-		...provided,
-		backgroundColor: state.isSelected
-			? '#c4c4c4'
-			: state.isFocused
-			? '#F4F4F4'
-			: 'white',
-	}), */
 };
 
 export const operationStyle = {

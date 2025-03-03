@@ -19,7 +19,34 @@ export const createNewOrder = async (fields) => {
 		descriptionPrivate,
 		printTasks,
 		otherTasks,
+		deviation,
 	} = fields;
+
+	const newContact = !client.contact.some(
+		(cont) =>
+			cont.name === contactName &&
+			cont.phone === contactPhone &&
+			cont.email === contactEmail
+	);
+
+	if (newContact) {
+		try {
+			const updatedContacts = [
+				...client.contact,
+				{
+					name: contactName,
+					phone: contactPhone,
+					email: contactEmail,
+				},
+			];
+			const response = await axios.put(
+				`${process.env.REACT_APP_API_URL}/api/client/${client._id}`,
+				{ contact: updatedContacts }
+			);
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
 	const tasks = [...printTasks, ...otherTasks];
 	let budgetEstimate = 0,
@@ -38,15 +65,13 @@ export const createNewOrder = async (fields) => {
 			: (budget += task.estimatedCost);
 	});
 
-	const stationsList = tasks.map((task, index) => ({
-		station: task.operation._id ?? task.operation,
-		completed: false,
-		number: index,
-	}));
-
-	const deviation =
-		((budget - budgetEstimate) * 100) / budgetEstimate +
-		'%';
+	const stationsList = tasks
+		.filter((task) => task.operation)
+		.map((task, index) => ({
+			station: task.operation._id ?? task.operation,
+			completed: false,
+			number: index,
+		}));
 
 	const body = {
 		orderNumber,
@@ -74,7 +99,7 @@ export const createNewOrder = async (fields) => {
 		stationsList,
 		budgetEstimate,
 		budget,
-		deviation,
+		deviation: `${deviation} %`,
 		fields,
 	};
 

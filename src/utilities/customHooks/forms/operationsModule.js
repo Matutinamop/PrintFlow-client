@@ -62,9 +62,9 @@ export const useOperationsModule = (fields, setFields) => {
 			operation: item,
 			description: '',
 			unitType: item.unitType,
-			quantity: 0,
-			estimatedCost: 0,
-			cost: 0,
+			quantity: '0',
+			estimatedCost: '0',
+			cost: '0',
 		}));
 
 		setOperationsList((prev) => {

@@ -78,6 +78,10 @@
 	margin-left: 0.2rem;
 }
 
+.inputError {
+	border: 1px solid red;
+}
+
 .disabled {
 	background-color: #ddd;
 }
