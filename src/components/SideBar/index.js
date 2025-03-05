@@ -1,9 +1,19 @@
 import React, { useEffect } from 'react';
 import styles from './sideBar.module.css';
-import { Link, useLocation } from 'react-router-dom';
+import {
+	Link,
+	useLocation,
+	useNavigate,
+} from 'react-router-dom';
 
 function SideBar({ hideSideBar }) {
 	const location = useLocation();
+	const navigate = useNavigate();
+
+	function logout() {
+		localStorage.removeItem('sessionToken');
+		navigate('/');
+	}
 
 	return (
 		<div
@@ -63,6 +73,12 @@ function SideBar({ hideSideBar }) {
 				>
 					Tareas y Materiales
 				</Link>
+				<div
+					className={styles.logout}
+					onClick={() => logout()}
+				>
+					Cerrar sesión
+				</div>
 			</div>
 		</div>
 	);

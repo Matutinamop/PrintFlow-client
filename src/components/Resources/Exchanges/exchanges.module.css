@@ -1,0 +1,80 @@
+.exchanges {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	width: 95%;
+}
+
+.exchangesTable {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	overflow-x: auto;
+	padding: 30px;
+	background-color: rgba(255, 255, 255, 1);
+	border: 1px solid #101204;
+	border-radius: 8px;
+	color: #101204;
+	box-shadow: 0 1px 5px 0 #101204;
+}
+
+.exchangesTable::-webkit-scrollbar {
+	width: 12px;
+	border-radius: 20px;
+}
+
+.exchangesTable::-webkit-scrollbar-track {
+	border-radius: 20px;
+}
+
+.exchangesTable::-webkit-scrollbar-thumb {
+	background-color: black;
+	border-radius: 20px;
+	border: 3px solid #ddd;
+}
+
+.exchangesTable::-webkit-scrollbar:window-inactive {
+	display: none;
+}
+
+.exchangeName {
+	width: 150px;
+}
+
+.input {
+	width: 50px;
+	margin-left: 150px;
+	margin-right: 25px;
+	padding: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: border-color 0.3s;
+	color: #6d6d6d;
+	height: 40px;
+	font-size: 16px;
+}
+
+@media (max-width: 1000px) {
+	/* .formContainer {
+		width: 80%;
+	}
+	.labelInput {
+		width: 80%;
+	}
+	.input {
+		width: 200px;
+	}
+
+	.formContainer th {
+		width: 100px;
+	}
+	.priceInput {
+		width: 100px;
+	}
+	.tdButton {
+		margin-top: 5px;
+		width: 100px;
+	} */
+}

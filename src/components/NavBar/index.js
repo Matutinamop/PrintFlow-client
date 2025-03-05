@@ -69,7 +69,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 	}
 
 	if (role) {
-		if (!windowSize.width < 1000) {
+		if (windowSize.width < 1000) {
 			return (
 				<div className={styles.navBar}>
 					<div>
@@ -147,12 +147,22 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 		return (
 			<div className={styles.nav}>
 				<div className={styles.logo}>
-					<img src="/assets/logos/logo-matutina.png" />
+					<MenuIcon
+						ref={buttonRef}
+						className={`${styles.burgerMenu} ${
+							menuOpen ? styles.open : ''
+						}`}
+						onClick={() => setHideSideBar(!hideSideBar)}
+					/>
+					<img
+						className={styles.matuLogo}
+						src="/assets/logos/logo-matutina.png"
+					/>
 					<Link to="/task/manager">
 						<h1>Matutina</h1>
 					</Link>
 				</div>
-				<div className={styles.navLinks}>
+				{/* <div className={styles.navLinks}>
 					<Link
 						className={(active) =>
 							active ? styles.active : ''
@@ -192,7 +202,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 					>
 						Tareas y Materiales
 					</Link>
-				</div>
+				</div> */}
 				<div className={styles.logout}>
 					<Button onClick={() => logout()}>
 						Cerrar sesión

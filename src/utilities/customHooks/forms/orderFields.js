@@ -18,6 +18,7 @@ const useCalculateFields = (
 	manualChanges
 ) => {
 	const [material, setMaterial] = useState({});
+	const [dollarPrice, setDollarPrice] = useState(0);
 
 	const module = fields.printTasks[index];
 
@@ -28,6 +29,14 @@ const useCalculateFields = (
 	const { operations } = useSelector(
 		(state) => state.operations
 	);
+
+	const { exchanges } = useSelector(
+		(state) => state.exchanges
+	);
+
+	useEffect(() => {
+		setDollarPrice(exchanges[0]?.conversion);
+	}, [exchanges]);
 
 	useEffect(() => {
 		if (module.material) {
@@ -200,7 +209,7 @@ const useCalculateFields = (
 				updatedPrintTasks[index].costPerBulkPaper =
 					paperCostByWeight(
 						paperWeight,
-						material.pricePerTon
+						material.pricePerTon * dollarPrice
 					);
 				return {
 					...prev,

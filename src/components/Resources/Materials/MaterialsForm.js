@@ -8,6 +8,8 @@ import {
 } from '../../../utilities/selectStyles/selectStyles';
 import { changeValue } from '../../../utilities/functions/forms/fields';
 import { Button } from '@mui/material';
+import { createNewMaterial } from '../../../utilities/functions/resources/createNewMaterial';
+import { editMaterial } from '../../../utilities/functions/resources/editMaterial';
 
 function MaterialsForm({
 	isEdit,
@@ -18,7 +20,7 @@ function MaterialsForm({
 	const [sizesOptions, setSizesOptions] = useState([
 		{ key: 1, label: '70x100', value: '70x100' },
 	]);
-	const [grammagesOptions, setGrammageOptions] = useState([
+	const [grammageOptions, setGrammageOptions] = useState([
 		{
 			key: 1,
 			label: '50',
@@ -130,6 +132,7 @@ function MaterialsForm({
 			value: '350',
 		},
 	]);
+	const [flag, setFlag] = useState(false);
 
 	const unitTypeOptions = [
 		{ key: 1, label: 'Tonelada', value: 'Tonelada' },
@@ -140,10 +143,32 @@ function MaterialsForm({
 			value: 'Metro cuadrado',
 		},
 	];
-	/* 
-    useEffect(() => {
 
-    },[]) */
+	useEffect(() => {
+		console.log(fields);
+		if (isEdit) {
+			setFields((prev) => ({
+				...prev,
+				sizes:
+					prev.sizes?.map((size, index) =>
+						typeof size === 'string'
+							? { key: index, label: size, value: size }
+							: size
+					) ?? [],
+				grammage:
+					prev.grammage?.map((gram, index) =>
+						typeof gram === 'string'
+							? { key: index, label: gram, value: gram }
+							: gram
+					) ?? [],
+			}));
+			setFlag(true);
+		}
+	}, []);
+
+	useEffect(() => {
+		console.log('fields', fields);
+	}, [fields]);
 
 	const setSelect = (option, e) => {
 		const { name } = e;
@@ -157,140 +182,154 @@ function MaterialsForm({
 		const { name } = e;
 		setFields((prev) => ({
 			...prev,
-			[name]: option.map((size) => size.value),
+			[name]: option,
 		}));
 	};
 
 	const handleNewOption = (input, name) => {
-		const newOption = { value: input, label: input };
+		const newOption = {
+			key: input,
+			value: input,
+			label: input,
+		};
 		if (name === 'sizes') {
 			setSizesOptions((prev) => [...prev, newOption]);
-			const newOptions = [...fields.sizes, newOption.value];
+			const newOptions = [...fields.sizes, newOption];
 
 			setFields((prev) => ({
 				...prev,
 				sizes: newOptions,
 			}));
 		}
-		if (name === 'grammages') {
+		if (name === 'grammage') {
 			setGrammageOptions((prev) => [...prev, newOption]);
-			const newOptions = [
-				...fields.grammages,
-				newOption.value,
-			];
+			const newOptions = [...fields.grammage, newOption];
 			setFields((prev) => ({
 				...prev,
-				grammages: newOptions,
+				grammage: newOptions,
 			}));
 		}
 	};
 
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		console.log('asdas');
+		if (isEdit && fields._id) {
+			try {
+				await editMaterial(fields);
+			} catch (error) {
+				console.log(error);
+			}
+		} else {
+			try {
+				await createNewMaterial(fields);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		setOpenMaterialModal(false);
+	};
+
 	return (
 		<div className={styles.formContainer}>
-			{isEdit ? (
-				<h2>Editar Material</h2>
-			) : (
-				<h2>Nueva Material</h2>
+			{isEdit && !flag ? null : (
+				<>
+					<h2>
+						{isEdit ? 'Editar Material' : 'Nuevo Material'}
+					</h2>
+					<form>
+						<div className={styles.labelInput}>
+							<label>Nombre:</label>
+							<input
+								name="name"
+								value={fields.name ?? ''}
+								className={styles.input}
+								onChange={(e) => changeValue(e, setFields)}
+							/>
+						</div>
+						<div className={styles.labelInput}>
+							<label>Tamaños</label>
+							<div className={styles.input}>
+								<CreatableSelect
+									name="sizes"
+									value={fields?.sizes}
+									onCreateOption={(e) =>
+										handleNewOption(e, 'sizes')
+									}
+									styles={creatableMultiStyles}
+									isMulti
+									options={sizesOptions}
+									onChange={(option, e) =>
+										setSelectMulti(option, e)
+									}
+								/>
+							</div>
+						</div>
+						<div className={styles.labelInput}>
+							<label>Gramaje</label>
+							<div className={styles.input}>
+								<CreatableSelect
+									name="grammage"
+									value={fields?.grammage}
+									onCreateOption={(e) =>
+										handleNewOption(e, 'grammage')
+									}
+									styles={creatableMultiStyles}
+									isMulti
+									options={grammageOptions}
+									onChange={(option, e) =>
+										setSelectMulti(option, e)
+									}
+								/>
+							</div>
+						</div>
+						<div className={styles.labelInput}>
+							<label>Tipo de unidad</label>
+							<div className={styles.input}>
+								<Select
+									name="unitType"
+									value={
+										unitTypeOptions.find(
+											(unit) =>
+												unit.value === fields.unitType
+										) ?? ''
+									}
+									styles={creatableMultiStyles}
+									options={unitTypeOptions}
+									onChange={(option, e) =>
+										setSelect(option, e)
+									}
+								/>
+							</div>
+						</div>
+						<div className={styles.labelInput}>
+							<label>Precio por unidad (U$S):</label>
+							<input
+								name="pricePerUnitType"
+								value={fields.pricePerUnitType ?? ''}
+								className={styles.input}
+								onChange={(e) => changeValue(e, setFields)}
+							/>
+						</div>
+						{isEdit ? (
+							<Button
+								variant="contained"
+								onClick={handleSubmit}
+							>
+								Editar
+							</Button>
+						) : (
+							<Button
+								variant="contained"
+								onClick={handleSubmit}
+							>
+								Crear
+							</Button>
+						)}
+					</form>
+				</>
 			)}
-			<form>
-				<div className={styles.labelInput}>
-					<label>Nombre:</label>
-					<input
-						name="name"
-						value={fields.name ?? ''}
-						className={styles.input}
-						onChange={(e) => changeValue(e, setFields)}
-					/>
-				</div>
-				<div className={styles.labelInput}>
-					<label>Tamaños</label>
-					<div className={styles.input}>
-						<CreatableSelect
-							name="sizes"
-							value={
-								sizesOptions.filter((size) =>
-									fields?.sizes.some(
-										(item) => size.value === item
-									)
-								) ?? ''
-							}
-							onCreateOption={(e) =>
-								handleNewOption(e, 'sizes')
-							}
-							styles={creatableMultiStyles}
-							isMulti
-							options={sizesOptions}
-							onChange={(option, e) =>
-								setSelectMulti(option, e)
-							}
-						/>
-					</div>
-				</div>
-				<div className={styles.labelInput}>
-					<label>Gramaje</label>
-					<div className={styles.input}>
-						<CreatableSelect
-							name="grammages"
-							value={
-								grammagesOptions.filter((grammage) =>
-									fields?.grammages.some(
-										(item) => grammage.value === item
-									)
-								) ?? ''
-							}
-							onCreateOption={(e) =>
-								handleNewOption(e, 'grammages')
-							}
-							styles={creatableMultiStyles}
-							isMulti
-							options={grammagesOptions}
-							onChange={(option, e) =>
-								setSelectMulti(option, e)
-							}
-						/>
-					</div>
-				</div>
-				<div className={styles.labelInput}>
-					<label>Tipo de unidad</label>
-					<div className={styles.input}>
-						<Select
-							name="unitType"
-							value={
-								unitTypeOptions.find(
-									(unit) => unit.value === fields.unitType
-								) ?? ''
-							}
-							styles={creatableMultiStyles}
-							options={unitTypeOptions}
-							onChange={(option, e) => setSelect(option, e)}
-						/>
-					</div>
-				</div>
-				<div className={styles.labelInput}>
-					<label>Precio por unidad (U$S):</label>
-					<input
-						name="pricePerUnitType"
-						value={fields.pricePerUnitType ?? ''}
-						className={styles.input}
-						onChange={(e) => changeValue(e, setFields)}
-					/>
-				</div>
-				{isEdit ? (
-					<Button
-						variant="contained"
-						/* onClick={handleSubmit} */
-					>
-						Editar
-					</Button>
-				) : (
-					<Button
-						variant="contained"
-						/* onClick={handleSubmit} */
-					>
-						Crear
-					</Button>
-				)}
-			</form>
 		</div>
 	);
 }

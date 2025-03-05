@@ -7,11 +7,14 @@ import Modal from '../../../components/shared/Modal';
 import OperationsForm from '../../../components/Resources/Operations/OperationsForm';
 import { changeValue } from '../../../utilities/functions/forms/fields';
 import MaterialsForm from '../../../components/Resources/Materials/MaterialsForm';
+import ExchangesList from '../../../components/Resources/Exchanges/ExchangesList';
 
 function ResourcesList() {
 	const [openOperationModal, setOpenOperationModal] =
 		useState(false);
 	const [openMaterialModal, setOpenMaterialModal] =
+		useState(false);
+	const [openExchangeModal, setOpenExchangeModal] =
 		useState(false);
 	const [searchTerm, setSearchTerm] = useState({
 		operation: '',
@@ -30,7 +33,7 @@ function ResourcesList() {
 
 	const initialMatFields = {
 		sizes: [],
-		grammages: [],
+		grammage: [],
 	};
 	const [operationFields, setOperationFields] =
 		useState(initialOpFields);
@@ -137,6 +140,12 @@ function ResourcesList() {
 					setOpenMaterialModal={setOpenMaterialModal}
 				/>
 			</Modal>
+			<Modal
+				isOpen={openExchangeModal}
+				onClose={() => setOpenExchangeModal(false)}
+			>
+				<ExchangesList />
+			</Modal>
 			<div className={styles.operationsList}>
 				<h2 className={styles.title}>TAREAS</h2>
 				<div className={styles.auxiliarRow}>
@@ -183,6 +192,12 @@ function ResourcesList() {
 					</div>
 					<Button
 						variant="contained"
+						onClick={() => setOpenExchangeModal(true)}
+					>
+						Divisas
+					</Button>
+					<Button
+						variant="contained"
 						onClick={() => (
 							setOpenMaterialModal(true),
 							setMaterialFields(initialMatFields)
@@ -191,7 +206,13 @@ function ResourcesList() {
 						Nuevo Material
 					</Button>
 				</div>
-				<MaterialsList searchTerm={searchTerm.material} />
+				<MaterialsList
+					searchTerm={searchTerm.material}
+					setIsEdit={setIsEditMaterial}
+					setFields={setMaterialFields}
+					openMaterialModal={openMaterialModal}
+					setOpenMaterialModal={setOpenMaterialModal}
+				/>
 			</div>
 		</div>
 	);

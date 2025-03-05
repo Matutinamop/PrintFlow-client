@@ -16,7 +16,13 @@ import { fetchFilteredMaterials } from '../../../redux/materials/materialsSlice'
 import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-function MaterialsList({ searchTerm }) {
+function MaterialsList({
+	searchTerm,
+	setIsEdit,
+	setFields,
+	openMaterialModal,
+	setOpenMaterialModal,
+}) {
 	const dispatch = useDispatch();
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
@@ -37,10 +43,16 @@ function MaterialsList({ searchTerm }) {
 				page: currentPage,
 			})
 		);
-	}, [currentPage, searchTerm]);
+	}, [currentPage, searchTerm, openMaterialModal]);
 
 	const setPage = (page) => {
 		setCurrentPage(page);
+	};
+
+	const handleEditClick = (info) => {
+		setFields({ ...info });
+		setIsEdit(true);
+		setOpenMaterialModal(true);
 	};
 
 	return (
@@ -75,9 +87,9 @@ function MaterialsList({ searchTerm }) {
 										<td className={styles.editTd}>
 											<IconButton
 												style={{ padding: 0 }}
-												/* onClick={() =>
-													handleEditClick(operation)
-												} */
+												onClick={() =>
+													handleEditClick(material)
+												}
 												color="primary"
 											>
 												<EditIcon fontSize="small" />

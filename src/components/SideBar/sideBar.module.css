@@ -20,8 +20,20 @@
 	left: 0;
 	top: 7vh;
 	padding: 20px;
+	height: 1000px;
 
 	/* background-color: #24252a; */
+}
+
+.spaceBetween {
+	display: flex;
+	justify-content: space-between;
+}
+
+.logout {
+	position: absolute;
+	bottom: 20vh;
+	cursor: pointer;
 }
 
 .navLinks {
