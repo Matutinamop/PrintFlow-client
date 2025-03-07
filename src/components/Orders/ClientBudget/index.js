@@ -2,6 +2,9 @@ import React, { useRef } from 'react';
 import styles from './budget.module.css';
 import { Button } from '@mui/material';
 import html2pdf from 'html2pdf.js';
+import CreatableSelect from 'react-select/creatable';
+import { Key } from '@mui/icons-material';
+import { invisibleStyles } from '../../../utilities/selectStyles/selectStyles';
 
 function ClientBudget({ order }) {
 	const { fields } = order;
@@ -25,12 +28,42 @@ function ClientBudget({ order }) {
 		html2pdf().from(input).set(options).save();
 	};
 
+	const handleInput = (e) => {
+		const textarea = e.target;
+		textarea.style.height = 'auto'; // Resetea la altura para que ajuste correctamente
+		textarea.style.height = `${textarea.scrollHeight}px`; // Ajusta la altura al contenido
+	};
+
+	const vendorOptions = [
+		{
+			key: 1,
+			value: 'Patricia Rivara',
+			label: 'Patricia Rivara',
+		},
+		{
+			key: 2,
+			value: 'Emilio Olivera',
+			label: 'Emilio Olivera',
+		},
+		{
+			key: 3,
+			value: 'Aníbal Cabrera',
+			label: 'Aníbal Cabrera',
+		},
+		{
+			key: 4,
+			value: 'Dpto. Comercial',
+			label: 'Dpto. comercial',
+		},
+	];
+
 	return (
 		<div
 			style={{
 				overflow: 'auto',
 				height: '80vh',
 				borderRadius: '5px',
+				width: '100%',
 			}}
 		>
 			<Button variant="contained" onClick={generatePDF}>
@@ -107,13 +140,6 @@ function ClientBudget({ order }) {
 								<p className={styles.infoText}>
 									{fields.client.legalName}
 								</p>
-								{/* 
-								<p className={styles.infoText}>
-									{fields.client.address}
-								</p>
-								<p className={styles.infoText}>
-									{fields.client.phone}
-								</p> */}
 							</div>
 
 							<div
@@ -170,9 +196,12 @@ function ClientBudget({ order }) {
 					<div className={styles.blockContainer}>
 						<div>
 							<h3 className={styles.notesTitle}>Notas:</h3>
-							<p className={styles.smallLetter}>
+							<textarea
+								onInput={handleInput}
+								className={styles.smallLetter}
+							>
 								EXENTO DE IVA
-							</p>
+							</textarea>
 							<p className={styles.smallLetter}>
 								Precios sujetos a aumentos de materiales y/o
 								jornales a partir de la fecha
@@ -180,7 +209,12 @@ function ClientBudget({ order }) {
 						</div>
 						<div className={styles.atte}>
 							<p>Atte.,</p>
-							<p> Patricia Rivara</p>
+							<CreatableSelect
+								options={vendorOptions}
+								styles={invisibleStyles}
+								menuPlacement="top"
+								placeholder="Dpto. Comercial"
+							/>
 						</div>
 					</div>
 				</div>

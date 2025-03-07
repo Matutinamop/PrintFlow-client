@@ -1,5 +1,6 @@
 import zIndex from '@mui/material/styles/zIndex';
-import { height, width } from '@mui/system';
+import { border, height, width } from '@mui/system';
+import { color } from 'framer-motion';
 
 export const selectStyles = {
 	control: (provided, state) => ({
@@ -122,5 +123,50 @@ export const creatableMultiStyles = {
 	option: (provided, state) => ({
 		...provided,
 		fontSize: '12px',
+	}),
+};
+
+export const invisibleStyles = {
+	control: (provided, state) => ({
+		...provided,
+		border: 'none',
+		height: '25px',
+		width: '150px',
+	}),
+
+	singleValue: (provided, state) => ({
+		...provided,
+		color: 'black',
+	}),
+	indicatorSeparator: (state) => ({
+		display: 'none',
+	}),
+	indicatorsContainer: (provided, state) => ({
+		...provided,
+		display: 'none',
+	}),
+	option: (provided, state) => ({
+		...provided,
+		fontSize: '12px',
+		':hover': {
+			backgroundColor: '#e0e0e0',
+			cursor: 'pointer',
+			color: 'black',
+		},
+	}),
+	menu: (provided, state) => ({
+		...provided,
+		marginBottom: '2px',
+		zIndex: 2,
+		width: '150px',
+	}),
+	menuList: (provided, state) => ({
+		...provided,
+		zIndex: 2,
+	}),
+	menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+	placeholder: (provided) => ({
+		...provided,
+		color: 'black',
 	}),
 };

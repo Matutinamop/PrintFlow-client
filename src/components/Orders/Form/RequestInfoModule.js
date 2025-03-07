@@ -59,7 +59,7 @@ function RequestInfoModule({
 	return (
 		<div className={styles.block}>
 			<div className={styles.blockTitle}>
-				<h3>Información del pedido: </h3>
+				<h3>Detalle del pedido: </h3>
 			</div>
 			<div className={styles.inputContainer}>
 				<label>Comentarios para el Cliente:</label>

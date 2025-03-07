@@ -5,6 +5,7 @@
 	background-color: white;
 	margin: 2% auto; /* Centramos la hoja */
 	color: black;
+	overflow: auto;
 }
 
 .documentContent {
@@ -12,6 +13,7 @@
 	height: 100%;
 	padding: 40px;
 	box-sizing: border-box;
+	overflow: auto;
 }
 
 .logo {
@@ -99,4 +101,10 @@
 
 .smallLetter {
 	font-size: 10px;
+	min-height: 15px;
+	color: black;
+	border: none;
+	resize: none;
+	font-family: 'Klavika';
+	padding: 5px 0 0;
 }

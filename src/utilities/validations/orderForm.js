@@ -3,7 +3,8 @@ import Joi from 'joi';
 const emailRegex =
 	/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-const sizeRegex = /^\d{1,3}[xX]\d{1,3}$/;
+const sizeRegex =
+	/^\d{1,5}([.,]\d+)?\s*[xX]\s*\d{1,5}([.,]\d+)?$/;
 const numbersRegex = /^\d+(\.\d+)?$/;
 const priceRegex = /^\$\d+(\.\d+)?$/;
 
@@ -193,7 +194,7 @@ export const orderSchema = Joi.object({
 			'El campo "Fecha estimada" es obligatorio',
 	}),
 	dateFinal: Joi.date()
-		.greater(new Date(Joi.ref('dateEstimated')))
+		.greater(Joi.ref('dateEstimate'))
 		.messages({
 			'date.greater':
 				'La fecha final debe ser posterior a la fecha estimada',

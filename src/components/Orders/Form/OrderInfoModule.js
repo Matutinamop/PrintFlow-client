@@ -156,7 +156,7 @@ function OrderInfoModule({
 					onChange={(e) => changeValue(e, setFields)}
 				></input>
 				<label className={styles.label}>
-					Fecha Estimada:
+					Fecha estimada de entrega:
 				</label>
 				<input
 					className={styles.dateInput}
@@ -167,7 +167,7 @@ function OrderInfoModule({
 					onChange={(e) => changeValue(e, setFields)}
 				/>
 				<label className={styles.label}>
-					Fecha Limite:
+					Fecha limite de entrega:
 				</label>
 				<input
 					className={styles.dateInput}
