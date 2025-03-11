@@ -125,11 +125,11 @@ function OrderInfoModule({
 			dispatch(fetchClientById(quickClient._id));
 		}
 	}, [quickClient]);
-	/* 
+
 	useEffect(() => {
-		console.log(fields);
-	}, [fields]);
- */
+		console.log(clientOptions);
+	}, [clientOptions]);
+
 	return (
 		<div className={styles.blockContainer}>
 			<Modal
