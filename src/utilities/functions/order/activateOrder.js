@@ -2,7 +2,6 @@ import axios from 'axios';
 
 export const activateOrder = async (order) => {
 	try {
-		console.log(order);
 		const res = await axios.get(
 			`${process.env.REACT_APP_API_URL}/api/workStation`
 		);

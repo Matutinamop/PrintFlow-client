@@ -20,7 +20,7 @@ function OperationsModule({
 		handleNewRow,
 		deleteRow,
 		changeValue,
-		handleDirtyField,
+		/* 		handleDirtyField, */
 	} = useOperationsModule(fields, setFields);
 
 	const checkError = (fieldName, index) => {
@@ -102,16 +102,18 @@ function OperationsModule({
 								<input
 									className={styles.smallInput}
 									name="cost"
-									value={`$ ${
-										manualChange[index]
-											? op.cost
-											: op.estimatedCost
-									}`}
+									value={`$ ${op.cost}`}
 									onChange={(e) => {
-										handleDirtyField(index);
+										/* handleDirtyField(index); */
 										changeValue(e, index);
 									}}
-									disabled
+									disabled={operationOptions.some(
+										(oper) => {
+											return (
+												oper.label === op?.operation?.name
+											);
+										}
+									)}
 								/>
 							</td>
 						</tr>

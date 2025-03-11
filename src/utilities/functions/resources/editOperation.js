@@ -13,7 +13,6 @@ export const editOperation = async (fields) => {
 			`${process.env.REACT_APP_API_URL}/api/operation/${_id}`,
 			newBody
 		);
-		console.log(response);
 		return response;
 	} catch (error) {
 		console.log(error);

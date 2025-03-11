@@ -11,7 +11,6 @@ export const useOperationsModule = (fields, setFields) => {
 	);
 
 	const [operationsList, setOperationsList] = useState([]);
-	const [manualChange, setManualChange] = useState([]);
 	const [operationOptions, setOperationOptions] = useState(
 		[]
 	);
@@ -81,18 +80,18 @@ export const useOperationsModule = (fields, setFields) => {
 	}, []);
 
 	useEffect(() => {
-		if (manualChange.length === 0) {
-			setManualChange(operationsList.map(() => false));
-		}
-	}, [operationsList]);
-
-	useEffect(() => {
 		operationsList.map((op, index) => {
 			if (op.quantity) {
+				const fixedQuantity =
+					parseFloat(
+						op.quantity.replace(',', '.').trim()
+					) || 0;
 				setOperationsList((prev) => {
 					const updatedTasks = [...prev];
-					updatedTasks[index].estimatedCost =
-						costCalculator(op.operation, op.quantity);
+					updatedTasks[index].cost = costCalculator(
+						op.operation,
+						fixedQuantity
+					);
 					return updatedTasks;
 				});
 			}
@@ -103,11 +102,7 @@ export const useOperationsModule = (fields, setFields) => {
 		const newList = operationsList.filter(
 			(op, i) => i !== index
 		);
-		const newManualChanges = manualChange.filter(
-			(item, i) => i !== index
-		);
 		setOperationsList(newList);
-		setManualChange(newManualChanges);
 	};
 
 	const handleNewRow = (option) => {
@@ -144,33 +139,32 @@ export const useOperationsModule = (fields, setFields) => {
 
 			setOperationsList((prev) => [...prev, newOperation]);
 		}
-		setManualChange((prev) => [...prev, false]);
-	};
-
-	const handleDirtyField = (index) => {
-		setManualChange((prev) => {
-			const newList = [...prev];
-			newList[index] = true;
-			return newList;
-		});
 	};
 
 	const changeValue = (e, index) => {
 		setOperationsList((prev) => {
 			const name = e.target.name;
 			const updatedOptions = [...prev];
-			updatedOptions[index][name] = e.target.value;
+
+			if (name === 'cost') {
+				console.log(name === 'cost');
+				updatedOptions[index][name] =
+					parseFloat(
+						e.target.value.replace('$', '').trim()
+					) || 0;
+			} else {
+				updatedOptions[index][name] = e.target.value;
+			}
+
 			return updatedOptions;
 		});
 	};
 
 	return {
 		operationsList,
-		manualChange,
 		operationOptions,
 		handleNewRow,
 		deleteRow,
 		changeValue,
-		handleDirtyField,
 	};
 };

@@ -75,18 +75,15 @@ export const updateStationsList = async (
 	);
 
 	if (order.order) {
-		console.log(order.order);
 		const orderTasks = order.order.stationsList
 			.map((stations) => stations.station?.workStation)
 			.filter(Boolean);
 
-		console.log('tasks', orderTasks);
 		const taskInStation = orderTasks.some(
 			(id) => id === stationId
 		);
 
 		if (taskInStation) {
-			console.log('llego aca');
 			const newStationsList = order.order.stationsList.map(
 				(station) => {
 					if (station.station.workStation === stationId) {

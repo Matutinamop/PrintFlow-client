@@ -145,7 +145,6 @@ function MaterialsForm({
 	];
 
 	useEffect(() => {
-		console.log(fields);
 		if (isEdit) {
 			setFields((prev) => ({
 				...prev,
@@ -166,9 +165,9 @@ function MaterialsForm({
 		}
 	}, []);
 
-	useEffect(() => {
+	/* 	useEffect(() => {
 		console.log('fields', fields);
-	}, [fields]);
+	}, [fields]); */
 
 	const setSelect = (option, e) => {
 		const { name } = e;
@@ -213,8 +212,6 @@ function MaterialsForm({
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		console.log('asdas');
 		if (isEdit && fields._id) {
 			try {
 				await editMaterial(fields);

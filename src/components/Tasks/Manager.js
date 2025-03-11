@@ -26,6 +26,7 @@ import { fetchActiveOrders } from '../../redux/orders/ordersSlice';
 import NextTasks from './NextTasks';
 import { fetchOperations } from '../../redux/operations/operationsSlice';
 import WorkShopOrder from '../Orders/WorkshopOrder';
+import Loader from '../shared/Loader';
 
 function Manager() {
 	const dispatch = useDispatch();
@@ -56,6 +57,7 @@ function Manager() {
 		open: false,
 		info: {},
 	});
+	const [loaderModal, setLoaderModal] = useState(false);
 	const [newStations, setNewStations] = useState([]);
 	const [activeTask, setActiveTask] = useState();
 	const [stationSource, setStationSource] = useState();
@@ -70,23 +72,20 @@ function Manager() {
 	};
 
 	useEffect(() => {
-		if (!infoModal.open) {
-			setTimeout(() => {
-				fetchAll();
-			}, 1500);
-		}
-	}, [infoModal]);
-
-	useEffect(() => {
 		fetchAll();
-	}, []);
+	}, [fetch]);
 
 	useEffect(() => {
 		setNewStations(stations);
 	}, [stations]);
 
 	const handleMoved = async () => {
-		await movingTasks(infoModal.info, newStations);
+		const res = await movingTasks(
+			infoModal.info,
+			newStations,
+			setLoaderModal
+		);
+		console.log(res);
 		setInfoModal({ open: false, info: {} });
 	};
 
@@ -97,8 +96,6 @@ function Manager() {
 					(st) => st.station.workStation === station._id
 				)
 		);
-
-		console.log(allSelectActiveOrders);
 
 		const finalSelectActiveOrders =
 			allSelectActiveOrders.filter(
@@ -315,6 +312,9 @@ function Manager() {
 				>
 					Cancelar
 				</Button>
+			</Modal>
+			<Modal transparent isOpen={loaderModal}>
+				<Loader />
 			</Modal>
 			<Modal
 				isOpen={openNextTasksModal.open}

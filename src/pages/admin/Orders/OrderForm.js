@@ -51,11 +51,6 @@ function OrderForm() {
 			  }
 	);
 
-	/* 	useEffect(() => {
-		console.log(location.state);
-		console.log(fields);
-	}, [JSON.stringify(fields)]); */
-
 	useEffect(() => {
 		dispatch(fetchClients());
 		dispatch(fetchMaterials());

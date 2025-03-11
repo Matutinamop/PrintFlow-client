@@ -64,9 +64,6 @@ function Paper({
 		const { active, over } = event;
 		if (!over) return;
 
-		/* 		console.log('active', active);
-		console.log('over', over); */
-
 		// Si el 'over' es una estación y el 'active' es una tarea
 		const activeStation = newStations.find((station) =>
 			station.tasks.some((task) => task._id === active.id)

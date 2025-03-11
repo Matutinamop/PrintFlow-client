@@ -104,10 +104,6 @@ function ResourcesList() {
 		}),
 	};
 
-	/* 	useEffect(() => {
-		console.log(isEditOperation);
-	}, [isEditOperation]); */
-
 	return (
 		<div className={styles.resourcesPage}>
 			<Modal

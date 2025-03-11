@@ -36,7 +36,6 @@ function OrdersList() {
 	}, []);
 
 	useEffect(() => {
-		console.log(status);
 		dispatch(
 			fetchFilteredOrders({
 				searchTerm,

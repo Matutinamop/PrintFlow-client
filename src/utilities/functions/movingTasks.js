@@ -4,17 +4,12 @@ import {
 	updateStationsList,
 } from './workStation/updateTasks';
 
-export const movingTasks = (result, newStations) => {
+export const movingTasks = (
+	result,
+	newStations,
+	setLoaderModal
+) => {
 	const { destination, source, draggableId } = result;
-
-	console.log(
-		'destination',
-		destination,
-		'source',
-		source,
-		'draggableId',
-		draggableId
-	);
 
 	if (!destination || !source || !destination.droppableId)
 		return;
@@ -70,6 +65,7 @@ export const movingTasks = (result, newStations) => {
 	}
 	(async () => {
 		try {
+			setLoaderModal(true);
 			const removedTask = await removeTask(
 				stationSrc._id,
 				draggableId
@@ -78,11 +74,13 @@ export const movingTasks = (result, newStations) => {
 			if (removedTask) {
 				await addTask(destination, draggableId);
 
-				await updateStationsList(
+				const res = await updateStationsList(
 					source.droppableId,
 					draggableId
 				);
+				console.log('dentro', res);
 			}
+			setLoaderModal(false);
 		} catch (error) {
 			console.error(
 				'Error al actualizar las estaciones:',

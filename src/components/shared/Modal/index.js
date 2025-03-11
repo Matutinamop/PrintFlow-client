@@ -9,13 +9,18 @@ function Modal({
 	success,
 	isOpen,
 	onClose,
+	transparent,
 }) {
 	return isOpen ? (
 		<div className={styles.background}>
 			<div
-				className={clsx(styles.modalContainer, {
-					[styles.success]: success,
-				})}
+				className={`${
+					transparent
+						? styles.transparentModalContainer
+						: clsx(styles.modalContainer, {
+								[styles.success]: success,
+						  })
+				}`}
 			>
 				<header className={styles.modalHeader}>
 					<h3>{title}</h3>

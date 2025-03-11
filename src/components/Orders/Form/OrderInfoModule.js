@@ -85,7 +85,6 @@ function OrderInfoModule({
 	);
 
 	const selectClient = (option, actionMeta) => {
-		console.log(option, actionMeta);
 		if (actionMeta.action === 'create-option') {
 			setClientModalFields({
 				companyName: option.label,
@@ -126,11 +125,11 @@ function OrderInfoModule({
 			dispatch(fetchClientById(quickClient._id));
 		}
 	}, [quickClient]);
-
+	/* 
 	useEffect(() => {
 		console.log(fields);
 	}, [fields]);
-
+ */
 	return (
 		<div className={styles.blockContainer}>
 			<Modal
