@@ -38,14 +38,12 @@ export const handleFileChange = (
 export const removeFile = (
 	fileIndex,
 	selectedFiles,
-	setSelectedFiles,
-	setFilesReady
+	setSelectedFiles
 ) => {
 	const newFiles = selectedFiles.filter(
 		(file, index) => index !== fileIndex
 	);
 	setSelectedFiles(newFiles);
-	setFilesReady(false);
 };
 
 export const handleUpload = async (

@@ -31,6 +31,7 @@ function OrderForm() {
 	const { client, clients } = useSelector(
 		(state) => state.clients
 	);
+	const [filesError, setFilesError] = useState('');
 
 	const today = format(new Date(), 'dd/MM/yyyy');
 
@@ -80,7 +81,7 @@ function OrderForm() {
 			setContactInfo(0);
 		}
 	}, [fields.client]);
-
+	/* 
 	const handleSubmit = async (id) => {
 		const result = orderSchema.validate(fields, {
 			abortEarly: false,
@@ -102,20 +103,21 @@ function OrderForm() {
 		} catch (error) {
 			console.log(error);
 		}
-	};
+	}; */
 
 	const handleCreateOrder = async () => {
+		setFilesError('');
 		const result = orderSchema.validate(fields, {
 			abortEarly: false,
 		});
 
-		console.log('antes del dispatch', allOrdersCount);
+		if (selectedFiles.length > 0 && !filesReady) {
+			return setFilesError('Hay archivos sin subir');
+		}
 
 		await dispatch(fetchOrdersPage()).unwrap();
 		const updatedOrdersCount =
 			store.getState().orders.allOrdersCount;
-
-		console.log('despues del dispatch', updatedOrdersCount);
 
 		const updatedFields = {
 			...fields,
@@ -136,9 +138,13 @@ function OrderForm() {
 	};
 
 	const handleEditOrder = async (id) => {
+		setFilesError('');
 		const result = orderSchema.validate(fields, {
 			abortEarly: false,
 		});
+		if (selectedFiles.length > 0 && !filesReady) {
+			return setFilesError('Hay archivos sin subir');
+		}
 
 		if (result.error) {
 			return setFormErrors(
@@ -315,6 +321,21 @@ function OrderForm() {
 									{err.message}
 								</p>
 							))}
+							{filesError ? (
+								<p
+									style={{
+										color: 'red',
+										fontSize: '11px',
+										backgroundColor: 'rgba(0,0,0,0.2)',
+										borderRadius: '4px',
+										margin: '2px 0',
+									}}
+								>
+									{filesError}
+								</p>
+							) : (
+								''
+							)}
 						</div>
 
 						<div style={{ width: '200px' }}>

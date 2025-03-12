@@ -39,6 +39,10 @@ function RequestInfoModule({
 		}));
 	};
 
+	useEffect(() => {
+		setFilesReady(false);
+	}, [selectedFiles]);
+
 	return (
 		<div className={styles.block}>
 			<div className={styles.blockTitle}>
@@ -194,8 +198,7 @@ function RequestInfoModule({
 												removeFile(
 													index,
 													selectedFiles,
-													setSelectedFiles,
-													setFilesReady
+													setSelectedFiles
 												)
 											}
 											disabled={loadingFile}
