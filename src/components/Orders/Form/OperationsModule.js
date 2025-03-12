@@ -24,10 +24,6 @@ function OperationsModule({
 	} = useOperationsModule(fields, setFields);
 
 	const checkError = (fieldName, index) => {
-		console.log(
-			'error?',
-			formErrors.some((err) => err.path.includes(fieldName))
-		);
 		return formErrors.some(
 			(err) =>
 				err.path.includes(fieldName) &&

@@ -161,6 +161,7 @@ function ResourcesList() {
 							setOpenOperationModal(true),
 							setOperationFields(initialOpFields)
 						)}
+						sx={{ padding: '5px' }}
 					>
 						Nueva Operación
 					</Button>
@@ -186,21 +187,25 @@ function ResourcesList() {
 							}
 						></input>
 					</div>
-					<Button
-						variant="contained"
-						onClick={() => setOpenExchangeModal(true)}
-					>
-						Divisas
-					</Button>
-					<Button
-						variant="contained"
-						onClick={() => (
-							setOpenMaterialModal(true),
-							setMaterialFields(initialMatFields)
-						)}
-					>
-						Nuevo Material
-					</Button>
+					<div style={{ display: 'flex', gap: '15px' }}>
+						<Button
+							variant="contained"
+							onClick={() => setOpenExchangeModal(true)}
+							sx={{ padding: '5px' }}
+						>
+							Divisas
+						</Button>
+						<Button
+							variant="contained"
+							onClick={() => (
+								setOpenMaterialModal(true),
+								setMaterialFields(initialMatFields)
+							)}
+							sx={{ padding: '5px' }}
+						>
+							Nuevo Material
+						</Button>
+					</div>
 				</div>
 				<MaterialsList
 					searchTerm={searchTerm.material}

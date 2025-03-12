@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './pagination.module.css';
 import { useDispatch } from 'react-redux';
+import { Button } from '@mui/material';
 
 function Pagination({
 	count,
@@ -24,30 +25,44 @@ function Pagination({
 		<div className={styles.pagination}>
 			{count > itemsPerPage ? (
 				<div className={styles.paginationBtns}>
-					<button
-						className={styles.prevBtn}
+					<Button
+						variant="contained"
+						/* className={styles.prevBtn} */
 						onClick={() =>
 							setPage((prev) => Math.max(prev - 1, 1))
 						}
 						disabled={currentPage === 1}
 					>
 						Anterior
-					</button>
+					</Button>
 					{getPaginationRange().map((page) => (
-						<button
+						<Button
 							key={page}
 							onClick={() => setPage(page)}
-							className={`${styles.pageBtn} ${
+							variant="contained"
+							sx={{
+								padding: '0', // El padding del botón en general
+								'& .MuiButton-label': {
+									padding: '12px 24px', // Modificamos el padding de la etiqueta interna del botón
+									fontSize: '18px', // Cambiamos el tamaño de la fuente
+									fontWeight: 'bold', // Cambiamos el peso de la fuente
+								},
+								'& .MuiTouchRipple-root': {
+									display: 'none', // Ocultamos el ripple (onda)
+								},
+							}}
+							/* className={`${styles.pageBtn} ${
 								page === currentPage
 									? styles.currentPageBtn
 									: ''
-							}`}
+							}`} */
 						>
 							{page}
-						</button>
+						</Button>
 					))}
-					<button
-						className={styles.nextBtn}
+					<Button
+						variant="contained"
+						/* className={styles.nextBtn} */
 						onClick={() =>
 							setPage((next) =>
 								Math.min(next + 1, totalPages)
@@ -56,7 +71,7 @@ function Pagination({
 						disabled={currentPage === totalPages}
 					>
 						Siguiente
-					</button>
+					</Button>
 				</div>
 			) : (
 				''

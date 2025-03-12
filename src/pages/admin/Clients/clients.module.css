@@ -14,3 +14,7 @@
 	display: flex;
 	width: 85%;
 }
+
+.paginationContainer {
+	margin: 20px 0;
+}

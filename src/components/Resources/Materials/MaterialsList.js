@@ -10,10 +10,10 @@ import {
 } from '../../shared/Tables';
 import Loader from '../../shared/Loader';
 import { useSelector } from 'react-redux';
-import Pagination from '../../shared/Pagination';
+/* import Pagination from '../../shared/Pagination'; */
 import { useDispatch } from 'react-redux';
 import { fetchFilteredMaterials } from '../../../redux/materials/materialsSlice';
-import { IconButton } from '@mui/material';
+import { IconButton, Pagination } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 function MaterialsList({
@@ -45,7 +45,7 @@ function MaterialsList({
 		);
 	}, [currentPage, searchTerm, openMaterialModal]);
 
-	const setPage = (page) => {
+	const setPage = (event, page) => {
 		setCurrentPage(page);
 	};
 
@@ -102,13 +102,27 @@ function MaterialsList({
 					</div>
 				)}
 			</div>
-			<Pagination
-				count={materialsCount}
-				itemsPerPage={15}
-				currentPage={currentPage}
-				totalPages={totalPages}
-				setPage={setPage}
-			/>
+			<div className={styles.paginationContainer}>
+				<Pagination
+					count={totalPages}
+					page={currentPage}
+					onChange={setPage}
+					variant="contained"
+					shape="rounded"
+					sx={{
+						'& .MuiPaginationItem-root': {
+							color: 'white',
+							backgroundColor: '#1976D2',
+							'&:hover': {
+								backgroundColor: 'lightblue',
+							},
+						},
+						'& .MuiPaginationItem-root.Mui-selected': {
+							backgroundColor: '#0D47A1',
+						},
+					}}
+				/>
+			</div>
 		</div>
 	);
 }

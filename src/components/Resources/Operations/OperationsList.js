@@ -9,11 +9,11 @@ import {
 	Tr,
 } from '../../shared/Tables';
 import { useSelector } from 'react-redux';
-import { IconButton } from '@mui/material';
+import { IconButton, Pagination } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useDispatch } from 'react-redux';
 import { fetchFilteredOperations } from '../../../redux/operations/operationsSlice';
-import Pagination from '../../shared/Pagination';
+/* import Pagination from '../../shared/Pagination'; */
 
 function OperationsList({
 	setFields,
@@ -45,7 +45,7 @@ function OperationsList({
 		);
 	}, [currentPage, searchTerm, openOperationModal]);
 
-	const setPage = (page) => {
+	const setPage = (event, page) => {
 		setCurrentPage(page);
 	};
 
@@ -98,6 +98,28 @@ function OperationsList({
 					</Table>
 				</div>
 			</div>
+			<div className={styles.paginationContainer}>
+				<Pagination
+					count={totalPages}
+					page={currentPage}
+					onChange={setPage}
+					variant="contained"
+					shape="rounded"
+					sx={{
+						'& .MuiPaginationItem-root': {
+							color: 'white',
+							backgroundColor: '#1976D2', // Color de los botones
+							'&:hover': {
+								backgroundColor: 'lightblue', // Color al pasar el cursor
+							},
+						},
+						'& .MuiPaginationItem-root.Mui-selected': {
+							backgroundColor: '#0D47A1',
+						},
+					}}
+				/>
+			</div>
+
 			<Pagination
 				count={operationsCount}
 				itemsPerPage={15}

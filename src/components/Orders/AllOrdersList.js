@@ -95,103 +95,99 @@ export function AllOrdersList({
 				<ClientBudget order={clientBudgetModal.order} />
 			</Modal>
 			<div className={styles.allOrdersTable}>
-				{ordersLoading ? (
+				{/* {ordersLoading ? (
 					<div className={styles.loader}>
 						<Loader />
 					</div>
-				) : (
-					<div className={styles.tables}>
-						<Table>
-							<Thead>
-								<Tr>
-									<Th size={'sizeNumber'}>Nº MOP</Th>
-									<Th>Producto</Th>
-									<Th size={'sizeClient'}>Cliente</Th>
-									<Th size="sizeStatus">
-										<p>Estado</p>{' '}
-										<Dropdown
-											options={statusList}
-											handleSelect={changeStatus}
-											dark
-										/>
-									</Th>
-									<Th size={'sizeDate'}>Creado</Th>
-									<Th size={'sizeDate'}>Fecha límite</Th>
-									<Th>Presupuesto</Th>
-									<Th size={'sizeNumber'}>Desv.</Th>
-									<Th size={'sizePDF'}>Orden</Th>
-									<Th size={'sizePDF'}>Pres.</Th>
-									<th className={styles.editTh}>Editar</th>
-								</Tr>
-							</Thead>
-							<Tbody>
-								{orders.map((order) => (
-									<Tr
-										key={order?._id}
-										warning={isWarning(order)}
-										urgent={isUrgent(order)}
-									>
-										<Td size={'sizeNumber'}>
-											{order?.orderNumber}
-										</Td>
-										<Td>{order?.product}</Td>
-										<Td size={'sizeClient'}>
-											{order?.client?.companyName}
-										</Td>
-										<Td size="sizeStatus">
-											{order?.status}
-										</Td>
-										<Td size={'sizeDate'}>
-											{order?.dateCreated}
-										</Td>
-										<Td size={'sizeDate'}>
-											{order?.dateFinal ?? '-'}
-										</Td>
-										<Td>${order?.budget}</Td>
-										<Td size={'sizeNumber'}>
-											{order?.deviation}
-										</Td>
-										<td className={styles.editTd}>
-											<IconButton
-												style={{ padding: 0 }}
-												onClick={() => createOrder(order)}
-											>
-												<PictureAsPdfIcon color="error" />
-											</IconButton>
-										</td>
-										{/* <Td>
+				) : ( */}
+				<div className={styles.tables}>
+					<Table>
+						<Thead>
+							<Tr>
+								<Th size={'sizeNumber'}>Nº MOP</Th>
+								<Th size={'sizeDate'}>Producto</Th>
+								<Th size={'sizeClient'}>Cliente</Th>
+								<Th size="sizeStatus">
+									<p>Estado</p>{' '}
+									<Dropdown
+										options={statusList}
+										handleSelect={changeStatus}
+										dark
+									/>
+								</Th>
+								<Th size={'sizeDate'}>Creado</Th>
+								<Th size={'sizeDate'}>Fecha límite</Th>
+								<Th size={'sizeDate'}>Presupuesto</Th>
+								<Th size={'sizeNumber'}>Desv.</Th>
+								<Th size={'sizePDF'}>Orden</Th>
+								<Th size={'sizePDF'}>Pres.</Th>
+								<th className={styles.editTh}>Editar</th>
+							</Tr>
+						</Thead>
+						<Tbody>
+							{orders.map((order) => (
+								<Tr
+									key={order?._id}
+									warning={isWarning(order)}
+									urgent={isUrgent(order)}
+								>
+									<Td size={'sizeNumber'}>
+										{order?.orderNumber}
+									</Td>
+									<Td>{order?.product}</Td>
+									<Td size={'sizeClient'}>
+										{order?.client?.companyName}
+									</Td>
+									<Td size="sizeStatus">{order?.status}</Td>
+									<Td size={'sizeDate'}>
+										{order?.dateCreated}
+									</Td>
+									<Td size={'sizeDate'}>
+										{order?.dateFinal ?? '-'}
+									</Td>
+									<Td>${order?.budget}</Td>
+									<Td size={'sizeNumber'}>
+										{order?.deviation}
+									</Td>
+									<td className={styles.editTd}>
+										<IconButton
+											style={{ padding: 0 }}
+											onClick={() => createOrder(order)}
+										>
+											<PictureAsPdfIcon color="error" />
+										</IconButton>
+									</td>
+									{/* <Td>
 											<PictureAsPdfIcon
 												color="error"
 												onClick={() => createOrder(order)}
 											/>
 										</Td> */}
-										<td className={styles.editTd}>
-											<IconButton
-												style={{ padding: 0 }}
-												onClick={() => createBudget(order)}
-											>
-												<PictureAsPdfIcon color="error" />
-											</IconButton>
-										</td>
-										<td className={styles.editTd}>
-											<IconButton
-												style={{ padding: 0 }}
-												onClick={() =>
-													handleEditClick(order)
-												} // Cambio aquí
-											>
-												<EditIcon
-													fontSize="small"
-													sx={{ color: '#101204' }}
-												/>
-											</IconButton>
-										</td>
-									</Tr>
-								))}
-							</Tbody>
-						</Table>
-					</div>
-				)}
+									<td className={styles.editTd}>
+										<IconButton
+											style={{ padding: 0 }}
+											onClick={() => createBudget(order)}
+										>
+											<PictureAsPdfIcon color="error" />
+										</IconButton>
+									</td>
+									<td className={styles.editTd}>
+										<IconButton
+											style={{ padding: 0 }}
+											onClick={() => handleEditClick(order)} // Cambio aquí
+										>
+											<EditIcon
+												fontSize="small"
+												sx={{ color: '#101204' }}
+											/>
+										</IconButton>
+									</td>
+								</Tr>
+							))}
+						</Tbody>
+					</Table>
+				</div>
+				{/* )} */}
 			</div>
 		</div>
 	);

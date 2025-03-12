@@ -1,4 +1,7 @@
 .formPage {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	width: 100%;
 	overflow: auto;
 	height: 88vh;
@@ -6,10 +9,9 @@
 
 .a4Sheet {
 	width: 794px;
-	min-height: 1123px;
 	border: 1px solid black;
 	background-color: white;
-	margin: 2% auto; /* Centramos la hoja */
+	margin: 2% auto;
 }
 
 .documentContent {
@@ -35,6 +37,38 @@
 	display: flex;
 	flex-direction: column;
 	font-size: 12px;
+}
+
+.editButtons {
+	display: flex;
+	justify-content: space-between;
+	width: 794px;
+	margin-bottom: 50px;
+}
+
+.buttons {
+	display: flex;
+	justify-content: flex-end;
+	width: 794px;
+	margin-bottom: 50px;
+}
+
+.ordersList {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	width: 90%;
+	height: 88vh;
+	color: #edf0f1;
+	padding-top: 20px;
+	margin: 0 auto;
+}
+
+.ordersListSearch {
+	display: flex;
+	align-items: center;
+	gap: 15px;
 }
 /* 
   .block {

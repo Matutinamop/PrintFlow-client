@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styles from '../../pages.module.css';
+import styles from './order.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	fetchFilteredOrders,
@@ -9,13 +9,17 @@ import {
 import { Input } from '../../../components/shared/Inputs';
 import { AllOrdersList } from '../../../components/Orders/AllOrdersList';
 import Pagination from '../../../components/shared/Pagination';
-import { Link } from 'react-router-dom'; // Cambiar aquí
-import Button from '../../../components/shared/Button';
+import { Link } from 'react-router-dom';
 import { rolToken } from '../../../utilities/functions/login';
+import { Button } from '@mui/material';
 
 function OrdersList() {
-	const { loadingOrders, orders, ordersCount } =
-		useSelector((state) => state.orders);
+	const {
+		loadingOrders,
+		orders,
+		ordersCount,
+		allOrdersCount,
+	} = useSelector((state) => state.orders);
 	const dispatch = useDispatch();
 
 	const [orderNumber, setOrderNumber] = useState('');
@@ -56,14 +60,25 @@ function OrdersList() {
 		);
 	};
 
+	const handleChangeSearchInput = (e) => {
+		setSearchTerm(e.target.value);
+		dispatch(
+			fetchFilteredOrders({
+				searchTerm: e.target.value,
+				status,
+				page: currentPage,
+			})
+		);
+	};
+
 	const orderNumberSubmit = (e) => {
 		e.preventDefault();
-		if (orderNumber > 0 && orderNumber <= ordersCount) {
+		if (orderNumber > 0 && orderNumber <= allOrdersCount) {
 			dispatch(fetchOrderByOrderNumber(orderNumber));
 		}
 	};
 
-	const setPage = (page) => {
+	const setPage = (e, page) => {
 		setCurrentPage(page);
 	};
 
@@ -79,13 +94,11 @@ function OrdersList() {
 			<div
 				style={{
 					display: 'flex',
+					justifyContent: 'space-between',
 					alignItems: 'center',
 					width: '95%',
 				}}
 			>
-				<Link to="/admin/orders/form">
-					<Button>Crear</Button>
-				</Link>
 				<div className={styles.ordersListSearch}>
 					<label className={styles.label}>Buscar: </label>
 					<form onSubmit={(e) => orderNumberSubmit(e)}>
@@ -95,19 +108,22 @@ function OrdersList() {
 							onChange={(e) =>
 								setOrderNumber(e.target.value)
 							}
-							placeholder={'Buscar por Nº orden'}
+							placeholder={'Nº orden'}
+							size={'mediumSize'}
 						></Input>
 					</form>
 					<form onSubmit={(e) => searchTermSubmit(e)}>
 						<Input
 							value={searchTerm}
-							onChange={(e) =>
-								setSearchTerm(e.target.value)
-							}
+							onChange={(e) => handleChangeSearchInput(e)}
 							placeholder={'Buscar por cliente o producto'}
+							size={'mailSize'}
 						></Input>
 					</form>
 				</div>
+				<Link to="/admin/orders/form">
+					<Button variant="contained">Crear</Button>
+				</Link>
 			</div>
 			<AllOrdersList
 				ordersLoading={loadingOrders}
@@ -115,13 +131,27 @@ function OrdersList() {
 				status={status}
 				changeStatus={changeStatus}
 			/>
-			<Pagination
-				count={ordersCount}
-				itemsPerPage={50}
-				currentPage={currentPage}
-				totalPages={totalPages}
-				setPage={setPage}
-			/>
+			<div className={styles.paginationContainer}>
+				<Pagination
+					count={totalPages}
+					page={currentPage}
+					onChange={setPage}
+					variant="contained"
+					shape="rounded"
+					sx={{
+						'& .MuiPaginationItem-root': {
+							color: 'white',
+							backgroundColor: '#1976D2',
+							'&:hover': {
+								backgroundColor: 'lightblue',
+							},
+						},
+						'& .MuiPaginationItem-root.Mui-selected': {
+							backgroundColor: '#0D47A1',
+						},
+					}}
+				/>
+			</div>
 		</div>
 	);
 }

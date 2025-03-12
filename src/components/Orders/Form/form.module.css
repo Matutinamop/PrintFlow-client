@@ -130,6 +130,10 @@
 	color: #6d6d6d;
 }
 
+.uploadStatus {
+	width: 50px;
+}
+
 .printTitle {
 	font-size: 20px;
 }

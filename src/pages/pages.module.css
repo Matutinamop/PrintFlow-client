@@ -30,23 +30,6 @@
 	font-size: 18px;
 }
 
-.ordersList {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: space-between;
-	width: 90%;
-	height: 88vh;
-	color: #edf0f1;
-	padding-top: 20px;
-	margin: 0 auto;
-}
-
-.ordersListSearch {
-	display: flex;
-	width: 85%;
-}
-
 @media (max-width: 1000px) {
 	.ordersListSearch {
 		flex-direction: column;

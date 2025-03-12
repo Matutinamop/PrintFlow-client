@@ -38,19 +38,25 @@ export const handleFileChange = (
 export const removeFile = (
 	fileIndex,
 	selectedFiles,
-	setSelectedFiles
+	setSelectedFiles,
+	setFilesReady
 ) => {
 	const newFiles = selectedFiles.filter(
 		(file, index) => index !== fileIndex
 	);
 	setSelectedFiles(newFiles);
+	setFilesReady(false);
 };
 
 export const handleUpload = async (
 	selectedFiles,
-	schemeField
+	schemeField,
+	setLoadingFile,
+	setFilesReady
 ) => {
 	if (selectedFiles.length > 0) {
+		setFilesReady(false);
+		setLoadingFile(true);
 		const zip = new JSZip();
 
 		selectedFiles.forEach((file) => {
@@ -85,13 +91,17 @@ export const handleUpload = async (
 			const fileLink = `https://${bucketName}.s3.${region}.amazonaws.com/${zipFileName}`;
 
 			schemeField(fileLink, selectedFiles);
+			setLoadingFile(false);
+			setFilesReady(true);
 		} catch (err) {
 			console.error(
 				'Error al generar o subir el archivo:',
 				err
 			);
+			setLoadingFile(false);
 		}
 	} else {
 		alert('Por favor selecciona al menos un archivo.');
+		setLoadingFile(false);
 	}
 };

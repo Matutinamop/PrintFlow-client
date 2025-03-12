@@ -5,9 +5,9 @@ import {
 	useLocation,
 	useNavigate,
 } from 'react-router-dom';
-import Button from '../shared/Button';
 import MenuIcon from '@mui/icons-material/Menu';
 import { rolToken } from '../../utilities/functions/login';
+import { Button } from '@mui/material';
 
 function NavBar({ setHideSideBar, hideSideBar }) {
 	const [windowSize, setWindowSize] = useState({
@@ -113,13 +113,6 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 									className={(active) =>
 										active ? styles.active : ''
 									}
-								>
-									Usuarios
-								</Link>
-								<Link
-									className={(active) =>
-										active ? styles.active : ''
-									}
 									to="/admin/resources"
 								>
 									Tareas y Materiales
@@ -146,65 +139,28 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 		}
 		return (
 			<div className={styles.nav}>
-				<div className={styles.logo}>
-					<MenuIcon
-						ref={buttonRef}
-						className={`${styles.burgerMenu} ${
-							menuOpen ? styles.open : ''
-						}`}
-						onClick={() => setHideSideBar(!hideSideBar)}
-					/>
-					<img
-						className={styles.matuLogo}
-						src="/assets/logos/logo-matutina.png"
-					/>
-					<Link to="/task/manager">
+				<Link to="/task/manager">
+					<div className={styles.logo}>
+						<MenuIcon
+							ref={buttonRef}
+							className={`${styles.burgerMenu} ${
+								menuOpen ? styles.open : ''
+							}`}
+							onClick={() => setHideSideBar(!hideSideBar)}
+						/>
+						<img
+							className={styles.matuLogo}
+							src="/assets/logos/logo-matutina.png"
+						/>
+
 						<h1>Matutina</h1>
-					</Link>
-				</div>
-				{/* <div className={styles.navLinks}>
-					<Link
-						className={(active) =>
-							active ? styles.active : ''
-						}
-						to="/task/manager"
-					>
-						Estaciones
-					</Link>
-					<Link
-						className={(active) =>
-							active ? styles.active : ''
-						}
-						to="/admin/orders/all"
-					>
-						Mops
-					</Link>
-					<Link
-						className={(active) =>
-							active ? styles.active : ''
-						}
-						to="/admin/clients"
-					>
-						Clientes
-					</Link>
-					<Link
-						className={(active) =>
-							active ? styles.active : ''
-						}
-					>
-						Usuarios
-					</Link>
-					<Link
-						className={(active) =>
-							active ? styles.active : ''
-						}
-						to="/admin/resources"
-					>
-						Tareas y Materiales
-					</Link>
-				</div> */}
+					</div>
+				</Link>
 				<div className={styles.logout}>
-					<Button onClick={() => logout()}>
+					<Button
+						variant="contained"
+						onClick={() => logout()}
+					>
 						Cerrar sesión
 					</Button>
 				</div>

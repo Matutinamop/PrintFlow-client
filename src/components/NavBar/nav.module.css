@@ -77,7 +77,7 @@
 	border-radius: 5px;
 
 	&:hover {
-		border: 1px solid #0088a9;
+		border: 1px solid #1976d2;
 		cursor: pointer;
 	}
 }
@@ -92,13 +92,13 @@
 	transition: all 0.3s ease 0s;
 
 	&:hover {
-		color: #0088a9;
+		color: #1976d2;
 	}
 }
 
 .active {
 	font-weight: bold;
-	color: #0088a9;
+	color: #1976d2;
 }
 
 @media (max-width: 1000px) {

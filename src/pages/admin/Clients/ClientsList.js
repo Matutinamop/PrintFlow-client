@@ -5,10 +5,11 @@ import { useDispatch } from 'react-redux';
 import { fetchFilteredClients } from '../../../redux/clients/clientsSlice';
 import Button from '../../../components/shared/Button';
 import { Input } from '../../../components/shared/Inputs';
-import Pagination from '../../../components/shared/Pagination';
+/* import Pagination from '../../../components/shared/Pagination'; */
 import { AllClientsList } from '../../../components/Clients/AllClientsList';
 import Modal from '../../../components/shared/Modal';
 import ClientsForm from '../../../components/Clients/Form/index';
+import { Pagination } from '@mui/material';
 
 function ClientsList() {
 	const { loadingClient, clients, clientsCount } =
@@ -60,7 +61,7 @@ function ClientsList() {
 		);
 	};
 
-	const setPage = (page) => {
+	const setPage = (event, page) => {
 		setCurrentPage(page);
 	};
 
@@ -117,13 +118,34 @@ function ClientsList() {
 				setIsEdit={setIsEdit}
 				setOpenModal={setOpenClientModal}
 			/>
-			<Pagination
+			<div className={styles.paginationContainer}>
+				<Pagination
+					count={totalPages}
+					page={currentPage}
+					onChange={setPage}
+					variant="contained"
+					shape="rounded"
+					sx={{
+						'& .MuiPaginationItem-root': {
+							color: 'white',
+							backgroundColor: '#1976D2', // Color de los botones
+							'&:hover': {
+								backgroundColor: 'lightblue', // Color al pasar el cursor
+							},
+						},
+						'& .MuiPaginationItem-root.Mui-selected': {
+							backgroundColor: '#0D47A1',
+						},
+					}}
+				/>
+			</div>
+			{/* <Pagination
 				count={clientsCount}
 				itemsPerPage={50}
 				currentPage={currentPage}
 				totalPages={totalPages}
 				setPage={setPage}
-			/>
+			/> */}
 		</div>
 	);
 }

@@ -8,6 +8,10 @@ import {
 	DatePicker,
 } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import CircularProgress from '@mui/material/CircularProgress';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Box from '@mui/material/Box';
 import styles from './form.module.css';
 import {
 	handleUpload,
@@ -21,29 +25,12 @@ function RequestInfoModule({
 	setFields,
 	fields,
 	selectStyles,
+	selectedFiles,
+	setSelectedFiles,
+	filesReady,
+	setFilesReady,
 }) {
-	const [selectedFiles, setSelectedFiles] = useState([]);
-
-	/* 	const changePrintTaskCount = (e) => {
-		const newValue = e.target.value;
-		if (newValue >= 0 && newValue <= 10) {
-			setFields((prevFields) => ({
-				...prevFields,
-				[e.target.name]: newValue,
-				[`printTask${newValue}`]: {},
-			}));
-		}
-	};
-
-	const changeOtherTaskCount = (e) => {
-		const newValue = e.target.value;
-		if (newValue >= 0 && newValue <= 10) {
-			setFields((prevFields) => ({
-				...prevFields,
-				[e.target.name]: newValue,
-			}));
-		}
-	}; */
+	const [loadingFile, setLoadingFile] = useState(false);
 
 	const schemeField = (fileLink, files) => {
 		setFields((prevFields) => ({
@@ -51,10 +38,6 @@ function RequestInfoModule({
 			scheme: { link: fileLink, files: files },
 		}));
 	};
-
-	/* 	useEffect(() => {
-		console.log(selectedFiles);
-	}, [selectedFiles]); */
 
 	return (
 		<div className={styles.block}>
@@ -138,6 +121,7 @@ function RequestInfoModule({
 										key={index}
 										sx={{
 											display: 'flex',
+											gap: '15px',
 											justifyContent: 'space-between',
 											width: '100%',
 										}}
@@ -148,6 +132,40 @@ function RequestInfoModule({
 												file.size / 1024
 											).toFixed(2)} KB`}
 										/>
+										<span className={styles.uploadStatus}>
+											{loadingFile ? (
+												<Box
+													sx={{
+														display: 'flex',
+														justifyContent: 'center',
+														alignItems: 'center',
+														height: '50px',
+													}}
+												>
+													<CircularProgress />
+												</Box>
+											) : (
+												''
+											)}
+											{filesReady ? (
+												<Box
+													sx={{
+														display: 'flex',
+														justifyContent: 'center',
+														alignItems: 'center',
+													}}
+												>
+													<CheckCircleIcon
+														sx={{
+															color: 'green',
+															fontSize: 24,
+														}}
+													/>
+												</Box>
+											) : (
+												''
+											)}
+										</span>
 										<ListItemIcon>
 											{file.type.startsWith('image/') ? (
 												<img
@@ -176,11 +194,18 @@ function RequestInfoModule({
 												removeFile(
 													index,
 													selectedFiles,
-													setSelectedFiles
+													setSelectedFiles,
+													setFilesReady
 												)
 											}
+											disabled={loadingFile}
 										>
-											x
+											<DeleteIcon
+												sx={{
+													color: 'white',
+													fontSize: 16,
+												}}
+											/>
 										</Button>
 									</ListItem>
 								))}
@@ -193,8 +218,14 @@ function RequestInfoModule({
 							color="success"
 							style={{ marginTop: '20px' }}
 							onClick={() =>
-								handleUpload(selectedFiles, schemeField)
+								handleUpload(
+									selectedFiles,
+									schemeField,
+									setLoadingFile,
+									setFilesReady
+								)
 							}
+							disabled={loadingFile}
 						>
 							Subir
 						</Button>

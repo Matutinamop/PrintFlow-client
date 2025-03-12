@@ -18,6 +18,8 @@ import { createNewOrder } from '../../../utilities/functions/order/createNewOrde
 import { useLocation, useNavigate } from 'react-router-dom';
 import { updateOrder } from '../../../utilities/functions/order/updateOrder';
 import { orderSchema } from '../../../utilities/validations/orderForm';
+import { fetchOrdersPage } from '../../../redux/orders/ordersSlice';
+import { store } from '../../../redux/store';
 
 function OrderForm() {
 	const location = useLocation();
@@ -51,6 +53,9 @@ function OrderForm() {
 			  }
 	);
 
+	const [selectedFiles, setSelectedFiles] = useState([]);
+	const [filesReady, setFilesReady] = useState(false);
+
 	useEffect(() => {
 		dispatch(fetchClients());
 		dispatch(fetchMaterials());
@@ -80,6 +85,7 @@ function OrderForm() {
 		const result = orderSchema.validate(fields, {
 			abortEarly: false,
 		});
+
 		if (result.error) {
 			return setFormErrors(
 				result.error.details.map((err) => err)
@@ -93,6 +99,58 @@ function OrderForm() {
 			}
 			const res = await createNewOrder(fields);
 			navigate('/admin/orders/all');
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleCreateOrder = async () => {
+		const result = orderSchema.validate(fields, {
+			abortEarly: false,
+		});
+
+		console.log('antes del dispatch', allOrdersCount);
+
+		await dispatch(fetchOrdersPage()).unwrap();
+		const updatedOrdersCount =
+			store.getState().orders.allOrdersCount;
+
+		console.log('despues del dispatch', updatedOrdersCount);
+
+		const updatedFields = {
+			...fields,
+			orderNumber: updatedOrdersCount + 1,
+		};
+
+		if (result.error) {
+			return setFormErrors(
+				result.error.details.map((err) => err)
+			);
+		}
+		try {
+			const res = await createNewOrder(updatedFields);
+			navigate('/admin/orders/all');
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleEditOrder = async (id) => {
+		const result = orderSchema.validate(fields, {
+			abortEarly: false,
+		});
+
+		if (result.error) {
+			return setFormErrors(
+				result.error.details.map((err) => err)
+			);
+		}
+		try {
+			if (location.state) {
+				const res = await updateOrder(id, fields);
+				navigate('/admin/orders/all');
+				return;
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -205,6 +263,10 @@ function OrderForm() {
 						formErrors={formErrors}
 						fields={fields}
 						setFields={setFields}
+						filesReady={filesReady}
+						setFilesReady={setFilesReady}
+						selectedFiles={selectedFiles}
+						setSelectedFiles={setSelectedFiles}
 					/>
 					{fields?.printTasks?.map((task, index) => (
 						<PrintTaskModule
@@ -285,19 +347,36 @@ function OrderForm() {
 					</div>
 				</div>
 			</div>
-			<Button
-				variant="contained"
-				color="success"
-				onClick={() =>
-					handleSubmit(location?.state?._id ?? null)
-				}
-			>
-				{location.state ? (
-					<>Guardar Cambios</>
-				) : (
-					<>Crear MOP</>
-				)}
-			</Button>
+			{location.state ? (
+				<div className={styles.editButtons}>
+					<Button
+						variant="contained"
+						color="success"
+						onClick={() =>
+							handleEditOrder(location.state._id)
+						}
+					>
+						Guardar cambios
+					</Button>
+					<Button
+						variant="contained"
+						color="success"
+						onClick={() => handleCreateOrder()}
+					>
+						Guardar como nuevo
+					</Button>
+				</div>
+			) : (
+				<div className={styles.buttons}>
+					<Button
+						variant="contained"
+						color="success"
+						onClick={() => handleCreateOrder()}
+					>
+						Guardar
+					</Button>
+				</div>
+			)}
 		</div>
 	);
 }
