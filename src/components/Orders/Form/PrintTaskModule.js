@@ -43,18 +43,19 @@ function PrintTaskModule({
 	};
 
 	const genericOptions = [
-		{
-			value: 'Uno',
-			label: 'Uno',
-		},
-		{
-			value: 'Dos',
-			label: 'Dos',
-		},
-		{
-			value: 'Tres',
-			label: 'Tres',
-		},
+		{ value: '59.4x84.1', label: '59.4x84.1' },
+		{ value: '42x59.4', label: '42x59.4' },
+		{ value: '29.7x42', label: '29.7x42' },
+		{ value: '21x29.7', label: '21x29.7' },
+		{ value: '50x70.7', label: '50x70.7' },
+		{ value: '35.3x50', label: '35.3x50' },
+		{ value: '25x35.3', label: '25x35.3' },
+		{ value: '17.6x25', label: '17.6x25' },
+		{ value: '22.9x32.4', label: '22.9x32.4' },
+		{ value: '16.2x22.9', label: '16.2x22.9' },
+		{ value: '21.6x27.9', label: '21.6x27.9' },
+		{ value: '21.6x35.6', label: '21.6x35.6' },
+		{ value: '27.9x43.2', label: '27.9x43.2' },
 	];
 
 	const changeValue = (e) => {
