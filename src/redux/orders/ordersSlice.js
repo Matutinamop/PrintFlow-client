@@ -25,7 +25,6 @@ const fetchOrdersPage = createAsyncThunk(
 					params: from ? { from } : {},
 				}
 			);
-			console.log('estoy adentro del thunk');
 			return response.data;
 		} catch (error) {
 			console.error(error);

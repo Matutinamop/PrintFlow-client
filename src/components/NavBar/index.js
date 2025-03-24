@@ -139,23 +139,25 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 		}
 		return (
 			<div className={styles.nav}>
-				<Link to="/task/manager">
-					<div className={styles.logo}>
-						<MenuIcon
-							ref={buttonRef}
-							className={`${styles.burgerMenu} ${
-								menuOpen ? styles.open : ''
-							}`}
-							onClick={() => setHideSideBar(!hideSideBar)}
-						/>
+				<div className={styles.logo}>
+					<MenuIcon
+						ref={buttonRef}
+						className={`${styles.burgerMenu} ${
+							menuOpen ? styles.open : ''
+						}`}
+						onClick={() => setHideSideBar(!hideSideBar)}
+					/>
+					<Link to="/task/manager">
 						<img
 							className={styles.matuLogo}
 							src="/assets/logos/logo-matutina.png"
 						/>
-
+					</Link>
+					<Link to="/task/manager">
 						<h1>Matutina</h1>
-					</div>
-				</Link>
+					</Link>
+				</div>
+
 				<div className={styles.logout}>
 					<Button
 						variant="contained"

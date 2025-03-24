@@ -93,10 +93,6 @@ function ClientsForm({
 		setOpenModal(false);
 	};
 
-	/* 	useEffect(() => {
-		console.log(fields);
-	}, [fields]); */
-
 	return (
 		<div className={styles.formContainer}>
 			{isEdit ? (

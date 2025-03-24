@@ -165,10 +165,6 @@ function MaterialsForm({
 		}
 	}, []);
 
-	/* 	useEffect(() => {
-		console.log('fields', fields);
-	}, [fields]); */
-
 	const setSelect = (option, e) => {
 		const { name } = e;
 		setFields((prev) => ({
@@ -216,13 +212,13 @@ function MaterialsForm({
 			try {
 				await editMaterial(fields);
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 			}
 		} else {
 			try {
 				await createNewMaterial(fields);
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 			}
 		}
 		setOpenMaterialModal(false);

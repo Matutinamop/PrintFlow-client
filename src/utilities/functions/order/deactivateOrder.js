@@ -26,6 +26,6 @@ export const deactivateOrder = async (orderId) => {
 		);
 		return response;
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 	}
 };

@@ -126,10 +126,6 @@ function OrderInfoModule({
 		}
 	}, [quickClient]);
 
-	useEffect(() => {
-		console.log(clientOptions);
-	}, [clientOptions]);
-
 	return (
 		<div className={styles.blockContainer}>
 			<Modal

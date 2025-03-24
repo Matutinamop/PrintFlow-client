@@ -133,13 +133,13 @@ export const useOperationsForm = (
 			try {
 				await editOperation(fields);
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 			}
 		} else {
 			try {
 				await createNewOperation(fields);
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 			}
 		}
 		setOpenOperationModal(false);

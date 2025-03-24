@@ -26,6 +26,6 @@ export const activateOrder = async (order) => {
 		);
 		return response;
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 	}
 };

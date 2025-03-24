@@ -21,7 +21,8 @@ const s3 = new S3Client({
 export const handleFileChange = (
 	event,
 	selectedFiles,
-	setSelectedFiles
+	setSelectedFiles,
+	setFilesReady
 ) => {
 	const files = Array.from(event.target.files);
 	const combinedArray = [
@@ -33,6 +34,7 @@ export const handleFileChange = (
 		), // Usa el nombre del archivo como clave
 	].map(([key, file]) => file);
 	setSelectedFiles(combinedArray);
+	setFilesReady(false);
 };
 
 export const removeFile = (
@@ -101,5 +103,40 @@ export const handleUpload = async (
 	} else {
 		alert('Por favor selecciona al menos un archivo.');
 		setLoadingFile(false);
+	}
+};
+
+export const fetchFilesFromZip = async (zipUrl) => {
+	try {
+		// 1️⃣ Descargar el archivo ZIP desde S3
+		const response = await fetch(zipUrl);
+		const blob = await response.blob();
+
+		// 2️⃣ Cargar el ZIP en JSZip
+		const zip = await JSZip.loadAsync(blob);
+
+		// 3️⃣ Extraer los archivos y convertirlos a objetos `File`
+		const files = [];
+		for (const fileName in zip.files) {
+			const file = zip.files[fileName];
+
+			// Verifica que el archivo no sea un directorio dentro del ZIP
+			if (!file.dir) {
+				// Extraer el contenido del archivo como un Blob
+				const fileBlob = await file.async('blob'); // Devuelve un Blob
+
+				// Crear un objeto File utilizando el Blob
+				const fileObject = new File([fileBlob], file.name, {
+					type: fileBlob.type, // Tipo MIME del archivo
+				});
+
+				// Añadir el archivo al array
+				files.push(fileObject);
+			}
+		}
+		return files;
+	} catch (error) {
+		console.error('Error al procesar el ZIP:', error);
+		return [];
 	}
 };

@@ -223,4 +223,5 @@ export const orderSchema = Joi.object({
 	otherTasks: Joi.array().items(otherTaskModuleSchema),
 	deviation: Joi.number(),
 	finalPrice: Joi.string().pattern(numbersRegex),
+	scheme: Joi.object().unknown().optional(),
 });

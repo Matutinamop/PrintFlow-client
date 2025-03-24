@@ -13,18 +13,20 @@ function NextTasks({
 	return (
 		<div className={styles.container}>
 			<h3>Próximas Tareas ({activeOrders.station.name})</h3>
-			{activeOrders.orders.map((order) => (
-				<div
-					className={styles.nextTasks}
-					key={order._id}
-					onClick={() => handleOpenOrder(order)}
-				>
-					<h4>{order?.product}</h4>
-					<div className={styles.content}>
-						{order?.client.companyName}
+			<div className={styles.nextTasksDiv}>
+				{activeOrders.orders.map((order) => (
+					<div
+						className={styles.nextTasks}
+						key={order._id}
+						onClick={() => handleOpenOrder(order)}
+					>
+						<h4>{order?.product}</h4>
+						<div className={styles.content}>
+							{order?.client.companyName}
+						</div>
 					</div>
-				</div>
-			))}
+				))}
+			</div>
 		</div>
 	);
 }

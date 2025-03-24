@@ -29,6 +29,12 @@ export const createNewOrder = async (fields) => {
 			cont.email === contactEmail
 	);
 
+	scheme?.files?.forEach((file) => {
+		delete file.lastModified;
+		delete file.lastModifiedDate;
+		delete file.webkitRelativePath;
+	});
+
 	if (newContact) {
 		try {
 			const updatedContacts = [
@@ -110,6 +116,6 @@ export const createNewOrder = async (fields) => {
 		);
 		return response;
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 	}
 };

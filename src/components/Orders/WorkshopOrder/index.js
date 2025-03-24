@@ -59,6 +59,18 @@ function WorkShopOrder({ order }) {
 		);
 	};
 
+	const handleDownload = () => {
+		// Crear un enlace de descarga dinámicamente
+		const link = document.createElement('a');
+
+		// Establecer la URL del archivo y el nombre del archivo de destino
+		link.href = order.scheme.link;
+		link.download = `Archivos-MOP-${order.orderNumber}`; // Puedes proporcionar un nombre predeterminado para el archivo descargado
+
+		// Simular un clic en el enlace para iniciar la descarga
+		link.click();
+	};
+
 	return (
 		<div
 			style={{
@@ -67,8 +79,18 @@ function WorkShopOrder({ order }) {
 				borderRadius: '5px',
 			}}
 		>
-			<Button variant="contained" onClick={generatePDF}>
+			<Button
+				variant="contained"
+				color="success"
+				onClick={generatePDF}
+				style={{
+					margin: '15px',
+				}}
+			>
 				crear PDF
+			</Button>
+			<Button variant="contained" onClick={handleDownload}>
+				Descargar archivos
 			</Button>
 			<div className={styles.a4Sheet} ref={orderPDF}>
 				<div className={styles.documentContent}>

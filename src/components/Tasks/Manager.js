@@ -85,7 +85,6 @@ function Manager() {
 			newStations,
 			setLoaderModal
 		);
-		console.log(res);
 		setInfoModal({ open: false, info: {} });
 	};
 

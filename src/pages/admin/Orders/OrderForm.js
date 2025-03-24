@@ -20,6 +20,7 @@ import { updateOrder } from '../../../utilities/functions/order/updateOrder';
 import { orderSchema } from '../../../utilities/validations/orderForm';
 import { fetchOrdersPage } from '../../../redux/orders/ordersSlice';
 import { store } from '../../../redux/store';
+import { fetchFilesFromZip } from '../../../utilities/functions/forms/uploadFile';
 
 function OrderForm() {
 	const location = useLocation();
@@ -35,11 +36,12 @@ function OrderForm() {
 
 	const today = format(new Date(), 'dd/MM/yyyy');
 
-	const [checked, setChecked] = useState(
-		location?.state?.fields.status === 'Aceptada'
-			? true
-			: false
-	);
+	const [checked, setChecked] = useState(() => {
+		const status = location.state?.status;
+		if (status === 'Aceptada') return true;
+		if (status === 'Abierta') return false;
+		return null; // Para cualquier otro valor
+	});
 	const [formErrors, setFormErrors] = useState([]);
 	const [fields, setFields] = useState(
 		location.state
@@ -49,13 +51,16 @@ function OrderForm() {
 					printTasks: [{ id: 0, moduleRepeat: 1 }],
 					client: '',
 					otherTasks: [{}],
-					status: checked ? 'Aceptada' : 'Abierta',
 					deviation: 0,
 			  }
 	);
 
+	const schemeLink = location.state?.fields.scheme?.link;
+
 	const [selectedFiles, setSelectedFiles] = useState([]);
-	const [filesReady, setFilesReady] = useState(false);
+	const [filesReady, setFilesReady] = useState(
+		!!location.state?.fields.scheme?.link
+	);
 
 	useEffect(() => {
 		dispatch(fetchClients());
@@ -63,6 +68,17 @@ function OrderForm() {
 		dispatch(fetchStations());
 		dispatch(cleanClient());
 	}, []);
+
+	useEffect(() => {
+		if (schemeLink) {
+			const loadFiles = async () => {
+				const files = await fetchFilesFromZip(schemeLink);
+				setSelectedFiles(files); // Actualiza el estado cuando se cargan los archivos
+			};
+
+			loadFiles();
+		}
+	}, [schemeLink]);
 
 	const setContactInfo = (index) => {
 		const { name, email, phone } =
@@ -81,29 +97,16 @@ function OrderForm() {
 			setContactInfo(0);
 		}
 	}, [fields.client]);
-	/* 
-	const handleSubmit = async (id) => {
-		const result = orderSchema.validate(fields, {
-			abortEarly: false,
-		});
 
-		if (result.error) {
-			return setFormErrors(
-				result.error.details.map((err) => err)
-			);
+	useEffect(() => {
+		console.log(checked);
+		if (checked !== null) {
+			setFields((prev) => ({
+				...prev,
+				status: checked ? 'Aceptada' : 'Abierta',
+			}));
 		}
-		try {
-			if (location.state) {
-				const res = await updateOrder(id, fields);
-				navigate('/admin/orders/all');
-				return;
-			}
-			const res = await createNewOrder(fields);
-			navigate('/admin/orders/all');
-		} catch (error) {
-			console.log(error);
-		}
-	}; */
+	}, [checked]);
 
 	const handleCreateOrder = async () => {
 		setFilesError('');
@@ -133,7 +136,7 @@ function OrderForm() {
 			const res = await createNewOrder(updatedFields);
 			navigate('/admin/orders/all');
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 	};
 
@@ -158,7 +161,7 @@ function OrderForm() {
 				return;
 			}
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 	};
 
@@ -170,6 +173,10 @@ function OrderForm() {
 		}));
 	};
 
+	const handleCheck = () => {
+		setChecked(!checked);
+	};
+
 	const deletePrintModule = (i) => {
 		const newModules = fields.printTasks.filter(
 			(mod, index) => index !== i
@@ -178,17 +185,6 @@ function OrderForm() {
 			...prev,
 			printTasks: newModules,
 		}));
-	};
-
-	useEffect(() => {
-		setFields((prev) => ({
-			...prev,
-			status: checked ? 'Aceptada' : 'Abierta',
-		}));
-	}, [checked]);
-
-	const handleCheck = () => {
-		setChecked(!checked);
 	};
 
 	useEffect(() => {
@@ -337,6 +333,22 @@ function OrderForm() {
 								''
 							)}
 						</div>
+
+						{location.state &&
+							(location.state?.status === 'Aceptada' ||
+								location.state?.status === 'Abierta') && (
+								<div>
+									<label>Orden activa: </label>
+									<Switch
+										sx={{
+											backgroundColor: 'rgba(0,0,0,0.2)',
+											borderRadius: '10px',
+										}}
+										checked={checked}
+										onChange={handleCheck}
+									/>
+								</div>
+							)}
 
 						<div style={{ width: '200px' }}>
 							<div>

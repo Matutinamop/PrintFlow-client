@@ -78,7 +78,6 @@ export const movingTasks = (
 					source.droppableId,
 					draggableId
 				);
-				console.log('dentro', res);
 			}
 			setLoaderModal(false);
 		} catch (error) {

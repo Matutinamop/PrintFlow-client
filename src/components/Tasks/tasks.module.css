@@ -55,7 +55,16 @@
 	background-color: #24252a;
 	border-radius: 10px;
 	width: 100%;
+
 	color: #9fadbc;
+}
+
+.nextTasksDiv {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	overflow-y: auto;
+	height: 600px;
 }
 
 .list {
@@ -77,6 +86,7 @@
 	color: #9fadbc;
 	border-radius: 10px;
 	box-shadow: 0 1px 5px 0 #101204;
+	overflow-y: auto;
 }
 
 .containerTitle {

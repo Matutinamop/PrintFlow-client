@@ -21,6 +21,6 @@ export const editMaterial = async (fields) => {
 		);
 		return response;
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 	}
 };

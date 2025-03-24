@@ -147,7 +147,6 @@ export const useOperationsModule = (fields, setFields) => {
 			const updatedOptions = [...prev];
 
 			if (name === 'cost') {
-				console.log(name === 'cost');
 				updatedOptions[index][name] =
 					parseFloat(
 						e.target.value.replace('$', '').trim()

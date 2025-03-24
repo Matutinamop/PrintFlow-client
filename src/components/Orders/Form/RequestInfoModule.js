@@ -38,10 +38,31 @@ function RequestInfoModule({
 			scheme: { link: fileLink, files: files },
 		}));
 	};
+	const imageExtensions = [
+		'jpg',
+		'jpeg',
+		'png',
+		'gif',
+		'webp',
+		'svg',
+	];
+	/* 	useEffect(() => {
+		if (selectedFiles.length > 0) {
+			setFilesReady(false);
+		}
+	}, [selectedFiles]); */
 
-	useEffect(() => {
-		setFilesReady(false);
-	}, [selectedFiles]);
+	const handleDownload = () => {
+		// Crear un enlace de descarga dinámicamente
+		const link = document.createElement('a');
+
+		// Establecer la URL del archivo y el nombre del archivo de destino
+		link.href = fields.scheme.link;
+		link.download = `Archivos-MOP-${fields.orderNumber}`; // Puedes proporcionar un nombre predeterminado para el archivo descargado
+
+		// Simular un clic en el enlace para iniciar la descarga
+		link.click();
+	};
 
 	return (
 		<div className={styles.block}>
@@ -93,7 +114,8 @@ function RequestInfoModule({
 							handleFileChange(
 								e,
 								selectedFiles,
-								setSelectedFiles
+								setSelectedFiles,
+								setFilesReady
 							)
 						}
 					/>
@@ -171,7 +193,12 @@ function RequestInfoModule({
 											)}
 										</span>
 										<ListItemIcon>
-											{file.type.startsWith('image/') ? (
+											{imageExtensions.includes(
+												file.name
+													.split('.')
+													.pop()
+													.toLowerCase()
+											) ? (
 												<img
 													src={URL.createObjectURL(file)}
 													alt={file.name}
@@ -216,22 +243,33 @@ function RequestInfoModule({
 						</div>
 					)}
 					{selectedFiles.length > 0 ? (
-						<Button
-							variant="contained"
-							color="success"
-							style={{ marginTop: '20px' }}
-							onClick={() =>
-								handleUpload(
-									selectedFiles,
-									schemeField,
-									setLoadingFile,
-									setFilesReady
-								)
-							}
-							disabled={loadingFile}
-						>
-							Subir
-						</Button>
+						<>
+							<Button
+								variant="contained"
+								color="success"
+								style={{
+									margin: '15px',
+								}}
+								onClick={() =>
+									handleUpload(
+										selectedFiles,
+										schemeField,
+										setLoadingFile,
+										setFilesReady
+									)
+								}
+								disabled={loadingFile || filesReady}
+							>
+								Subir
+							</Button>
+							<Button
+								variant="contained"
+								onClick={() => handleDownload()}
+								disabled={!filesReady}
+							>
+								Descargar
+							</Button>
+						</>
 					) : (
 						''
 					)}
