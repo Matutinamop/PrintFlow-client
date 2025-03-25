@@ -8,7 +8,7 @@ const accessKey = process.env.REACT_APP_AWS_ACCESS_KEY_ID;
 const secretKey =
 	process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
 const region = process.env.REACT_APP_AWS_REGION;
-const bucketName = 'print-flow';
+const bucketName = process.env.REACT_APP_BUCKET_NAME;
 
 const s3 = new S3Client({
 	credentials: {
