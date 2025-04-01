@@ -35,6 +35,10 @@ function PrintTaskModule({
 		});
 	}, [selectedOptions]);
 
+	useEffect(() => {
+		console.log(fields.printTasks[module]);
+	}, [fields]);
+
 	const handleManualChange = (e) => {
 		setManualChanges((prev) => ({
 			...prev,
