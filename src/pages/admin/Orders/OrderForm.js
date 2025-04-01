@@ -21,6 +21,7 @@ import { orderSchema } from '../../../utilities/validations/orderForm';
 import { fetchOrdersPage } from '../../../redux/orders/ordersSlice';
 import { store } from '../../../redux/store';
 import { fetchFilesFromZip } from '../../../utilities/functions/forms/uploadFile';
+import { fetchExchanges } from '../../../redux/exchanges/exchangesSlice';
 
 function OrderForm() {
 	const location = useLocation();
@@ -67,6 +68,8 @@ function OrderForm() {
 		dispatch(fetchMaterials());
 		dispatch(fetchStations());
 		dispatch(cleanClient());
+		dispatch(fetchMaterials());
+		dispatch(fetchExchanges());
 	}, []);
 
 	useEffect(() => {
@@ -99,7 +102,6 @@ function OrderForm() {
 	}, [fields.client]);
 
 	useEffect(() => {
-		console.log(checked);
 		if (checked !== null) {
 			setFields((prev) => ({
 				...prev,
