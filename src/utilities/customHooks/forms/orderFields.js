@@ -194,7 +194,7 @@ const useCalculateFields = (
 			module.grammage &&
 			module.bulkPaperSize &&
 			module.material &&
-			material?.pricePerTon
+			material?.pricePerUnitType
 		) {
 			const [width, height] = module.bulkPaperSize
 				.replace(/,/g, '.')
@@ -209,7 +209,7 @@ const useCalculateFields = (
 				updatedPrintTasks[index].costPerBulkPaper =
 					paperCostByWeight(
 						paperWeight,
-						material.pricePerTon * dollarPrice
+						material.pricePerUnitType * dollarPrice
 					);
 				return {
 					...prev,
