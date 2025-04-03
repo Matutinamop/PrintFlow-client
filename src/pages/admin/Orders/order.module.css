@@ -47,9 +47,12 @@
 }
 
 .buttons {
+	position: fixed;
+	bottom: 3vh;
+	right: 1vw;
 	display: flex;
-	justify-content: flex-end;
-	width: 794px;
+	flex-direction: column;
+	gap: 15px;
 	margin-bottom: 50px;
 }
 
@@ -70,6 +73,19 @@
 	align-items: center;
 	gap: 15px;
 }
+
+.prevModal {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding: 35px 20px;
+}
+.prevButtons {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+}
+
 /* 
   .block {
     position: relative;

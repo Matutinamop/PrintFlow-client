@@ -9,9 +9,10 @@ import {
 import { Input } from '../../../components/shared/Inputs';
 import { AllOrdersList } from '../../../components/Orders/AllOrdersList';
 import Pagination from '../../../components/shared/Pagination';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { rolToken } from '../../../utilities/functions/login';
 import { Button } from '@mui/material';
+import Modal from '../../../components/shared/Modal';
 
 function OrdersList() {
 	const {
@@ -27,6 +28,16 @@ function OrdersList() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
 	const [status, setStatus] = useState('');
+	const [prevFieldsModal, setPrevFieldsModal] =
+		useState(false);
+	const [prevFields, setPrevFields] = useState({});
+
+	const navigate = useNavigate();
+
+	const recoverData = () => {
+		const fields = prevFields;
+		navigate('/admin/orders/form', { state: { fields } });
+	};
 
 	useEffect(() => {
 		const pages = Math.ceil(ordersCount / 50);
@@ -86,8 +97,47 @@ function OrdersList() {
 		setStatus(stat);
 	};
 
+	const openModal = () => {
+		const savedFields = localStorage.getItem('fields');
+		if (savedFields) {
+			const recoveredFields = JSON.parse(savedFields);
+			setPrevFields(recoveredFields);
+			setPrevFieldsModal(true);
+		}
+	};
+
 	return (
 		<div className={styles.ordersList}>
+			<Modal
+				isOpen={prevFieldsModal}
+				onClose={() => setPrevFieldsModal(false)}
+			>
+				<div className={styles.prevModal}>
+					<h3>
+						Quieres recuperar los datos de la ultima MOP?
+					</h3>
+					<div className={styles.prevButtons}>
+						<Link to={'/admin/orders/form'}>
+							<Button
+								variant="contained"
+								onClick={() => setPrevFieldsModal(false)}
+							>
+								Empezar nueva
+							</Button>
+						</Link>
+						<Button
+							variant="contained"
+							color="success"
+							onClick={() => {
+								setPrevFieldsModal(false);
+								recoverData();
+							}}
+						>
+							Recuperar
+						</Button>
+					</div>
+				</div>
+			</Modal>
 			<h2 className={styles.allOrdersTitle}>
 				LISTA DE MOPS
 			</h2>
@@ -121,9 +171,9 @@ function OrdersList() {
 						></Input>
 					</form>
 				</div>
-				<Link to="/admin/orders/form">
-					<Button variant="contained">Crear</Button>
-				</Link>
+				<Button variant="contained" onClick={openModal}>
+					Crear
+				</Button>
 			</div>
 			<AllOrdersList
 				ordersLoading={loadingOrders}

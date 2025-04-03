@@ -8,6 +8,8 @@ import { Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deepEqual } from '../../../utilities/functions/deepEqual';
 import { selectStyles } from '../../../utilities/selectStyles/selectStyles';
+import Modal from '../../shared/Modal';
+import MaterialsForm from '../../Resources/Materials/MaterialsForm';
 
 function PrintTaskModule({
 	fields,
@@ -17,6 +19,9 @@ function PrintTaskModule({
 	info,
 	index,
 	deleteModule,
+	quickMaterial,
+	setMaterialModalOpen,
+	setMaterialModalFields,
 }) {
 	const [selectedOptions, setSelectedOptions] = useState(
 		[]
@@ -72,8 +77,33 @@ function PrintTaskModule({
 		fields,
 		index,
 		setFields,
-		manualChanges
+		manualChanges,
+		quickMaterial
 	);
+
+	const selectMaterial = (option, actionMeta) => {
+		if (actionMeta.action === 'create-option') {
+			setMaterialModalFields({
+				name: option.label,
+			});
+			return setMaterialModalOpen(true);
+		}
+		setFields((prev) => {
+			const updatedPrintTasks = [...prev.printTasks];
+			updatedPrintTasks[index]['material'] = option.value;
+			return {
+				...prev,
+				printTasks: updatedPrintTasks,
+			};
+		});
+		setSelectedOptions((prev) => ({
+			...prev,
+			material: {
+				label: option.label,
+				value: option.value,
+			},
+		}));
+	};
 
 	const checkError = (fieldName) => {
 		return formErrors.some(
@@ -172,25 +202,8 @@ function PrintTaskModule({
 										value: info?.material,
 								  }
 						}
-						onChange={(option) => {
-							setFields((prev) => {
-								const updatedPrintTasks = [
-									...prev.printTasks,
-								];
-								updatedPrintTasks[index]['material'] =
-									option.value;
-								return {
-									...prev,
-									printTasks: updatedPrintTasks,
-								};
-							});
-							setSelectedOptions((prev) => ({
-								...prev,
-								material: {
-									label: option.label,
-									value: option.value,
-								},
-							}));
+						onChange={(option, actionMeta) => {
+							selectMaterial(option, actionMeta);
 						}}
 						options={info.materialOptions}
 						placeholder={''}

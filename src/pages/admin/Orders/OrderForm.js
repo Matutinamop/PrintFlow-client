@@ -22,6 +22,9 @@ import { fetchOrdersPage } from '../../../redux/orders/ordersSlice';
 import { store } from '../../../redux/store';
 import { fetchFilesFromZip } from '../../../utilities/functions/forms/uploadFile';
 import { fetchExchanges } from '../../../redux/exchanges/exchangesSlice';
+import { fetchOperations } from '../../../redux/operations/operationsSlice';
+import Modal from '../../../components/shared/Modal';
+import MaterialsForm from '../../../components/Resources/Materials/MaterialsForm';
 
 function OrderForm() {
 	const location = useLocation();
@@ -56,6 +59,14 @@ function OrderForm() {
 			  }
 	);
 
+	console.log(location.state);
+
+	const [materialModalOpen, setMaterialModalOpen] =
+		useState(false);
+	const [materialModalFields, setMaterialModalFields] =
+		useState({});
+	const [quickMaterial, setQuickMaterial] = useState({});
+
 	const schemeLink = location.state?.fields.scheme?.link;
 
 	const [selectedFiles, setSelectedFiles] = useState([]);
@@ -66,11 +77,16 @@ function OrderForm() {
 	useEffect(() => {
 		dispatch(fetchClients());
 		dispatch(fetchMaterials());
+		dispatch(fetchOperations());
 		dispatch(fetchStations());
 		dispatch(cleanClient());
 		dispatch(fetchMaterials());
 		dispatch(fetchExchanges());
 	}, []);
+
+	useEffect(() => {
+		localStorage.setItem('fields', JSON.stringify(fields));
+	}, [fields]);
 
 	useEffect(() => {
 		if (schemeLink) {
@@ -215,6 +231,18 @@ function OrderForm() {
 
 	return (
 		<div className={styles.formPage}>
+			<Modal
+				isOpen={materialModalOpen}
+				onClose={() => setMaterialModalOpen(false)}
+			>
+				<MaterialsForm
+					setOpenMaterialModal={setMaterialModalOpen}
+					fields={materialModalFields}
+					setFields={setMaterialModalFields}
+					setQuickMaterial={setQuickMaterial}
+				/>
+			</Modal>
+
 			<div className={styles.a4Sheet}>
 				<div className={styles.documentContent}>
 					<div className={styles.mopHeader}>
@@ -282,15 +310,22 @@ function OrderForm() {
 							setFields={setFields}
 							index={index}
 							deleteModule={deletePrintModule}
+							quickMaterial={quickMaterial}
+							setMaterialModalOpen={setMaterialModalOpen}
+							setMaterialModalFields={
+								setMaterialModalFields
+							}
 						/>
 					))}
-					<Button
-						variant="contained"
-						onClick={newPrintTask}
-						sx={{ mt: '10px' }}
-					>
-						Nuevo modulo de impresión
-					</Button>
+					<div>
+						<Button
+							variant="contained"
+							onClick={newPrintTask}
+							sx={{ mt: '10px' }}
+						>
+							Nuevo modulo de impresión
+						</Button>
+					</div>
 					<OperationsModule
 						formErrors={formErrors}
 						setFields={setFields}
@@ -383,7 +418,7 @@ function OrderForm() {
 				</div>
 			</div>
 			{location.state ? (
-				<div className={styles.editButtons}>
+				<div className={styles.buttons}>
 					<Button
 						variant="contained"
 						color="success"

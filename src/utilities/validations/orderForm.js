@@ -11,14 +11,14 @@ const priceRegex = /^\$\d+(\.\d+)?$/;
 export const printTaskModuleSchema = Joi.object({
 	sheetDescription: Joi.string()
 		.max(80)
-		.required()
+		.allow('')
 		.messages({
 			'any.required':
 				'El campo "Descripción del modulo" es obligatorio',
 		}),
 	quantity: Joi.string()
 		.pattern(numbersRegex)
-		.required()
+		.allow('')
 		.messages({
 			'string.pattern.base':
 				'"Unidades" debe ser un numero',
@@ -26,7 +26,7 @@ export const printTaskModuleSchema = Joi.object({
 		}),
 	finalSize: Joi.string()
 		.pattern(sizeRegex)
-		.required()
+		.allow('')
 		.messages({
 			'string.pattern.base':
 				'Formato erróneo para "Medida final" ej: 25x10',
@@ -35,22 +35,22 @@ export const printTaskModuleSchema = Joi.object({
 		}),
 	sizeWithMargins: Joi.string()
 		.pattern(sizeRegex)
-		.required()
+		.allow('')
 		.messages({
 			'string.pattern.base':
 				'Formato erróneo para "Medida con margenes" ej: 25x10',
 			'any.required':
 				'El campo "Medida con margenes" es obligatorio',
 		}),
-	material: Joi.string().required().messages({
+	material: Joi.string().allow('').messages({
 		'any.required': 'El campo "Material" es obligatorio',
 	}),
-	grammage: Joi.string().required().messages({
+	grammage: Joi.string().allow('').messages({
 		'any.required': 'El campo "Gramaje" es obligatorio',
 	}),
 	bulkPaperSize: Joi.string()
 		.pattern(sizeRegex)
-		.required()
+		.allow('')
 		.messages({
 			'string.pattern.base':
 				'Formato erróneo para "Tam. hoja" ej: 25x10',
@@ -58,7 +58,7 @@ export const printTaskModuleSchema = Joi.object({
 		}),
 	sheetSize: Joi.string()
 		.pattern(sizeRegex)
-		.required()
+		.allow('')
 		.messages({
 			'string.pattern.base':
 				'Formato erróneo para "Pliego de impresión" ej: 25x10',
@@ -85,7 +85,7 @@ export const printTaskModuleSchema = Joi.object({
 		.allow(''),
 	excess: Joi.string()
 		.pattern(numbersRegex)
-		.required()
+		.allow('')
 		.messages({
 			'string.pattern.base': '"Demasía" debe ser un numero',
 			'any.required': 'El campo "Demasía" es obligatorio',
@@ -102,12 +102,12 @@ export const printTaskModuleSchema = Joi.object({
 			Joi.string().pattern(priceRegex).allow('0')
 		)
 		.allow(''),
-	operation: Joi.string().required().messages({
+	operation: Joi.string().allow('').messages({
 		'any.required': 'El campo "Máquina" es obligatorio',
 	}),
 	plates: Joi.string()
 		.pattern(numbersRegex)
-		.required()
+		.allow('')
 		.messages({
 			'string.pattern.base': '"Chapas" debe ser un numero',
 			'any.required': 'El campo "Chapas" es obligatorio',
@@ -117,12 +117,13 @@ export const printTaskModuleSchema = Joi.object({
 			Joi.number().min(0),
 			Joi.string().pattern(priceRegex).allow('0')
 		)
-		.allow(''),
-	front: Joi.string(),
-	back: Joi.string(),
+		.allow('')
+		.optional(),
+	front: Joi.string().allow(''),
+	back: Joi.string().allow(''),
 	postures: Joi.string()
 		.pattern(numbersRegex)
-		.required()
+		.allow('')
 		.messages({
 			'string.pattern.base':
 				'"Posturas" debe ser un numero',
@@ -169,7 +170,7 @@ export const printTaskModuleSchema = Joi.object({
 const otherTaskModuleSchema = Joi.object({
 	operation: Joi.object(),
 	description: Joi.string().allow(''),
-	unitType: Joi.string(),
+	unitType: Joi.string().allow(''),
 	quantity: Joi.alternatives()
 		.try(
 			Joi.number().min(0),
@@ -203,13 +204,13 @@ export const orderSchema = Joi.object({
 		'any.required': 'Es necesario seleccionar un cliente',
 		'object.base': 'Es necesario seleccionar un cliente',
 	}),
-	contactName: Joi.string().required().max(20).messages({
+	contactName: Joi.string().allow('').max(20).messages({
 		'any.required':
 			'Es necesario seleccionar un nombre de contacto',
 	}),
 	contactPhone: Joi.string()
 		.pattern(numbersRegex)
-		.required()
+		.allow('')
 		.messages({
 			'any.required':
 				'Es necesario seleccionar un numero de contacto',

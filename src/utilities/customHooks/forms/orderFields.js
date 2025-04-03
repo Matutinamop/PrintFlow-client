@@ -15,7 +15,8 @@ const useCalculateFields = (
 	fields,
 	index,
 	setFields,
-	manualChanges
+	manualChanges,
+	quickMaterial
 ) => {
 	const [material, setMaterial] = useState({});
 	const [dollarPrice, setDollarPrice] = useState(0);
@@ -97,7 +98,29 @@ const useCalculateFields = (
 			value: material._id,
 			label: material.name,
 		}));
-
+		if (
+			quickMaterial &&
+			Object.keys(quickMaterial).length > 0
+		) {
+			newOptions.push({
+				key: quickMaterial._id,
+				value: quickMaterial._id,
+				label: quickMaterial.name,
+			});
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].materialOptions =
+					newOptions;
+				updatedPrintTasks[index]['material'] =
+					quickMaterial._id;
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
+			setMaterial(quickMaterial);
+			return;
+		}
 		setFields((prev) => {
 			const updatedPrintTasks = [...prev.printTasks];
 			updatedPrintTasks[index].materialOptions = newOptions;
@@ -106,7 +129,7 @@ const useCalculateFields = (
 				printTasks: updatedPrintTasks,
 			};
 		});
-	}, [materials]);
+	}, [materials, quickMaterial]);
 
 	useEffect(() => {
 		const newOptions = operations

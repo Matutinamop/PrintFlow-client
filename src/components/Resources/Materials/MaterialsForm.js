@@ -16,6 +16,7 @@ function MaterialsForm({
 	setOpenMaterialModal,
 	fields,
 	setFields,
+	setQuickMaterial,
 }) {
 	const [sizesOptions, setSizesOptions] = useState([
 		{ key: 1, label: '70x100', value: '70x100' },
@@ -216,7 +217,13 @@ function MaterialsForm({
 			}
 		} else {
 			try {
-				await createNewMaterial(fields);
+				const res = await createNewMaterial(fields);
+				console.log('res', res);
+
+				if (setQuickMaterial) {
+					console.log(res.data.material);
+					setQuickMaterial(res.data.newMaterial);
+				}
 			} catch (error) {
 				console.error(error);
 			}
