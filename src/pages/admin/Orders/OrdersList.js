@@ -102,9 +102,10 @@ function OrdersList() {
 		if (savedFields) {
 			const recoveredFields = JSON.parse(savedFields);
 			setPrevFields(recoveredFields);
-			setPrevFieldsModal(true);
+			return setPrevFieldsModal(true);
+		} else {
+			return navigate('/admin/orders/form');
 		}
-		navigate('/admin/orders/form');
 	};
 
 	return (
