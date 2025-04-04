@@ -1,14 +1,31 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './budget.module.css';
 import { Button } from '@mui/material';
 import html2pdf from 'html2pdf.js';
-import CreatableSelect from 'react-select/creatable';
+import Select from 'react-select';
 import { Key } from '@mui/icons-material';
 import { invisibleStyles } from '../../../utilities/selectStyles/selectStyles';
+import { toFormatNumber } from '../../../utilities/functions/costCalculator';
+import { updateOrder } from '../../../utilities/functions/order/updateOrder';
+import { useDispatch } from 'react-redux';
 
-function ClientBudget({ order }) {
+function ClientBudget({ order, toggleRefresh }) {
 	const { fields } = order;
+	const [newFields, setNewFields] = useState(
+		fields.divEditable || fields.atte
+			? fields
+			: {
+					...fields,
+					divEditable: 'EXENTO DE IVA',
+					atte: {
+						key: 4,
+						value: 'Dpto. Comercial',
+						label: 'Dpto. comercial',
+					},
+			  }
+	);
 	const orderPDF = useRef();
+	const divRef = useRef(null);
 
 	const generatePDF = () => {
 		const input = orderPDF.current;
@@ -26,12 +43,6 @@ function ClientBudget({ order }) {
 		};
 
 		html2pdf().from(input).set(options).save();
-	};
-
-	const handleInput = (e) => {
-		const textarea = e.target;
-		textarea.style.height = 'auto'; // Resetea la altura para que ajuste correctamente
-		textarea.style.height = `${textarea.scrollHeight}px`; // Ajusta la altura al contenido
 	};
 
 	const vendorOptions = [
@@ -57,6 +68,19 @@ function ClientBudget({ order }) {
 		},
 	];
 
+	const handleBlur = () => {
+		if (divRef.current) {
+			const cleanText = divRef.current.innerHTML
+				.replace(/<div>/g, '\n')
+				.replace(/<\/div>/g, '')
+				.replace(/<br>/g, '');
+			setNewFields((prev) => ({
+				...prev,
+				divEditable: cleanText,
+			}));
+		}
+	};
+
 	return (
 		<div
 			style={{
@@ -66,9 +90,22 @@ function ClientBudget({ order }) {
 				width: '100%',
 			}}
 		>
-			<Button variant="contained" onClick={generatePDF}>
-				crear PDF
-			</Button>
+			<div style={{ display: 'flex', gap: '20px' }}>
+				<Button variant="contained" onClick={generatePDF}>
+					crear PDF
+				</Button>
+				<Button
+					variant="contained"
+					color="success"
+					onClick={(e) => {
+						updateOrder(order._id, newFields);
+						toggleRefresh();
+					}}
+				>
+					Guardar Cambios
+				</Button>
+			</div>
+
 			<div className={styles.a4Sheet} ref={orderPDF}>
 				<div className={styles.documentContent}>
 					<div className={styles.mopHeader}>
@@ -103,12 +140,11 @@ function ClientBudget({ order }) {
 									display: 'flex',
 									justifyContent: 'flex-end',
 									fontWeight: 'bold',
+									fontSize: '20px',
 								}}
 							>
-								<div style={{ fontSize: '20px' }}>
-									Presupuseto Nº.{' '}
-									<span>{order.orderNumber} </span>
-								</div>
+								Presupuseto Nº.{' '}
+								<span>{order.orderNumber} </span>
 							</p>
 						</div>
 					</div>
@@ -189,19 +225,24 @@ function ClientBudget({ order }) {
 								{fields.descriptionClient}
 							</p>
 							<p className={styles.priceText}>
-								Precio final: ${order.budget}
+								Precio final: $
+								{toFormatNumber(order.budget)}
 							</p>
 						</div>
 					</div>
 					<div className={styles.blockContainer}>
 						<div>
 							<h3 className={styles.notesTitle}>Notas:</h3>
-							<textarea
-								onInput={handleInput}
+							<div
+								ref={divRef}
+								contentEditable
+								suppressContentEditableWarning
+								onBlur={handleBlur}
 								className={styles.smallLetter}
 							>
-								EXENTO DE IVA
-							</textarea>
+								{newFields.divEditable}
+							</div>
+
 							<p className={styles.smallLetter}>
 								Precios sujetos a aumentos de materiales y/o
 								jornales a partir de la fecha
@@ -209,11 +250,17 @@ function ClientBudget({ order }) {
 						</div>
 						<div className={styles.atte}>
 							<p>Atte.,</p>
-							<CreatableSelect
+							<Select
 								options={vendorOptions}
 								styles={invisibleStyles}
 								menuPlacement="top"
-								placeholder="Dpto. Comercial"
+								value={newFields.atte}
+								onChange={(option) =>
+									setNewFields((prev) => ({
+										...prev,
+										atte: option,
+									}))
+								}
 							/>
 						</div>
 					</div>

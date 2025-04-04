@@ -11,8 +11,16 @@ import { AllOrdersList } from '../../../components/Orders/AllOrdersList';
 import Pagination from '../../../components/shared/Pagination';
 import { Link, useNavigate } from 'react-router-dom';
 import { rolToken } from '../../../utilities/functions/login';
-import { Button } from '@mui/material';
+import { Button, setRef } from '@mui/material';
 import Modal from '../../../components/shared/Modal';
+import {
+	cleanClient,
+	fetchClients,
+} from '../../../redux/clients/clientsSlice';
+import { fetchMaterials } from '../../../redux/materials/materialsSlice';
+import { fetchOperations } from '../../../redux/operations/operationsSlice';
+import { fetchStations } from '../../../redux/workStations/workStationSlice';
+import { fetchExchanges } from '../../../redux/exchanges/exchangesSlice';
 
 function OrdersList() {
 	const {
@@ -31,6 +39,11 @@ function OrdersList() {
 	const [prevFieldsModal, setPrevFieldsModal] =
 		useState(false);
 	const [prevFields, setPrevFields] = useState({});
+	const [refresh, setRefresh] = useState(false);
+
+	const toggleRefresh = () => {
+		setRefresh(!refresh);
+	};
 
 	const navigate = useNavigate();
 
@@ -51,6 +64,16 @@ function OrdersList() {
 	}, []);
 
 	useEffect(() => {
+		dispatch(fetchClients());
+		dispatch(fetchMaterials());
+		dispatch(fetchOperations());
+		dispatch(fetchStations());
+		dispatch(cleanClient());
+		dispatch(fetchMaterials());
+		dispatch(fetchExchanges());
+	}, []);
+
+	useEffect(() => {
 		dispatch(
 			fetchFilteredOrders({
 				searchTerm,
@@ -58,7 +81,7 @@ function OrdersList() {
 				page: currentPage,
 			})
 		);
-	}, [currentPage, status]);
+	}, [currentPage, status, refresh]);
 
 	const searchTermSubmit = (e) => {
 		e.preventDefault();
@@ -182,6 +205,7 @@ function OrdersList() {
 				orders={orders}
 				status={status}
 				changeStatus={changeStatus}
+				toggleRefresh={toggleRefresh}
 			/>
 			<div className={styles.paginationContainer}>
 				<Pagination

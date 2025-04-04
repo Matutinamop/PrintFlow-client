@@ -1,6 +1,9 @@
 import styles from './form.module.css';
 import CreatableSelect from 'react-select/creatable';
-import { costCalculator } from '../../../utilities/functions/costCalculator';
+import {
+	costCalculator,
+	toFormatNumber,
+} from '../../../utilities/functions/costCalculator';
 import { useOperationsModule } from '../../../utilities/customHooks/forms/operationsModule';
 import {
 	operationStyle,
@@ -98,9 +101,8 @@ function OperationsModule({
 								<input
 									className={styles.smallInput}
 									name="cost"
-									value={`$ ${op.cost}`}
+									value={`$ ${toFormatNumber(op.cost)}`}
 									onChange={(e) => {
-										/* handleDirtyField(index); */
 										changeValue(e, index);
 									}}
 									disabled={operationOptions.some(

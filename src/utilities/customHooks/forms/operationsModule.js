@@ -2,7 +2,10 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { fetchOperations } from '../../../redux/operations/operationsSlice';
 import { useEffect, useState } from 'react';
-import { costCalculator } from '../../functions/costCalculator';
+import {
+	costCalculator,
+	toRawNumber,
+} from '../../functions/costCalculator';
 
 export const useOperationsModule = (fields, setFields) => {
 	const dispatch = useDispatch();
@@ -144,13 +147,13 @@ export const useOperationsModule = (fields, setFields) => {
 	const changeValue = (e, index) => {
 		setOperationsList((prev) => {
 			const name = e.target.name;
+			const value = e.target.value;
 			const updatedOptions = [...prev];
 
 			if (name === 'cost') {
-				updatedOptions[index][name] =
-					parseFloat(
-						e.target.value.replace('$', '').trim()
-					) || 0;
+				const number = value.replace('$', '').trim();
+				const rawNumber = toRawNumber(number);
+				updatedOptions[index][name] = rawNumber;
 			} else {
 				updatedOptions[index][name] = e.target.value;
 			}

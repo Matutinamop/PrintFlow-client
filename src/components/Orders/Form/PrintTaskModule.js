@@ -10,6 +10,7 @@ import { deepEqual } from '../../../utilities/functions/deepEqual';
 import { selectStyles } from '../../../utilities/selectStyles/selectStyles';
 import Modal from '../../shared/Modal';
 import MaterialsForm from '../../Resources/Materials/MaterialsForm';
+import { toFormatNumber } from '../../../utilities/functions/costCalculator';
 
 function PrintTaskModule({
 	fields,
@@ -392,7 +393,9 @@ function PrintTaskModule({
 				<Input
 					name="costPerBulkPaper"
 					onChange={(e) => changeValue(e)}
-					value={`$ ${info.costPerBulkPaper || ''}`}
+					value={`$ ${
+						toFormatNumber(info.costPerBulkPaper) || ''
+					}`}
 					size="mediumSize"
 					isDisabled
 				>
@@ -402,7 +405,9 @@ function PrintTaskModule({
 					<Input
 						name="paperCost"
 						onChange={(e) => changeValue(e)}
-						value={`$ ${info.paperCost || ''}`}
+						value={`$ ${
+							toFormatNumber(info.paperCost) || ''
+						}`}
 						size="priceSize"
 						isDisabled
 					>
@@ -469,7 +474,9 @@ function PrintTaskModule({
 					<Input
 						name="plateCost"
 						onChange={(e) => changeValue(e)}
-						value={`$ ${info.plateCost || ''}`}
+						value={`$ ${
+							toFormatNumber(info.plateCost) || ''
+						}`}
 						isDisabled
 						size="priceSize"
 					>
@@ -526,7 +533,9 @@ function PrintTaskModule({
 							<Input
 								name="postureCost"
 								onChange={(e) => changeValue(e)}
-								value={`$ ${info.postureCost || ''}`}
+								value={`$ ${
+									toFormatNumber(info.postureCost) || ''
+								}`}
 								size="priceSize"
 								isDisabled
 							>
@@ -549,7 +558,9 @@ function PrintTaskModule({
 									changeValue(e);
 									handleManualChange(e);
 								}}
-								value={`$ ${info.totalCost || ''}`}
+								value={`$ ${
+									toFormatNumber(info.totalCost) || ''
+								}`}
 								size="priceSize"
 								isDisabled
 							>

@@ -73,17 +73,7 @@ export const updateOrder = async (id, fields) => {
 			`${process.env.REACT_APP_API_URL}/api/order/${id}`,
 			body
 		);
-		/* if (response) {
-			if (status === 'Aceptada') {
-				activateOrder(response.data.updatedOrder);
-				return;
-			}
-			if (status === 'Abierta') {
-				deactivateOrder(id);
-				return;
-			}
-			return;
-		} */
+		localStorage.removeItem('fields');
 	} catch (error) {
 		console.error(error);
 	}

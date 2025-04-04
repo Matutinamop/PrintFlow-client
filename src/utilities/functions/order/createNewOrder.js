@@ -114,6 +114,7 @@ export const createNewOrder = async (fields) => {
 			`${process.env.REACT_APP_API_URL}/api/order`,
 			body
 		);
+		localStorage.removeItem('fields');
 		return response;
 	} catch (error) {
 		console.error(error);

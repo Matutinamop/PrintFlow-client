@@ -37,6 +37,16 @@ input:-moz-autofill {
 	color: #333 !important;
 }
 
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type='number'] {
+	-moz-appearance: textfield; /* Firefox */
+}
+
 @font-face {
 	font-family: 'Klavika';
 	src: url(/public/fonts/Klavika-Medium.otf)

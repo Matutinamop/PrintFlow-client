@@ -25,6 +25,10 @@ import { fetchExchanges } from '../../../redux/exchanges/exchangesSlice';
 import { fetchOperations } from '../../../redux/operations/operationsSlice';
 import Modal from '../../../components/shared/Modal';
 import MaterialsForm from '../../../components/Resources/Materials/MaterialsForm';
+import {
+	toFormatNumber,
+	toRawNumber,
+} from '../../../utilities/functions/costCalculator';
 
 function OrderForm() {
 	const location = useLocation();
@@ -74,7 +78,7 @@ function OrderForm() {
 		!!location.state?.fields.scheme?.link
 	);
 
-	useEffect(() => {
+	/* 	useEffect(() => {
 		dispatch(fetchClients());
 		dispatch(fetchMaterials());
 		dispatch(fetchOperations());
@@ -82,7 +86,7 @@ function OrderForm() {
 		dispatch(cleanClient());
 		dispatch(fetchMaterials());
 		dispatch(fetchExchanges());
-	}, []);
+	}, []); */
 
 	useEffect(() => {
 		localStorage.setItem('fields', JSON.stringify(fields));
@@ -225,7 +229,14 @@ function OrderForm() {
 			price = Math.round(price * 100) / 100;
 			price = price.toFixed(2);
 
-			setFields((prev) => ({ ...prev, finalPrice: price }));
+			if (fields.estimatedFinalPrice !== price) {
+				setFields((prev) => ({
+					...prev,
+					estimatedFinalPrice: price,
+					finalPrice: price,
+					deviation: 0,
+				}));
+			}
 		}
 	}, [JSON.stringify(fields)]);
 
@@ -386,33 +397,114 @@ function OrderForm() {
 									/>
 								</div>
 							)}
-
-						<div style={{ width: '200px' }}>
-							<div>
+						<div
+							style={{
+								width: '200px',
+								display: 'flex',
+								flexDirection: 'column',
+								gap: '2px',
+							}}
+						>
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: 'space-between',
+								}}
+							>
+								<p>Precio sugerido: </p>
+								<p>
+									$
+									{toFormatNumber(
+										fields.estimatedFinalPrice
+									) || 0}
+								</p>
+							</div>
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: 'space-between',
+								}}
+							>
 								<label>% Desviación:</label>
 								<input
 									name="deviation"
-									value={fields.deviation || ''}
+									type="number"
+									value={fields.deviation || 0}
 									style={{
 										width: '50px',
 										fontWeight: 'bold',
+										textAlign: 'right',
 									}}
-									type="number"
-									onChange={(e) =>
+									onChange={(e) => {
+										const deviation = parseFloat(
+											e.target.value
+										);
+										if (isNaN(deviation)) return;
+
+										const estimated = parseFloat(
+											fields.estimatedFinalPrice
+										);
+										const newFinalPrice =
+											Math.round(
+												estimated *
+													(1 + deviation / 100) *
+													100
+											) / 100;
+
 										setFields((prev) => ({
 											...prev,
-											[e.target.name]: e.target.value,
-										}))
-									}
+											deviation,
+											finalPrice: newFinalPrice,
+										}));
+									}}
 								/>
 							</div>
-							<p>
-								Precio Final: ${' '}
-								{Math.round(
-									fields.finalPrice *
-										(100 + parseFloat(fields.deviation))
-								) / 100}
-							</p>
+
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: 'space-between',
+								}}
+							>
+								<label>Precio Final:</label>
+								<div style={{ display: 'flex' }}>
+									<p>$</p>
+									<input
+										name="finalPrice"
+										value={
+											toFormatNumber(fields.finalPrice) ||
+											'0'
+										}
+										style={{
+											width: '80px',
+											fontWeight: 'bold',
+											textAlign: 'right',
+										}}
+										onChange={(e) => {
+											const finalPrice = toRawNumber(
+												parseFloat(e.target.value)
+											);
+											if (isNaN(finalPrice)) return;
+
+											const estimated = parseFloat(
+												fields.estimatedFinalPrice
+											);
+											const newDeviation =
+												Math.round(
+													(finalPrice / estimated - 1) *
+														100 *
+														100
+												) / 100;
+
+											setFields((prev) => ({
+												...prev,
+												finalPrice,
+												deviation: newDeviation,
+											}));
+										}}
+									/>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

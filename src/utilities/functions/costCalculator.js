@@ -68,3 +68,20 @@ export const printModuleCost = (module) => {
 		return Math.round(price * 100) / 100;
 	}
 };
+
+export const toRawNumber = (number) => {
+	if (typeof number === 'string') {
+		const raw = number
+			.replace(/\./g, '') // elimina puntos de miles
+			.replace(',', '.'); // cambia la coma decimal por punto
+
+		const res = parseFloat(raw || '0');
+		return res;
+	}
+	return number;
+};
+
+export const toFormatNumber = (number) => {
+	const res = new Intl.NumberFormat('es-AR').format(number);
+	return res;
+};

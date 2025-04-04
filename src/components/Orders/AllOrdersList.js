@@ -32,6 +32,7 @@ export function AllOrdersList({
 	orders,
 	ordersLoading,
 	changeStatus,
+	toggleRefresh,
 }) {
 	const [workshopOrderModal, setWorkshopOrderModal] =
 		useState({
@@ -92,7 +93,10 @@ export function AllOrdersList({
 				isOpen={clientBudgetModal.open}
 				onClose={closeClientBudgetModal}
 			>
-				<ClientBudget order={clientBudgetModal.order} />
+				<ClientBudget
+					order={clientBudgetModal.order}
+					toggleRefresh={toggleRefresh}
+				/>
 			</Modal>
 			<div className={styles.allOrdersTable}>
 				{/* {ordersLoading ? (
@@ -145,7 +149,12 @@ export function AllOrdersList({
 									<Td size={'sizeDate'}>
 										{order?.dateFinal ?? '-'}
 									</Td>
-									<Td>${order?.budget}</Td>
+									<Td>
+										$
+										{new Intl.NumberFormat('es-AR').format(
+											order?.budget
+										)}
+									</Td>
 									<Td size={'sizeNumber'}>
 										{order?.deviation}
 									</Td>

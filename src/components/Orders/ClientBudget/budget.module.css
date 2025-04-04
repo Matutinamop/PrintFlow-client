@@ -96,15 +96,17 @@
 }
 
 .notesTitle {
-	font-size: 12px;
+	font-size: 14px;
 }
 
 .smallLetter {
-	font-size: 10px;
+	font-size: 12px;
 	min-height: 15px;
+	width: 500px;
 	color: black;
 	border: none;
 	resize: none;
 	font-family: 'Klavika';
 	padding: 5px 0 0;
+	white-space: pre-wrap;
 }
