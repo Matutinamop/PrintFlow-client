@@ -104,6 +104,7 @@ function OrdersList() {
 			setPrevFields(recoveredFields);
 			setPrevFieldsModal(true);
 		}
+		navigate('/admin/orders/form');
 	};
 
 	return (
