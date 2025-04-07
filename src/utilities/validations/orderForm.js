@@ -66,10 +66,9 @@ export const printTaskModuleSchema = Joi.object({
   }),
   plateCost: Joi.alternatives()
     .try(
-      Joi.number().min(0),
-      Joi.string().allow('').pattern(priceRegex).allow('0')
+      Joi.number().min(0).allow(NaN), // importante el .allow(NaN)
+      Joi.string().allow('').pattern(priceRegex).allow('0', 'NaN')
     )
-    .allow(NaN)
     .optional(),
   front: Joi.string().allow(''),
   back: Joi.string().allow(''),
