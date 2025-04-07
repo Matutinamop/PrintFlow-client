@@ -69,7 +69,7 @@ export const printTaskModuleSchema = Joi.object({
       Joi.number().min(0),
       Joi.string().allow('').pattern(priceRegex).allow('0')
     )
-    .allow('NaN')
+    .allow(NaN)
     .optional(),
   front: Joi.string().allow(''),
   back: Joi.string().allow(''),
