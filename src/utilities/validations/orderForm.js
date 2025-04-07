@@ -65,8 +65,11 @@ export const printTaskModuleSchema = Joi.object({
     'any.required': 'El campo "Chapas" es obligatorio',
   }),
   plateCost: Joi.alternatives()
-    .try(Joi.number().min(0), Joi.string().pattern(priceRegex).allow('0'))
-    .allow('')
+    .try(
+      Joi.number().min(0),
+      Joi.string().allow('').pattern(priceRegex).allow('0')
+    )
+    .allow('NaN')
     .optional(),
   front: Joi.string().allow(''),
   back: Joi.string().allow(''),
