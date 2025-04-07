@@ -141,11 +141,11 @@ export const orderSchema = Joi.object({
   printTasks: Joi.array().items(printTaskModuleSchema),
   otherTasks: Joi.array().items(otherTaskModuleSchema),
   deviation: Joi.number(),
-  estimatedFinalPrice: Joi.try(
+  estimatedFinalPrice: Joi.alternatives().try(
     Joi.number().min(0),
     Joi.string().pattern(numbersRegex).allow('0')
   ),
-  finalPrice: Joi.try(
+  finalPrice: Joi.alternatives().try(
     Joi.number().min(0),
     Joi.string().pattern(numbersRegex).allow('0')
   ),
