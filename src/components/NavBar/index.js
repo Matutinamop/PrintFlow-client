@@ -9,21 +9,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { rolToken } from '../../utilities/functions/login';
 import { Button } from '@mui/material';
 
-function NavBar({ setHideSideBar, hideSideBar }) {
+function NavBar({ setHideSideBar, hideSideBar, role }) {
 	const [windowSize, setWindowSize] = useState({
 		width: window.innerWidth,
 		height: window.innerHeight,
 	});
 	const [menuOpen, setMenuOpen] = useState(false);
-	const [role, setRole] = useState();
 	const menuRef = useRef(null);
 	const buttonRef = useRef(null);
 	const location = useLocation();
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		setRole(rolToken());
-	}, [location]);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -67,9 +62,8 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 		localStorage.removeItem('sessionToken');
 		navigate('/');
 	}
-
-	if (role) {
-		if (windowSize.width < 1000) {
+	if (windowSize.width < 1000) {
+		if (role === 'ADMIN' || role === 'SUPERADMIN') {
 			return (
 				<div className={styles.navBar}>
 					<div>
@@ -99,7 +93,7 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 									}
 									to="/admin/orders/all"
 								>
-									MOPS
+									Presupuestos
 								</Link>
 								<Link
 									className={(active) =>
@@ -136,7 +130,45 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 					</Link>
 				</div>
 			);
+		} else if (role === 'WORKER') {
+			return (
+				<div className={styles.navBar}>
+					<div>
+						<MenuIcon
+							ref={buttonRef}
+							className={`${styles.burgerMenu} ${
+								menuOpen ? styles.open : ''
+							}`}
+							onClick={() => setHideSideBar(!hideSideBar)}
+						/>
+						{menuOpen ? (
+							<div
+								ref={menuRef}
+								className={`${styles.verticalNav} ${styles.navLinks}`}
+							>
+								<div onClick={() => logout()}>
+									Cerrar sesión
+								</div>
+							</div>
+						) : (
+							''
+						)}
+					</div>
+					<Link to="/task/manager">
+						<div className={styles.logo}>
+							<img
+								className={styles.matuLogo}
+								src="/assets/logos/logo-matutina.png"
+							/>
+							<h1>Matutina</h1>
+						</div>
+					</Link>
+				</div>
+			);
 		}
+	}
+
+	if (role === 'ADMIN' || role === 'SUPERADMIN') {
 		return (
 			<div className={styles.nav}>
 				<div className={styles.logo}>
@@ -168,7 +200,33 @@ function NavBar({ setHideSideBar, hideSideBar }) {
 				</div>
 			</div>
 		);
+	} else if (role === 'WORKER') {
+		return (
+			<div className={styles.nav}>
+				<div className={styles.logo}>
+					<Link to="/task/manager">
+						<img
+							className={styles.matuLogo}
+							src="/assets/logos/logo-matutina.png"
+						/>
+					</Link>
+					<Link to="/task/manager">
+						<h1>Matutina</h1>
+					</Link>
+				</div>
+
+				<div className={styles.logout}>
+					<Button
+						variant="contained"
+						onClick={() => logout()}
+					>
+						Cerrar sesión
+					</Button>
+				</div>
+			</div>
+		);
 	}
+
 	return (
 		<div className={styles.navBarUnknown}>
 			<div className={styles.logo}>

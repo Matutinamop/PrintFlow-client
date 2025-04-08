@@ -41,5 +41,5 @@ export function rolToken() {
 		const userInfo = jwtDecode(token);
 		return userInfo.role;
 	}
-	return;
+	return 'sin rol';
 }

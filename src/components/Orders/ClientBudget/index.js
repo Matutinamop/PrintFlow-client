@@ -143,7 +143,7 @@ function ClientBudget({ order, toggleRefresh }) {
 									fontSize: '20px',
 								}}
 							>
-								Presupuseto Nº.{' '}
+								Presupuesto Nº.{' '}
 								<span>{order.orderNumber} </span>
 							</p>
 						</div>

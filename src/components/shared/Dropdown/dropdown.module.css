@@ -1,15 +1,15 @@
 .dropdown {
 	position: relative;
 	display: inline-block;
-	width: 25px;
-	height: 25px;
+	/* width: 25px */
+	height: 15px;
 	/* z-index: 3; */
 }
 
 .dropdownBtn {
 	color: black; /* Color del texto */
 	border: none; /* Sin borde */
-	padding: 10px 15px; /* Espaciado del botón */
+	/* padding: 5px; */ /* Espaciado del botón */
 	cursor: pointer; /* Cursor de puntero */
 	padding: 0;
 	background-color: transparent;
@@ -26,7 +26,7 @@
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para profundidad */
 	z-index: 4; /* Asegúrate de que esté encima de otros elementos */
 	margin: 0; /* Sin margen */
-	padding: 0; /* Sin padding */
+	padding: 5px; /* Sin padding */
 	list-style: none; /* Sin estilo de lista */
 	font-size: 14px;
 	border-radius: 4px;
@@ -34,7 +34,7 @@
 
 .dropdownMenu li {
 	color: black;
-	padding: 5px;
+	padding: 7px;
 	cursor: pointer;
 	white-space: nowrap; /* Previene el salto de línea */
 	overflow: hidden; /* Oculta el desbordamiento */
@@ -42,5 +42,6 @@
 }
 
 .dropdownMenu li:hover {
-	background-color: #f1f1f1; /* Color al pasar el mouse */
+	background-color: #1976d2; /* Color al pasar el mouse */
+	color: white;
 }

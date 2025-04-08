@@ -33,7 +33,7 @@ function Dropdown({
 				}
 				onClick={toggleDropdown}
 			>
-				<ArrowDropDownIcon />
+				<ArrowDropDownIcon sx={{ fontSize: '1.2rem' }} />
 			</button>
 			{isOpen && (
 				<ul className={styles.dropdownMenu}>

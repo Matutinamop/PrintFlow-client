@@ -218,10 +218,8 @@ function MaterialsForm({
 		} else {
 			try {
 				const res = await createNewMaterial(fields);
-				console.log('res', res);
 
 				if (setQuickMaterial) {
-					console.log(res.data.material);
 					setQuickMaterial(res.data.newMaterial);
 				}
 			} catch (error) {

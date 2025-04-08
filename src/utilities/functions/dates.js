@@ -7,6 +7,44 @@ import {
 
 const now = format(startOfDay(new Date()), 'dd/MM/yyyy');
 
+export const toDateObject = (fechaStr) => {
+	if (!fechaStr) return null;
+
+	if (/^\d{2,4}\/\d{2}\/\d{2}$/.test(fechaStr)) {
+		const [year, month, day] = fechaStr.split('-');
+		const fullYear =
+			year.length === 2
+				? Number('20' + year)
+				: Number(year);
+		return new Date(
+			fullYear,
+			Number(month) - 1,
+			Number(day)
+		);
+	}
+
+	const parsed = new Date(fechaStr);
+	return isNaN(parsed) ? null : parsed;
+};
+
+export const toFormatDate = (dateStr) => {
+	if (!dateStr) {
+		return null;
+	}
+	const date = new Date(dateStr);
+	if (isNaN(date)) return null;
+
+	// Usa funciones UTC para evitar desfase por zona horaria
+	const day = String(date.getUTCDate()).padStart(2, '0');
+	const month = String(date.getUTCMonth() + 1).padStart(
+		2,
+		'0'
+	); // Los meses comienzan en 0, por eso sumamos 1
+	const year = String(date.getUTCFullYear()).slice(-2); // Toma los dos últimos dígitos del año
+
+	return `${day}/${month}/${year}`;
+};
+
 export const parseDate = (dateString) => {
 	let [day, month, year] = dateString.split('/');
 	if (year < 100) {

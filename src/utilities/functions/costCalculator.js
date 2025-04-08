@@ -1,80 +1,71 @@
 export const costCalculator = (operation, quantity) => {
-  let price = 0;
+	let price = 0;
 
-  if (operation.unitCost) {
-    price += operation.unitCost * quantity;
-  }
+	if (operation.unitCost) {
+		price += operation.unitCost * quantity;
+	}
 
-  if (operation.pricingRules) {
-    const { pricingRules } = operation;
-    let quantityLeft = quantity;
-    let range = 1;
+	if (operation.pricingRules.length > 0) {
+		const { pricingRules } = operation;
 
-    while (quantityLeft > 0 && range < pricingRules.length) {
-      const {
-        rangeStart,
-        rangeEnd,
-        price: rulePrice,
-        step,
-      } = pricingRules[range - 1];
-      const quantityRange = rangeEnd - rangeStart;
-      const applicableQuantity = Math.min(quantityLeft, quantityRange);
-      price += (applicableQuantity * rulePrice) / step;
-      quantityLeft -= applicableQuantity;
-      range++;
-    }
-    if (quantityLeft > 0 && range === pricingRules.length) {
-      const { price: rulePrice, step } = pricingRules[range - 1];
-      price += (quantityLeft * rulePrice) / step;
-      quantityLeft = 0;
-    }
-  }
+		const range = pricingRules.find(
+			(rule) =>
+				rule.rangeStart <= quantity &&
+				(!rule.rangeEnd || rule.rangeEnd > quantity)
+		);
 
-  if (operation.minPrice && price < operation.minPrice) {
-    price = operation.minPrice;
-  }
+		price += (range?.price * quantity) / range?.step;
+	}
 
-  return Math.round(price);
+	if (operation.minPrice && price < operation.minPrice) {
+		price = operation.minPrice;
+	}
+
+	return Math.round(price);
 };
 
 export const printCost = (module) => {
-  let price = 0;
+	let price = 0;
 
-  if (module.paperCost) {
-    price += module.paperCost;
-  }
+	if (module.paperCost) {
+		price += module.paperCost;
+	}
 
-  if (module.plateCost) {
-    price += module.plateCost;
-  }
+	if (module.plateCost) {
+		price += module.plateCost;
+	}
 
-  if (module.postureCost) {
-    price += module.postureCost;
-  }
+	if (module.postureCost) {
+		price += module.postureCost;
+	}
 
-  return Math.round(price);
+	return Math.round(price);
 };
 
 export const printModuleCost = (module) => {
-  if (module.printCost && module.moduleRepeat) {
-    const price = module.printCost * module.moduleRepeat;
-    return Math.round(price);
-  }
+	if (module.printCost && module.moduleRepeat) {
+		const price = module.printCost * module.moduleRepeat;
+		return Math.round(price);
+	}
 };
 
 export const toRawNumber = (number) => {
-  if (typeof number === 'string') {
-    const raw = number
-      .replace(/\./g, '') // elimina puntos de miles
-      .replace(',', '.'); // cambia la coma decimal por punto
+	if (typeof number === 'string') {
+		const raw = number
+			.replace(/\./g, '') // elimina puntos de miles
+			.replace(',', '.'); // cambia la coma decimal por punto
 
-    const res = parseFloat(raw || '0');
-    return res;
-  }
-  return number;
+		const res = Number(raw || '0');
+		return res;
+	}
+	return number;
 };
 
 export const toFormatNumber = (number) => {
-  const res = new Intl.NumberFormat('es-AR').format(number);
-  return res;
+	const raw = String(number)
+		.replace(/\./g, '')
+		.replace(',', '');
+	const res = new Intl.NumberFormat('es-AR').format(raw);
+	console.log(raw, res);
+	return res;
 };

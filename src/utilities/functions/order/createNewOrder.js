@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { today } from '../dates';
+import { toDateObject, today } from '../dates';
 import { format } from 'date-fns';
 
 export const createNewOrder = async (fields) => {
@@ -59,8 +59,10 @@ export const createNewOrder = async (fields) => {
 		budget = 0;
 
 	printTasks.map((task) => {
-		budgetEstimate += task.estimatedCost;
-		budget += task.totalCost;
+		if (task.estimatedCost) {
+			budgetEstimate += task.estimatedCost;
+			budget += task.totalCost;
+		}
 	});
 	otherTasks.map((task) => {
 		task.estimatedCost
@@ -73,11 +75,18 @@ export const createNewOrder = async (fields) => {
 
 	const stationsList = tasks
 		.filter((task) => task.operation)
-		.map((task, index) => ({
-			station: task.operation._id ?? task.operation,
-			completed: false,
-			number: index,
-		}));
+		.map((task, index) => {
+			if (!task._id) {
+				return;
+			} else {
+				return {
+					station: task.operation._id ?? task.operation,
+					completed: false,
+					number: index,
+				};
+			}
+		})
+		.filter(Boolean);
 
 	const body = {
 		orderNumber,
@@ -93,11 +102,11 @@ export const createNewOrder = async (fields) => {
 		request:
 			'asdasd' /* aca tengo que ver si va a ir o no en el formulario */,
 		scheme,
-		dateCreated: today(),
-		dateEstimate: format(dateEstimate, 'dd/MM/yy'),
-		dateFinal: dateFinal
-			? format(dateFinal, 'dd/MM/yy')
-			: null,
+		dateCreated: new Date(),
+		dateEstimate: dateEstimate
+			? toDateObject(dateEstimate)
+			: '',
+		dateFinal: dateFinal ? toDateObject(dateFinal) : '',
 		descriptionClient,
 		descriptionWork,
 		descriptionPrivate,
@@ -108,6 +117,8 @@ export const createNewOrder = async (fields) => {
 		deviation: `${deviation} %`,
 		fields,
 	};
+
+	console.log('tasks', tasks);
 
 	try {
 		const response = await axios.post(

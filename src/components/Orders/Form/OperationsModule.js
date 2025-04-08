@@ -101,7 +101,9 @@ function OperationsModule({
 								<input
 									className={styles.smallInput}
 									name="cost"
-									value={`$ ${toFormatNumber(op.cost)}`}
+									value={`$ ${
+										op.cost ? toFormatNumber(op.cost) : 0
+									}`}
 									onChange={(e) => {
 										changeValue(e, index);
 									}}

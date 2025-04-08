@@ -4,7 +4,7 @@
 	align-items: center;
 	width: 100%;
 	overflow: auto;
-	height: 88vh;
+	height: 93vh;
 }
 
 .a4Sheet {
@@ -30,13 +30,14 @@
 }
 
 .headerBlock {
-	width: 280px;
+	width: 180px;
 }
 
 .infoHeader {
 	display: flex;
 	flex-direction: column;
 	font-size: 12px;
+	width: 180px;
 }
 
 .editButtons {
@@ -62,7 +63,7 @@
 	align-items: center;
 	justify-content: space-between;
 	width: 90%;
-	height: 88vh;
+	height: 93vh;
 	color: #edf0f1;
 	padding-top: 20px;
 	margin: 0 auto;

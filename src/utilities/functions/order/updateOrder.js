@@ -2,6 +2,7 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { activateOrder } from './activateOrder';
 import { deactivateOrder } from './deactivateOrder';
+import { toDateObject } from '../dates';
 
 export const updateOrder = async (id, fields) => {
 	const {
@@ -28,8 +29,10 @@ export const updateOrder = async (id, fields) => {
 		budget = 0;
 
 	printTasks.map((task) => {
-		budgetEstimate += task.estimatedCost;
-		budget += task.totalCost;
+		if (task.estimatedCost) {
+			budgetEstimate += task.estimatedCost;
+			budget += task.totalCost;
+		}
 	});
 	otherTasks.map((task) => {
 		task.estimatedCost
@@ -49,14 +52,13 @@ export const updateOrder = async (id, fields) => {
 			email: contactEmail,
 		},
 		deliveryData,
-		status: 'Abierta',
 		request:
 			'asdasd' /* aca tengo que ver si va a ir o no en el formulario */,
 		scheme,
-		dateEstimate: format(dateEstimate, 'dd/MM/yy'),
-		dateFinal: dateFinal
-			? format(dateFinal, 'dd/MM/yy')
-			: null,
+		dateEstimate: dateEstimate
+			? toDateObject(dateEstimate)
+			: '',
+		dateFinal: dateFinal ? toDateObject(dateFinal) : '',
 		descriptionClient,
 		descriptionWork,
 		descriptionPrivate,
@@ -67,6 +69,8 @@ export const updateOrder = async (id, fields) => {
 		status,
 		fields,
 	};
+
+	console.log('tasksupdate', tasks);
 
 	try {
 		const response = await axios.put(

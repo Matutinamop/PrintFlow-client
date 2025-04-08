@@ -58,7 +58,7 @@ function RequestInfoModule({
 
 		// Establecer la URL del archivo y el nombre del archivo de destino
 		link.href = fields.scheme.link;
-		link.download = `Archivos-MOP-${fields.orderNumber}`; // Puedes proporcionar un nombre predeterminado para el archivo descargado
+		link.download = `Archivos-Presupuesto-${fields.orderNumber}`; // Puedes proporcionar un nombre predeterminado para el archivo descargado
 
 		// Simular un clic en el enlace para iniciar la descarga
 		link.click();

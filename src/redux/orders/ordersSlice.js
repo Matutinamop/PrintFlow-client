@@ -48,7 +48,13 @@ const fetchActiveOrders = createAsyncThunk(
 
 const fetchFilteredOrders = createAsyncThunk(
 	'orders/fetchFilteredOrders',
-	async ({ searchTerm, status, page, limit }) => {
+	async ({
+		searchTerm,
+		status,
+		page,
+		limit,
+		dateOrder = false,
+	}) => {
 		try {
 			const response = await axios.get(
 				`${url}/api/order/filtered`,
@@ -58,6 +64,7 @@ const fetchFilteredOrders = createAsyncThunk(
 						...(searchTerm && { searchTerm }),
 						...(status && { status }),
 						...(limit && { limit }),
+						...(dateOrder && { dateOrder }),
 					},
 				}
 			);

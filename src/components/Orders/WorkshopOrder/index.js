@@ -65,7 +65,7 @@ function WorkShopOrder({ order }) {
 
 		// Establecer la URL del archivo y el nombre del archivo de destino
 		link.href = order.scheme.link;
-		link.download = `Archivos-MOP-${order.orderNumber}`; // Puedes proporcionar un nombre predeterminado para el archivo descargado
+		link.download = `Archivos-Presupuesto-${order.orderNumber}`; // Puedes proporcionar un nombre predeterminado para el archivo descargado
 
 		// Simular un clic en el enlace para iniciar la descarga
 		link.click();

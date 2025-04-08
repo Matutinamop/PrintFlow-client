@@ -6,7 +6,10 @@ import { format } from 'date-fns';
 import OrderInfoModule from '../../../components/Orders/Form/OrderInfoModule';
 import RequestInfoModule from '../../../components/Orders/Form/RequestInfoModule';
 import PrintTaskModule from '../../../components/Orders/Form/PrintTaskModule';
-import { cleanClient, fetchClients } from '../../../redux/clients/clientsSlice';
+import {
+	cleanClient,
+	fetchClients,
+} from '../../../redux/clients/clientsSlice';
 import { Button, Switch } from '@mui/material';
 import { fetchMaterials } from '../../../redux/materials/materialsSlice';
 import { fetchStations } from '../../../redux/workStations/workStationSlice';
@@ -23,53 +26,74 @@ import { fetchOperations } from '../../../redux/operations/operationsSlice';
 import Modal from '../../../components/shared/Modal';
 import MaterialsForm from '../../../components/Resources/Materials/MaterialsForm';
 import {
-  toFormatNumber,
-  toRawNumber,
+	toFormatNumber,
+	toRawNumber,
 } from '../../../utilities/functions/costCalculator';
 
 function OrderForm() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { allOrdersCount } = useSelector((state) => state.orders);
-  const { client, clients } = useSelector((state) => state.clients);
-  const [filesError, setFilesError] = useState('');
+	const location = useLocation();
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { allOrdersCount } = useSelector(
+		(state) => state.orders
+	);
+	const { client, clients } = useSelector(
+		(state) => state.clients
+	);
+	const [filesError, setFilesError] = useState('');
 
-  const today = format(new Date(), 'dd/MM/yyyy');
+	const today = format(new Date(), 'dd/MM/yyyy');
 
-  const [checked, setChecked] = useState(() => {
-    const status = location.state?.status;
-    if (status === 'Aceptada') return true;
-    if (status === 'Abierta') return false;
-    return null; // Para cualquier otro valor
-  });
-  const [formErrors, setFormErrors] = useState([]);
-  const [fields, setFields] = useState(
-    location.state
-      ? location.state.fields
-      : {
-          orderNumber: allOrdersCount + 1,
-          printTasks: [{ id: 0, moduleRepeat: 1 }],
-          client: '',
-          otherTasks: [{}],
-          deviation: 0,
-        }
-  );
+	const recoveredFields =
+		location.state?.order && !location.state?.isEdit
+			? location.state.order
+			: null;
+	const editFields = location.state?.isEdit
+		? location.state.order.fields
+		: null;
 
-  console.log(location.state);
+	const [fields, setFields] = useState(
+		recoveredFields
+			? recoveredFields
+			: editFields
+			? editFields
+			: {
+					orderNumber: allOrdersCount + 1,
+					printTasks: [{ id: 0, moduleRepeat: 1 }],
+					client: '',
+					otherTasks: [{}],
+					deviation: 0,
+			  }
+	);
+	/* 
+	useEffect(() => {
+		console.log(fields);
+		console.log('location', location.state);
+	}, [fields]); */
 
-  const [materialModalOpen, setMaterialModalOpen] = useState(false);
-  const [materialModalFields, setMaterialModalFields] = useState({});
-  const [quickMaterial, setQuickMaterial] = useState({});
+	const [checked, setChecked] = useState(() => {
+		const status = location.state?.orderStatus;
+		if (status === 'Aceptada') return true;
+		if (status === 'Abierta') return false;
+		return null;
+	});
 
-  const schemeLink = location.state?.fields.scheme?.link;
+	const [formErrors, setFormErrors] = useState([]);
 
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [filesReady, setFilesReady] = useState(
-    !!location.state?.fields.scheme?.link
-  );
+	const [materialModalOpen, setMaterialModalOpen] =
+		useState(false);
+	const [materialModalFields, setMaterialModalFields] =
+		useState({});
+	const [quickMaterial, setQuickMaterial] = useState({});
 
-  /* 	useEffect(() => {
+	const schemeLink = fields.scheme?.link;
+
+	const [selectedFiles, setSelectedFiles] = useState([]);
+	const [filesReady, setFilesReady] = useState(
+		!!fields.scheme?.link
+	);
+
+	/* 	useEffect(() => {
 		dispatch(fetchClients());
 		dispatch(fetchMaterials());
 		dispatch(fetchOperations());
@@ -79,421 +103,504 @@ function OrderForm() {
 		dispatch(fetchExchanges());
 	}, []); */
 
-  useEffect(() => {
-    localStorage.setItem('fields', JSON.stringify(fields));
-  }, [fields]);
+	const handleDeviationChange = (e) => {
+		let value = e.target.value.trim();
 
-  useEffect(() => {
-    if (schemeLink) {
-      const loadFiles = async () => {
-        const files = await fetchFilesFromZip(schemeLink);
-        setSelectedFiles(files); // Actualiza el estado cuando se cargan los archivos
-      };
+		const regex = /^-?\d*\.?\d*$/;
 
-      loadFiles();
-    }
-  }, [schemeLink]);
+		if (regex.test(value) || value === '') {
+			const deviation = value;
+			console.log(fields.estimatedFinalPrice);
 
-  const setContactInfo = (index) => {
-    const { name, email, phone } = fields.client?.contact[index];
+			const newFinalPrice = value
+				? Math.round(
+						fields.estimatedFinalPrice *
+							(1 + parseFloat(deviation) / 100)
+				  )
+				: fields.estimatedFinalPrice;
 
-    setFields((prev) => ({
-      ...prev,
-      contactName: name,
-      contactEmail: email,
-      contactPhone: phone,
-    }));
-  };
+			setFields((prev) => ({
+				...prev,
+				deviation,
+				finalPrice: newFinalPrice,
+			}));
+		}
+	};
 
-  useEffect(() => {
-    if (fields.client?.contact?.length > 0) {
-      setContactInfo(0);
-    }
-  }, [fields.client]);
+	const handleFinalPriceChange = (e) => {
+		let value = e.target.value.trim();
+		const finalPrice = toRawNumber(value);
+		const regex = /^-?\d*\.?\d*$/;
+		console.log('value', typeof value);
+		if (regex.test(finalPrice) || value === '') {
+			console.log('finalprice', finalPrice);
+			const newDeviation =
+				Math.round(
+					(finalPrice /
+						toRawNumber(fields.estimatedFinalPrice) -
+						1) *
+						100 *
+						10
+				) / 10;
 
-  useEffect(() => {
-    if (checked !== null) {
-      setFields((prev) => ({
-        ...prev,
-        status: checked ? 'Aceptada' : 'Abierta',
-      }));
-    }
-  }, [checked]);
+			setFields((prev) => ({
+				...prev,
+				deviation: newDeviation,
+				finalPrice,
+			}));
+		}
+	};
 
-  const handleCreateOrder = async () => {
-    setFilesError('');
-    const result = orderSchema.validate(fields, {
-      abortEarly: false,
-    });
+	useEffect(() => {
+		localStorage.setItem('fields', JSON.stringify(fields));
+	}, [fields]);
 
-    if (selectedFiles.length > 0 && !filesReady) {
-      return setFilesError('Hay archivos sin subir');
-    }
+	useEffect(() => {
+		if (schemeLink) {
+			const loadFiles = async () => {
+				const files = await fetchFilesFromZip(schemeLink);
+				setSelectedFiles(files); // Actualiza el estado cuando se cargan los archivos
+			};
 
-    await dispatch(fetchOrdersPage()).unwrap();
-    const updatedOrdersCount = store.getState().orders.allOrdersCount;
+			loadFiles();
+		}
+	}, [schemeLink]);
 
-    const updatedFields = {
-      ...fields,
-      orderNumber: updatedOrdersCount + 1,
-    };
+	const setContactInfo = (index) => {
+		const { name, email, phone } =
+			fields.client?.contact[index];
 
-    if (result.error) {
-      return setFormErrors(result.error.details.map((err) => err));
-    }
-    try {
-      const res = await createNewOrder(updatedFields);
-      navigate('/admin/orders/all');
-    } catch (error) {
-      console.error(error);
-    }
-  };
+		setFields((prev) => ({
+			...prev,
+			contactName: name,
+			contactEmail: email,
+			contactPhone: phone,
+		}));
+	};
 
-  const handleEditOrder = async (id) => {
-    setFilesError('');
-    const result = orderSchema.validate(fields, {
-      abortEarly: false,
-    });
-    if (selectedFiles.length > 0 && !filesReady) {
-      return setFilesError('Hay archivos sin subir');
-    }
+	useEffect(() => {
+		if (fields.client?.contact?.length > 0) {
+			setContactInfo(0);
+		}
+	}, [fields.client]);
 
-    if (result.error) {
-      return setFormErrors(result.error.details.map((err) => err));
-    }
-    try {
-      if (location.state) {
-        const res = await updateOrder(id, fields);
-        navigate('/admin/orders/all');
-        return;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+	useEffect(() => {
+		if (checked !== null) {
+			setFields((prev) => ({
+				...prev,
+				status: checked ? 'Aceptada' : 'Abierta',
+			}));
+		}
+	}, [checked]);
 
-  const newPrintTask = () => {
-    const newTask = { id: fields.printTasks.length };
-    setFields((prev) => ({
-      ...prev,
-      printTasks: [...prev.printTasks, newTask],
-    }));
-  };
+	const handleCreateOrder = async () => {
+		setFilesError('');
+		const result = orderSchema.validate(fields, {
+			abortEarly: false,
+		});
 
-  const handleCheck = () => {
-    setChecked(!checked);
-  };
+		if (selectedFiles.length > 0 && !filesReady) {
+			return setFilesError('Hay archivos sin subir');
+		}
 
-  const deletePrintModule = (i) => {
-    const newModules = fields.printTasks.filter((mod, index) => index !== i);
-    setFields((prev) => ({
-      ...prev,
-      printTasks: newModules,
-    }));
-  };
+		await dispatch(fetchOrdersPage()).unwrap();
+		const updatedOrdersCount =
+			store.getState().orders.allOrdersCount;
 
-  useEffect(() => {
-    if (fields.printTasks) {
-      let price = 0;
-      fields.printTasks.map((task) => {
-        if (task.totalCost) {
-          price += Number(task.totalCost);
-        }
-      });
-      fields.otherTasks.map((task) => {
-        if (task.cost) {
-          return (price += Number(task.cost));
-        }
-        if (task.estimatedCost) {
-          return (price += Number(task.estimatedCost));
-        }
-      });
+		const updatedFields = {
+			...fields,
+			orderNumber: updatedOrdersCount + 1,
+		};
 
-      price = Math.round(price);
+		if (result.error) {
+			return setFormErrors(
+				result.error.details.map((err) => err)
+			);
+		}
+		try {
+			const res = await createNewOrder(updatedFields);
+			navigate('/admin/orders/all');
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
-      if (fields.estimatedFinalPrice !== price) {
-        setFields((prev) => ({
-          ...prev,
-          estimatedFinalPrice: price,
-          finalPrice: price,
-          deviation: 0,
-        }));
-      }
-    }
-  }, [JSON.stringify(fields)]);
+	const handleEditOrder = async (id) => {
+		setFilesError('');
+		const result = orderSchema.validate(fields, {
+			abortEarly: false,
+		});
+		if (selectedFiles.length > 0 && !filesReady) {
+			return setFilesError('Hay archivos sin subir');
+		}
 
-  return (
-    <div className={styles.formPage}>
-      <Modal
-        isOpen={materialModalOpen}
-        onClose={() => setMaterialModalOpen(false)}
-      >
-        <MaterialsForm
-          setOpenMaterialModal={setMaterialModalOpen}
-          fields={materialModalFields}
-          setFields={setMaterialModalFields}
-          setQuickMaterial={setQuickMaterial}
-        />
-      </Modal>
+		if (result.error) {
+			return setFormErrors(
+				result.error.details.map((err) => err)
+			);
+		}
+		try {
+			if (editFields) {
+				const res = await updateOrder(id, fields);
+				navigate('/admin/orders/all');
+				return;
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
-      <div className={styles.a4Sheet}>
-        <div className={styles.documentContent}>
-          <div className={styles.mopHeader}>
-            <div className={styles.headerBlock}>
-              <h4>Imprenta</h4>
-              <h2>MATUTINA</h2>
-            </div>
-            <h3 className={styles.headerBlock}>MOP de la empresa</h3>
-            <div className={`${styles.headerBlock} ${styles.infoHeader}`}>
-              <p
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                Fecha de Creación: <span>{today}</span>
-              </p>
-              <p
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                {location.state ? (
-                  <>
-                    MOP Nº. <span>{allOrdersCount} </span>
-                  </>
-                ) : (
-                  <>
-                    MOP Nº. <span>{allOrdersCount + 1} </span>
-                  </>
-                )}
-              </p>
-            </div>
-          </div>
-          <OrderInfoModule
-            formErrors={formErrors}
-            fields={fields}
-            clients={clients}
-            setContactInfo={setContactInfo}
-            client={client}
-            setFields={setFields}
-          />
-          <RequestInfoModule
-            formErrors={formErrors}
-            fields={fields}
-            setFields={setFields}
-            filesReady={filesReady}
-            setFilesReady={setFilesReady}
-            selectedFiles={selectedFiles}
-            setSelectedFiles={setSelectedFiles}
-          />
-          {fields?.printTasks?.map((task, index) => (
-            <PrintTaskModule
-              formErrors={formErrors}
-              info={task}
-              key={index}
-              fields={fields}
-              module={task.id}
-              setFields={setFields}
-              index={index}
-              deleteModule={deletePrintModule}
-              quickMaterial={quickMaterial}
-              setMaterialModalOpen={setMaterialModalOpen}
-              setMaterialModalFields={setMaterialModalFields}
-            />
-          ))}
-          <div>
-            <Button
-              variant='contained'
-              onClick={newPrintTask}
-              sx={{ mt: '10px' }}
-            >
-              Nuevo modulo de impresión
-            </Button>
-          </div>
-          <OperationsModule
-            formErrors={formErrors}
-            setFields={setFields}
-            fields={fields}
-          />
-          <div
-            style={{
-              display: 'flex',
-              marginTop: '30px',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <div>
-              {formErrors.map((err, index) => (
-                <p
-                  key={index}
-                  style={{
-                    color: 'red',
-                    fontSize: '11px',
-                    backgroundColor: 'rgba(0,0,0,0.2)',
-                    borderRadius: '4px',
-                    margin: '2px 0',
-                  }}
-                >
-                  {err.message}
-                </p>
-              ))}
-              {filesError ? (
-                <p
-                  style={{
-                    color: 'red',
-                    fontSize: '11px',
-                    backgroundColor: 'rgba(0,0,0,0.2)',
-                    borderRadius: '4px',
-                    margin: '2px 0',
-                  }}
-                >
-                  {filesError}
-                </p>
-              ) : (
-                ''
-              )}
-            </div>
+	const newPrintTask = () => {
+		const newTask = { id: fields.printTasks.length };
+		setFields((prev) => ({
+			...prev,
+			printTasks: [...prev.printTasks, newTask],
+		}));
+	};
 
-            {location.state &&
-              (location.state?.status === 'Aceptada' ||
-                location.state?.status === 'Abierta') && (
-                <div>
-                  <label>Orden activa: </label>
-                  <Switch
-                    sx={{
-                      backgroundColor: 'rgba(0,0,0,0.2)',
-                      borderRadius: '10px',
-                    }}
-                    checked={checked}
-                    onChange={handleCheck}
-                  />
-                </div>
-              )}
-            <div
-              style={{
-                width: '200px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '2px',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <p>Precio sugerido: </p>
-                <p>${toFormatNumber(fields.estimatedFinalPrice) || 0}</p>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <label>% Desviación:</label>
-                <input
-                  name='deviation'
-                  type='number'
-                  value={fields.deviation || 0}
-                  style={{
-                    width: '50px',
-                    fontWeight: 'bold',
-                    textAlign: 'right',
-                  }}
-                  onChange={(e) => {
-                    const deviation = parseFloat(e.target.value);
-                    if (isNaN(deviation)) return;
+	const handleCheck = () => {
+		setChecked(!checked);
+	};
 
-                    const estimated = parseFloat(fields.estimatedFinalPrice);
-                    const newFinalPrice = Math.round(
-                      estimated * (1 + deviation / 100)
-                    );
+	const deletePrintModule = (i) => {
+		const newModules = fields.printTasks.filter(
+			(mod, index) => index !== i
+		);
+		setFields((prev) => ({
+			...prev,
+			printTasks: newModules,
+		}));
+	};
 
-                    setFields((prev) => ({
-                      ...prev,
-                      deviation,
-                      finalPrice: newFinalPrice,
-                    }));
-                  }}
-                />
-              </div>
+	useEffect(() => {
+		if (fields.printTasks) {
+			let price = 0;
+			fields.printTasks.map((task) => {
+				if (task.totalCost) {
+					price += Number(task.totalCost);
+				}
+			});
+			fields.otherTasks.map((task) => {
+				if (task.cost) {
+					return (price += Number(task.cost));
+				}
+				if (task.estimatedCost) {
+					return (price += Number(task.estimatedCost));
+				}
+			});
 
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <label>Precio Final:</label>
-                <div style={{ display: 'flex' }}>
-                  <p>$</p>
-                  <input
-                    name='finalPrice'
-                    value={toFormatNumber(fields.finalPrice) || '0'}
-                    style={{
-                      width: '80px',
-                      fontWeight: 'bold',
-                      textAlign: 'right',
-                    }}
-                    onChange={(e) => {
-                      const finalPrice = toRawNumber(
-                        parseFloat(e.target.value)
-                      );
-                      if (isNaN(finalPrice)) return;
+			price = Math.round(price);
 
-                      const estimated = parseFloat(fields.estimatedFinalPrice);
-                      const newDeviation = Math.round(
-                        (finalPrice / estimated - 1) * 100
-                      );
+			if (fields.estimatedFinalPrice !== price) {
+				setFields((prev) => ({
+					...prev,
+					estimatedFinalPrice: price,
+					finalPrice: price,
+					deviation: 0,
+				}));
+			}
+		}
+	}, [JSON.stringify(fields)]);
 
-                      setFields((prev) => ({
-                        ...prev,
-                        finalPrice,
-                        deviation: newDeviation,
-                      }));
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {location.state ? (
-        <div className={styles.buttons}>
-          <Button
-            variant='contained'
-            color='success'
-            onClick={() => handleEditOrder(location.state._id)}
-          >
-            Guardar cambios
-          </Button>
-          <Button
-            variant='contained'
-            color='success'
-            onClick={() => handleCreateOrder()}
-          >
-            Guardar como nuevo
-          </Button>
-        </div>
-      ) : (
-        <div className={styles.buttons}>
-          <Button
-            variant='contained'
-            color='success'
-            onClick={() => handleCreateOrder()}
-          >
-            Guardar
-          </Button>
-        </div>
-      )}
-    </div>
-  );
+	return (
+		<div className={styles.formPage}>
+			<Modal
+				isOpen={materialModalOpen}
+				onClose={() => setMaterialModalOpen(false)}
+			>
+				<MaterialsForm
+					setOpenMaterialModal={setMaterialModalOpen}
+					fields={materialModalFields}
+					setFields={setMaterialModalFields}
+					setQuickMaterial={setQuickMaterial}
+				/>
+			</Modal>
+
+			<div className={styles.a4Sheet}>
+				<div className={styles.documentContent}>
+					<div className={styles.mopHeader}>
+						<div className={styles.headerBlock}>
+							<h4>Imprenta</h4>
+							<h2>MATUTINA</h2>
+						</div>
+						<h3
+							className={styles.headerBlock}
+							style={{
+								width: '280px',
+								textAlign: 'center',
+							}}
+						>
+							Presupuesto de la empresa
+						</h3>
+						<div
+							className={`${styles.headerBlock} ${styles.infoHeader}`}
+						>
+							<p
+								style={{
+									display: 'flex',
+									justifyContent: 'space-between',
+								}}
+							>
+								Fecha de Creación: <span>{today}</span>
+							</p>
+							<p
+								style={{
+									display: 'flex',
+									justifyContent: 'space-between',
+								}}
+							>
+								{editFields ? (
+									<>
+										Presupuesto Nº.{' '}
+										<span>{fields.orderNumber} </span>
+									</>
+								) : (
+									<>
+										Presupuesto Nº.{' '}
+										<span>{allOrdersCount + 1} </span>
+									</>
+								)}
+							</p>
+						</div>
+					</div>
+					<OrderInfoModule
+						formErrors={formErrors}
+						fields={fields}
+						clients={clients}
+						setContactInfo={setContactInfo}
+						client={client}
+						setFields={setFields}
+					/>
+					<RequestInfoModule
+						formErrors={formErrors}
+						fields={fields}
+						setFields={setFields}
+						filesReady={filesReady}
+						setFilesReady={setFilesReady}
+						selectedFiles={selectedFiles}
+						setSelectedFiles={setSelectedFiles}
+					/>
+					{fields?.printTasks?.map((task, index) => (
+						<PrintTaskModule
+							formErrors={formErrors}
+							info={task}
+							key={index}
+							fields={fields}
+							module={task.id}
+							setFields={setFields}
+							index={index}
+							deleteModule={deletePrintModule}
+							quickMaterial={quickMaterial}
+							setMaterialModalOpen={setMaterialModalOpen}
+							setMaterialModalFields={
+								setMaterialModalFields
+							}
+						/>
+					))}
+					<div>
+						<Button
+							variant="contained"
+							onClick={newPrintTask}
+							sx={{ mt: '10px' }}
+						>
+							Nuevo modulo de impresión
+						</Button>
+					</div>
+					<OperationsModule
+						formErrors={formErrors}
+						setFields={setFields}
+						fields={fields}
+					/>
+					<div
+						style={{
+							display: 'flex',
+							marginTop: '30px',
+							justifyContent: 'space-between',
+							alignItems: 'center',
+						}}
+					>
+						<div>
+							{formErrors.map((err, index) => (
+								<p
+									key={index}
+									style={{
+										color: 'red',
+										fontSize: '11px',
+										backgroundColor: 'rgba(0,0,0,0.2)',
+										borderRadius: '4px',
+										margin: '2px 0',
+									}}
+								>
+									{err.message}
+								</p>
+							))}
+							{filesError ? (
+								<p
+									style={{
+										color: 'red',
+										fontSize: '11px',
+										backgroundColor: 'rgba(0,0,0,0.2)',
+										borderRadius: '4px',
+										margin: '2px 0',
+									}}
+								>
+									{filesError}
+								</p>
+							) : (
+								''
+							)}
+						</div>
+
+						{(fields.status === 'Aceptada' ||
+							fields.status === 'Abierta') && (
+							<div>
+								<label>Orden activa: </label>
+								<Switch
+									sx={{
+										backgroundColor: 'rgba(0,0,0,0.2)',
+										borderRadius: '10px',
+									}}
+									checked={checked}
+									onChange={handleCheck}
+								/>
+							</div>
+						)}
+						<div
+							style={{
+								width: '200px',
+								display: 'flex',
+								flexDirection: 'column',
+								gap: '2px',
+							}}
+						>
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: 'space-between',
+								}}
+							>
+								<p>Precio sugerido: </p>
+								<p>
+									$
+									{toFormatNumber(
+										fields.estimatedFinalPrice
+									) || 0}
+								</p>
+							</div>
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: 'space-between',
+								}}
+							>
+								<label>% Desviación:</label>
+								<input
+									name="deviation"
+									type="text"
+									value={fields.deviation}
+									style={{
+										width: '50px',
+										fontWeight: 'bold',
+										textAlign: 'right',
+									}}
+									onChange={handleDeviationChange}
+								/>
+							</div>
+
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: 'space-between',
+								}}
+							>
+								<label>Precio Final:</label>
+								<div style={{ display: 'flex' }}>
+									<p>$</p>
+									{/* <input
+										name="finalPrice"
+										value={
+											fields.finalPrice
+												? toFormatNumber(fields.finalPrice)
+												: 0
+										}
+										style={{
+											width: '80px',
+											fontWeight: 'bold',
+											textAlign: 'right',
+										}}
+										onChange={(e) => {
+											const finalPrice = toRawNumber(
+												parseFloat(e.target.value)
+											);
+											if (isNaN(finalPrice)) return;
+
+											const estimated = parseFloat(
+												fields.estimatedFinalPrice
+											);
+											const newDeviation =
+												Math.round(
+													(finalPrice / estimated - 1) *
+														100 *
+														10
+												) / 10;
+
+											setFields((prev) => ({
+												...prev,
+												finalPrice,
+												deviation: newDeviation,
+											}));
+										}}
+									/> */}
+									<input
+										name="finalPrice"
+										value={toFormatNumber(
+											fields.finalPrice
+										)}
+										style={{
+											width: '80px',
+											fontWeight: 'bold',
+											textAlign: 'end',
+										}}
+										onChange={handleFinalPriceChange}
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{editFields ? (
+				<div className={styles.buttons}>
+					<Button
+						variant="contained"
+						color="success"
+						onClick={() =>
+							handleEditOrder(location.state.order._id)
+						}
+					>
+						Guardar cambios
+					</Button>
+					<Button
+						variant="contained"
+						color="success"
+						onClick={() => handleCreateOrder()}
+					>
+						Guardar como nuevo
+					</Button>
+				</div>
+			) : (
+				<div className={styles.buttons}>
+					<Button
+						variant="contained"
+						color="success"
+						onClick={() => handleCreateOrder()}
+					>
+						Guardar
+					</Button>
+				</div>
+			)}
+		</div>
+	);
 }
 
 export default OrderForm;

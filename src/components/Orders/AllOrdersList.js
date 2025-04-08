@@ -11,6 +11,7 @@ import {
 import {
 	isUrgent,
 	isWarning,
+	toFormatDate,
 } from '../../utilities/functions/dates';
 import Loader from '../shared/Loader';
 import Dropdown from '../shared/Dropdown';
@@ -27,12 +28,15 @@ import {
 	updateOrder,
 } from '../../utilities/functions/order/updateOrder';
 import ClientBudget from './ClientBudget';
+import { fetchFilteredOrders } from '../../redux/orders/ordersSlice';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export function AllOrdersList({
 	orders,
 	ordersLoading,
 	changeStatus,
 	toggleRefresh,
+	setDateOrder,
 }) {
 	const [workshopOrderModal, setWorkshopOrderModal] =
 		useState({
@@ -54,7 +58,13 @@ export function AllOrdersList({
 	const navigate = useNavigate(); // Cambio aquí
 
 	const handleEditClick = (order) => {
-		navigate('/admin/orders/form', { state: order }); // Cambio aquí
+		navigate('/admin/orders/form', {
+			state: {
+				order,
+				isEdit: true,
+				orderStatus: order.status,
+			},
+		}); // Cambio aquí
 	};
 
 	const createOrder = (order) => {
@@ -108,7 +118,7 @@ export function AllOrdersList({
 					<Table>
 						<Thead>
 							<Tr>
-								<Th size={'sizeNumber'}>Nº MOP</Th>
+								<Th size={'sizeNumber'}>Nº PRES.</Th>
 								<Th size={'sizeDate'}>Producto</Th>
 								<Th size={'sizeClient'}>Cliente</Th>
 								<Th size="sizeStatus">
@@ -120,11 +130,25 @@ export function AllOrdersList({
 									/>
 								</Th>
 								<Th size={'sizeDate'}>Creado</Th>
-								<Th size={'sizeDate'}>Fecha límite</Th>
-								<Th size={'sizeDate'}>Presupuesto</Th>
+								<Th size={'sizeDate'}>Fecha estimada</Th>
+								<Th size={'sizeDate'}>
+									<p
+										onClick={setDateOrder}
+										style={{ cursor: 'pointer' }}
+									>
+										Fecha límite
+									</p>
+									<ArrowDropDownIcon
+										sx={{
+											fontSize: '1.2rem',
+											cursor: 'pointer',
+										}}
+									/>
+								</Th>
+								<Th size={'sizeDate'}>Precio</Th>
 								<Th size={'sizeNumber'}>Desv.</Th>
 								<Th size={'sizePDF'}>Orden</Th>
-								<Th size={'sizePDF'}>Pres.</Th>
+								<Th size={'sizePDF'}>Pres. Cli.</Th>
 								<th className={styles.editTh}>Editar</th>
 							</Tr>
 						</Thead>
@@ -132,8 +156,8 @@ export function AllOrdersList({
 							{orders.map((order) => (
 								<Tr
 									key={order?._id}
-									warning={isWarning(order)}
-									urgent={isUrgent(order)}
+									/* warning={isWarning(order)}
+									urgent={isUrgent(order)} */
 								>
 									<Td size={'sizeNumber'}>
 										{order?.orderNumber}
@@ -144,10 +168,14 @@ export function AllOrdersList({
 									</Td>
 									<Td size="sizeStatus">{order?.status}</Td>
 									<Td size={'sizeDate'}>
-										{order?.dateCreated}
+										{toFormatDate(order?.dateCreated)}
 									</Td>
 									<Td size={'sizeDate'}>
-										{order?.dateFinal ?? '-'}
+										{toFormatDate(order?.dateEstimate) ??
+											'-'}
+									</Td>
+									<Td size={'sizeDate'}>
+										{toFormatDate(order?.dateFinal) ?? '-'}
 									</Td>
 									<Td>
 										$

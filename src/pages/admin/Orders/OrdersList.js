@@ -48,8 +48,10 @@ function OrdersList() {
 	const navigate = useNavigate();
 
 	const recoverData = () => {
-		const fields = prevFields;
-		navigate('/admin/orders/form', { state: { fields } });
+		const order = prevFields;
+		navigate('/admin/orders/form', {
+			state: { order },
+		});
 	};
 
 	useEffect(() => {
@@ -69,7 +71,6 @@ function OrdersList() {
 		dispatch(fetchOperations());
 		dispatch(fetchStations());
 		dispatch(cleanClient());
-		dispatch(fetchMaterials());
 		dispatch(fetchExchanges());
 	}, []);
 
@@ -82,6 +83,16 @@ function OrdersList() {
 			})
 		);
 	}, [currentPage, status, refresh]);
+
+	const setDateOrder = () => {
+		dispatch(
+			fetchFilteredOrders({
+				searchTerm,
+				page: currentPage,
+				dateOrder: true,
+			})
+		);
+	};
 
 	const searchTermSubmit = (e) => {
 		e.preventDefault();
@@ -139,7 +150,8 @@ function OrdersList() {
 			>
 				<div className={styles.prevModal}>
 					<h3>
-						Quieres recuperar los datos de la ultima MOP?
+						Quieres recuperar los datos del ultimo
+						presupuesto?
 					</h3>
 					<div className={styles.prevButtons}>
 						<Link to={'/admin/orders/form'}>
@@ -164,7 +176,7 @@ function OrdersList() {
 				</div>
 			</Modal>
 			<h2 className={styles.allOrdersTitle}>
-				LISTA DE MOPS
+				LISTA DE PRESUPUESTOS
 			</h2>
 			<div
 				style={{
@@ -206,6 +218,7 @@ function OrdersList() {
 				status={status}
 				changeStatus={changeStatus}
 				toggleRefresh={toggleRefresh}
+				setDateOrder={setDateOrder}
 			/>
 			<div className={styles.paginationContainer}>
 				<Pagination

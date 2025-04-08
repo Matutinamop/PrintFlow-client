@@ -41,7 +41,7 @@ function SideBar({ hideSideBar }) {
 					}
 					to="/admin/orders/all"
 				>
-					MOPS
+					Presupuestos
 				</Link>
 				<Link
 					className={
@@ -52,16 +52,6 @@ function SideBar({ hideSideBar }) {
 					to="/admin/clients"
 				>
 					Clientes
-				</Link>
-				<Link
-					className={
-						location.pathname === '/users'
-							? styles.active
-							: ''
-					}
-					to="/admin/users"
-				>
-					Usuarios
 				</Link>
 				<Link
 					className={
