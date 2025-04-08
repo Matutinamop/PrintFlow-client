@@ -218,9 +218,9 @@ const useCalculateFields = (
     if (module.bulkPaperQuantity && module.costPerBulkPaper) {
       setFields((prev) => {
         const updatedPrintTasks = [...prev.printTasks];
-        updatedPrintTasks[index].paperCost =
-          Math.round(module.bulkPaperQuantity * module.costPerBulkPaper * 100) /
-          100;
+        updatedPrintTasks[index].paperCost = Math.round(
+          module.bulkPaperQuantity * module.costPerBulkPaper
+        );
         return {
           ...prev,
           printTasks: updatedPrintTasks,
