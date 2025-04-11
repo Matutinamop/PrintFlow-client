@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './workshop.module.css';
-import { today } from '../../../utilities/functions/dates';
+import {
+	today,
+	toFormatDate,
+} from '../../../utilities/functions/dates';
 import { useSelector } from 'react-redux';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -123,7 +126,9 @@ function WorkShopOrder({ order, toggleRefresh }) {
 								}}
 							>
 								Fecha de Creación:{' '}
-								<span>{order.dateCreated}</span>
+								<span>
+									{toFormatDate(order.dateCreated)}
+								</span>
 							</p>
 							<p
 								style={{

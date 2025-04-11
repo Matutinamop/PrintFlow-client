@@ -8,6 +8,7 @@ import { invisibleStyles } from '../../../utilities/selectStyles/selectStyles';
 import { toFormatNumber } from '../../../utilities/functions/costCalculator';
 import { updateOrder } from '../../../utilities/functions/order/updateOrder';
 import { useDispatch } from 'react-redux';
+import { toFormatDate } from '../../../utilities/functions/dates';
 
 function ClientBudget({ order, toggleRefresh }) {
 	const { fields } = order;
@@ -133,7 +134,9 @@ function ClientBudget({ order, toggleRefresh }) {
 								}}
 							>
 								Fecha de Creación:{' '}
-								<span>{order.dateCreated}</span>
+								<span>
+									{toFormatDate(order.dateCreated)}
+								</span>
 							</p>
 							<p
 								style={{
