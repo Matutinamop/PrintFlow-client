@@ -1,30 +1,49 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './workshop.module.css';
-import {
-	today,
-	toFormatDate,
-} from '../../../utilities/functions/dates';
-import { useSelector } from 'react-redux';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import { toFormatDate } from '../../../utilities/functions/dates';
 import { Button } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { fetchMaterialById } from '../../../redux/materials/materialsSlice';
 import html2pdf from 'html2pdf.js';
 import { acceptOrder } from '../../../utilities/functions/order/updateOrder';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import {
+	List,
+	ListItem,
+	ListItemIcon,
+	ListItemText,
+	Typography,
+} from '@mui/material';
+import { fetchFilesFromZip } from '../../../utilities/functions/forms/uploadFile';
 
 function WorkShopOrder({ order, toggleRefresh }) {
-	const dispatch = useDispatch();
 	const orderPDF = useRef();
 	const { fields } = order;
-	const { allOrdersCount } = useSelector(
-		(state) => state.orders
-	);
+
+	const [selectedFiles, setSelectedFiles] = useState({});
+	const imageExtensions = [
+		'jpg',
+		'jpeg',
+		'png',
+		'gif',
+		'webp',
+		'svg',
+	];
+
+	useEffect(() => {
+		if (order.scheme?.link) {
+			const loadFiles = async () => {
+				const files = await fetchFilesFromZip(
+					order.scheme.link
+				);
+				setSelectedFiles(files);
+			};
+
+			loadFiles();
+		}
+	}, [order.scheme]);
 
 	const generatePDF = () => {
 		const input = orderPDF.current;
 
-		// Configuración del PDF
 		const options = {
 			margin: 0,
 			filename: `Orden-Taller-${fields.orderNumber}.pdf`,
@@ -42,14 +61,12 @@ function WorkShopOrder({ order, toggleRefresh }) {
 			toggleRefresh();
 		}
 
-		// Generar el PDF
 		html2pdf()
 			.from(input)
 			.set(options)
 			.toPdf()
 			.get('pdf')
 			.then(function (pdf) {
-				// Abrir el PDF para impresión
 				const pdfBlob = pdf.output('blob');
 				const pdfUrl = URL.createObjectURL(pdfBlob);
 				const printWindow = window.open(pdfUrl, '_blank');
@@ -69,14 +86,11 @@ function WorkShopOrder({ order, toggleRefresh }) {
 	};
 
 	const handleDownload = () => {
-		// Crear un enlace de descarga dinámicamente
 		const link = document.createElement('a');
 
-		// Establecer la URL del archivo y el nombre del archivo de destino
 		link.href = order.scheme.link;
-		link.download = `Archivos-Presupuesto-${order.orderNumber}`; // Puedes proporcionar un nombre predeterminado para el archivo descargado
+		link.download = `Archivos-Presupuesto-${order.orderNumber}`;
 
-		// Simular un clic en el enlace para iniciar la descarga
 		link.click();
 	};
 
@@ -258,6 +272,91 @@ function WorkShopOrder({ order, toggleRefresh }) {
 								{fields.descriptionWork ?? ''}
 							</p>
 						</div>
+						{order.scheme?.link ? (
+							<div style={{ width: '100%' }}>
+								<label htmlFor="upload-button">
+									<Button
+										variant="contained"
+										component="span"
+										startIcon={<UploadFileIcon />}
+										color="primary"
+									>
+										Adjuntar archivos
+									</Button>
+								</label>
+								{selectedFiles.length > 0 && (
+									<div
+										style={{
+											marginTop: '20px',
+											textAlign: 'left',
+											width: '100%',
+										}}
+									>
+										<Typography>
+											Archivos seleccionados:
+										</Typography>
+										<List sx={{ width: '100%' }}>
+											{selectedFiles.map((file, index) => (
+												<ListItem
+													key={index}
+													sx={{
+														display: 'flex',
+														gap: '15px',
+														justifyContent: 'space-between',
+														width: '100%',
+													}}
+												>
+													<ListItemText
+														primary={file.name}
+														secondary={`Tamaño: ${(
+															file.size / 1024
+														).toFixed(2)} KB`}
+													/>
+
+													<ListItemIcon>
+														{imageExtensions.includes(
+															file.name
+																.split('.')
+																.pop()
+																.toLowerCase()
+														) ? (
+															<img
+																src={URL.createObjectURL(
+																	file
+																)}
+																alt={file.name}
+																style={{
+																	width: '50px',
+																	height: '50px',
+																	objectFit: 'cover',
+																	borderRadius: '4px',
+																}}
+															/>
+														) : (
+															<UploadFileIcon />
+														)}
+													</ListItemIcon>
+												</ListItem>
+											))}
+										</List>
+									</div>
+								)}
+								{selectedFiles.length > 0 ? (
+									<>
+										<Button
+											variant="contained"
+											onClick={() => handleDownload()}
+										>
+											Descargar
+										</Button>
+									</>
+								) : (
+									''
+								)}
+							</div>
+						) : (
+							''
+						)}
 					</div>
 					{fields.printTasks.map((info, index) => (
 						<div

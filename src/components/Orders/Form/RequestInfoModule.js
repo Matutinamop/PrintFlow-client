@@ -46,21 +46,13 @@ function RequestInfoModule({
 		'webp',
 		'svg',
 	];
-	/* 	useEffect(() => {
-		if (selectedFiles.length > 0) {
-			setFilesReady(false);
-		}
-	}, [selectedFiles]); */
 
 	const handleDownload = () => {
-		// Crear un enlace de descarga dinámicamente
 		const link = document.createElement('a');
 
-		// Establecer la URL del archivo y el nombre del archivo de destino
 		link.href = fields.scheme.link;
-		link.download = `Archivos-Presupuesto-${fields.orderNumber}`; // Puedes proporcionar un nombre predeterminado para el archivo descargado
+		link.download = `Archivos-Presupuesto-${fields.orderNumber}`;
 
-		// Simular un clic en el enlace para iniciar la descarga
 		link.click();
 	};
 
