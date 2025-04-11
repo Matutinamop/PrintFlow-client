@@ -170,7 +170,7 @@ export const printTaskModuleSchema = Joi.object({
 });
 
 const otherTaskModuleSchema = Joi.object({
-	operation: Joi.object(),
+	operation: Joi.any(),
 	description: Joi.string().allow(''),
 	unitType: Joi.string().allow(''),
 	quantity: Joi.alternatives()
@@ -215,11 +215,11 @@ export const orderSchema = Joi.object({
 			'any.required':
 				'Es necesario seleccionar un numero de contacto',
 		}),
-	contactEmail: Joi.string().pattern(emailRegex),
-	deliveryData: Joi.string(),
-	descriptionClient: Joi.string(),
-	descriptionWork: Joi.string(),
-	descriptionPrivate: Joi.string(),
+	contactEmail: Joi.string().pattern(emailRegex).allow(''),
+	deliveryData: Joi.string().allow(''),
+	descriptionClient: Joi.string().allow(''),
+	descriptionWork: Joi.string().allow(''),
+	descriptionPrivate: Joi.string().allow(''),
 	printTasks: Joi.array().items(printTaskModuleSchema),
 	otherTasks: Joi.array().items(otherTaskModuleSchema),
 	deviation: Joi.number(),

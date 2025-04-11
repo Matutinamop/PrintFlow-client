@@ -69,9 +69,10 @@ export function AllOrdersList({
 
 	const createOrder = (order) => {
 		setWorkshopOrderModal({ open: true, order: order });
+		/* toggleRefresh();
 		if (order.status === 'Abierta') {
 			acceptOrder(order._id);
-		}
+		} */
 	};
 
 	const createBudget = (order) => {
@@ -79,6 +80,7 @@ export function AllOrdersList({
 	};
 
 	const closeWorkshopModal = () => {
+		/* toggleRefresh(); */
 		setWorkshopOrderModal((prev) => ({
 			...prev,
 			open: false,
@@ -97,7 +99,10 @@ export function AllOrdersList({
 				isOpen={workshopOrderModal.open}
 				onClose={closeWorkshopModal}
 			>
-				<WorkShopOrder order={workshopOrderModal.order} />
+				<WorkShopOrder
+					order={workshopOrderModal.order}
+					toggleRefresh={toggleRefresh}
+				/>
 			</Modal>
 			<Modal
 				isOpen={clientBudgetModal.open}

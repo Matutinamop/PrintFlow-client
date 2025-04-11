@@ -8,8 +8,9 @@ import { Button } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { fetchMaterialById } from '../../../redux/materials/materialsSlice';
 import html2pdf from 'html2pdf.js';
+import { acceptOrder } from '../../../utilities/functions/order/updateOrder';
 
-function WorkShopOrder({ order }) {
+function WorkShopOrder({ order, toggleRefresh }) {
 	const dispatch = useDispatch();
 	const orderPDF = useRef();
 	const { fields } = order;
@@ -32,6 +33,11 @@ function WorkShopOrder({ order }) {
 				orientation: 'portrait',
 			},
 		};
+
+		if (order.status === 'Abierta') {
+			acceptOrder(order._id);
+			toggleRefresh();
+		}
 
 		// Generar el PDF
 		html2pdf()
@@ -230,6 +236,14 @@ function WorkShopOrder({ order }) {
 					<div className={styles.block}>
 						<div className={styles.blockTitle}>
 							<h3>Información del pedido: </h3>
+						</div>
+						<div className={styles.inputContainer}>
+							<h3 style={{ fontSize: '16px' }}>
+								Comentarios para el Cliente:
+							</h3>
+							<p className={styles.textArea}>
+								{fields.descriptioClient ?? ''}
+							</p>
 						</div>
 						<div className={styles.inputContainer}>
 							<h3 style={{ fontSize: '16px' }}>

@@ -145,7 +145,9 @@ function OrderForm() {
 
 			setFields((prev) => ({
 				...prev,
-				deviation: newDeviation,
+				deviation: isFinite(newDeviation)
+					? newDeviation
+					: 0,
 				finalPrice,
 			}));
 		}
