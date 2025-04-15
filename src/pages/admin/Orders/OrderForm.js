@@ -573,6 +573,28 @@ function OrderForm() {
 			</div>
 			{editFields ? (
 				<div className={styles.buttons}>
+					{(fields.status === 'Aceptada' ||
+						fields.status === 'Abierta') && (
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'space-around',
+								alignItems: 'center',
+								backgroundColor: 'white',
+								borderRadius: '5px',
+							}}
+						>
+							<label>Orden activa: </label>
+							<Switch
+								sx={{
+									backgroundColor: 'rgba(0,0,0,0.2)',
+									borderRadius: '10px',
+								}}
+								checked={checked}
+								onChange={handleCheck}
+							/>
+						</div>
+					)}
 					<Button
 						variant="contained"
 						color="success"

@@ -13,6 +13,8 @@ import {
 	Typography,
 } from '@mui/material';
 import { fetchFilesFromZip } from '../../../utilities/functions/forms/uploadFile';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 function WorkShopOrder({ order, toggleRefresh }) {
 	const orderPDF = useRef();
@@ -41,39 +43,117 @@ function WorkShopOrder({ order, toggleRefresh }) {
 		}
 	}, [order.scheme]);
 
-	const generatePDF = () => {
-		const input = orderPDF.current;
-
-		const options = {
-			margin: 0,
-			filename: `Orden-Taller-${fields.orderNumber}.pdf`,
-			image: { type: 'png', quality: 0.6 },
-			html2canvas: { scale: 2 },
-			jsPDF: {
-				unit: 'mm',
-				format: 'a4',
-				orientation: 'portrait',
-			},
-		};
-
+	const generatePDF = async () => {
 		if (order.status === 'Abierta') {
 			acceptOrder(order._id);
 			toggleRefresh();
 		}
+		const input = orderPDF.current;
+		const scale = 2;
 
-		html2pdf()
-			.from(input)
-			.set(options)
-			.toPdf()
-			.get('pdf')
-			.then(function (pdf) {
-				const pdfBlob = pdf.output('blob');
-				const pdfUrl = URL.createObjectURL(pdfBlob);
-				const printWindow = window.open(pdfUrl, '_blank');
-				printWindow.onload = () => {
-					printWindow.print();
-				};
-			});
+		// Asegurarse de que las fuentes estén cargadas
+		await document.fonts.ready;
+
+		// Generamos el canvas
+		const canvas = await html2canvas(input, {
+			scale,
+			useCORS: true,
+		});
+
+		const canvasWidth = canvas.width;
+		const canvasHeight = canvas.height;
+
+		// Creamos el PDF en tamaño A4 (mm)
+		const pdf = new jsPDF({
+			orientation: 'portrait',
+			unit: 'mm',
+			format: 'a4',
+		});
+
+		// Dimensiones del PDF en mm y en píxeles
+		const pdfWidthMM = pdf.internal.pageSize.getWidth(); // 210 mm
+		const pdfHeightMM = pdf.internal.pageSize.getHeight(); // 297 mm
+		const pdfWidthPx = Math.floor(
+			(pdfWidthMM / 25.4) * 96 * scale
+		);
+		const pdfHeightPx = Math.floor(
+			(pdfHeightMM / 25.4) * 96 * scale
+		);
+
+		// Margen deseado en mm (definí 10 mm, pero podés cambiarlo)
+		const marginMM = 10;
+		// Área disponible en mm
+		const availableWidthMM = pdfWidthMM - marginMM * 2;
+		const availableHeightMM = pdfHeightMM - marginMM * 2;
+		// Convertimos el margen y área disponible a píxeles
+		const mmToPx = (mm) =>
+			Math.floor((mm / 25.4) * 96 * scale);
+		const pxToMm = (px) => (px / (96 * scale)) * 25.4;
+		const availableWidthPx = mmToPx(availableWidthMM);
+		const availableHeightPx = mmToPx(availableHeightMM);
+
+		let currentHeight = 0;
+		let pageCount = 0;
+
+		while (currentHeight < canvasHeight) {
+			// Cortamos el canvas en slices del alto disponible en la página (sin márgenes)
+			const sliceHeight = Math.min(
+				availableHeightPx,
+				canvasHeight - currentHeight
+			);
+
+			// Canvas temporal para el slice
+			const tempCanvas = document.createElement('canvas');
+			tempCanvas.width = canvasWidth;
+			tempCanvas.height = sliceHeight;
+			const ctx = tempCanvas.getContext('2d');
+			ctx.drawImage(
+				canvas,
+				0,
+				currentHeight, // desde dónde recortar en Y
+				canvasWidth, // ancho a recortar
+				sliceHeight, // alto a recortar
+				0,
+				0,
+				canvasWidth,
+				sliceHeight
+			);
+
+			const imgData = tempCanvas.toDataURL('image/png');
+
+			if (pageCount > 0) {
+				pdf.addPage();
+			}
+
+			// Convertir dimensiones del slice de px a mm
+			const sliceWidthMM = pxToMm(canvasWidth);
+			const sliceHeightMM = pxToMm(sliceHeight);
+
+			// Calcular el factor de escala para que la imagen se ajuste en el área disponible
+			const scaleRatio = Math.min(
+				availableWidthMM / sliceWidthMM,
+				availableHeightMM / sliceHeightMM
+			);
+			const finalWidth = sliceWidthMM * scaleRatio;
+			const finalHeight = sliceHeightMM * scaleRatio;
+
+			// Posicionar la imagen en (margen, margen)
+			pdf.addImage(
+				imgData,
+				'PNG',
+				marginMM,
+				marginMM,
+				finalWidth,
+				finalHeight
+			);
+
+			currentHeight += sliceHeight;
+			pageCount++;
+		}
+
+		// Abrir el PDF generado en una nueva pestaña
+		const pdfOutput = pdf.output('bloburl');
+		window.open(pdfOutput, '_blank');
 	};
 
 	const Input = ({ name, value }) => {
@@ -129,7 +209,7 @@ function WorkShopOrder({ order, toggleRefresh }) {
 							Orden de producción
 						</h3>
 						<div
-							className={`${styles.headerBlock} ${styles.infoHeader}`}
+							className={`${styles.headerBlock} ${styles.infoHeader} `}
 						>
 							<p
 								style={{
@@ -158,7 +238,9 @@ function WorkShopOrder({ order, toggleRefresh }) {
 							</p>
 						</div>
 					</div>
-					<div className={styles.blockContainer}>
+					<div
+						className={`${styles.blockContainer} ${styles.noBreak}`}
+					>
 						<div className={styles.leftBlock}>
 							{' '}
 							<div>
@@ -252,7 +334,7 @@ function WorkShopOrder({ order, toggleRefresh }) {
 						</div>
 					</div>
 
-					<div className={styles.block}>
+					<div className={`${styles.block}`}>
 						<div className={styles.blockTitle}>
 							<h3>Información del pedido: </h3>
 						</div>
@@ -273,86 +355,80 @@ function WorkShopOrder({ order, toggleRefresh }) {
 							</p>
 						</div>
 						{order.scheme?.link ? (
-							<div style={{ width: '100%' }}>
-								<label htmlFor="upload-button">
-									<Button
-										variant="contained"
-										component="span"
-										startIcon={<UploadFileIcon />}
-										color="primary"
-									>
-										Adjuntar archivos
-									</Button>
-								</label>
-								{selectedFiles.length > 0 && (
-									<div
-										style={{
-											marginTop: '20px',
-											textAlign: 'left',
-											width: '100%',
-										}}
-									>
-										<Typography>
-											Archivos seleccionados:
-										</Typography>
-										<List sx={{ width: '100%' }}>
-											{selectedFiles.map((file, index) => (
-												<ListItem
-													key={index}
-													sx={{
-														display: 'flex',
-														gap: '15px',
-														justifyContent: 'space-between',
-														width: '100%',
-													}}
-												>
-													<ListItemText
-														primary={file.name}
-														secondary={`Tamaño: ${(
-															file.size / 1024
-														).toFixed(2)} KB`}
-													/>
-
-													<ListItemIcon>
-														{imageExtensions.includes(
-															file.name
-																.split('.')
-																.pop()
-																.toLowerCase()
-														) ? (
-															<img
-																src={URL.createObjectURL(
-																	file
-																)}
-																alt={file.name}
-																style={{
-																	width: '50px',
-																	height: '50px',
-																	objectFit: 'cover',
-																	borderRadius: '4px',
-																}}
-															/>
-														) : (
-															<UploadFileIcon />
-														)}
-													</ListItemIcon>
-												</ListItem>
-											))}
-										</List>
-									</div>
-								)}
-								{selectedFiles.length > 0 ? (
-									<>
-										<Button
-											variant="contained"
-											onClick={() => handleDownload()}
+							<div className={styles.inputContainer}>
+								<div style={{ width: '100%' }}>
+									<h3 style={{ fontSize: '16px' }}>
+										Archivos adjuntos:
+									</h3>
+									{selectedFiles.length > 0 && (
+										<div
+											style={{
+												textAlign: 'left',
+												width: '100%',
+											}}
 										>
-											Descargar
-										</Button>
-									</>
-								) : (
-									''
-								)}
+											<List sx={{ width: '100%' }}>
+												{selectedFiles.map(
+													(file, index) => (
+														<ListItem
+															key={index}
+															sx={{
+																display: 'flex',
+																gap: '10px',
+																justifyContent:
+																	'space-between',
+																width: '100%',
+															}}
+														>
+															<ListItemText
+																primary={file.name}
+																secondary={`Tamaño: ${(
+																	file.size / 1024
+																).toFixed(2)} KB`}
+															/>
+
+															<ListItemIcon>
+																{imageExtensions.includes(
+																	file.name
+																		.split('.')
+																		.pop()
+																		.toLowerCase()
+																) ? (
+																	<img
+																		src={URL.createObjectURL(
+																			file
+																		)}
+																		alt={file.name}
+																		style={{
+																			width: '50px',
+																			height: '50px',
+																			objectFit: 'cover',
+																			borderRadius: '4px',
+																		}}
+																	/>
+																) : (
+																	<UploadFileIcon />
+																)}
+															</ListItemIcon>
+														</ListItem>
+													)
+												)}
+											</List>
+										</div>
+									)}
+									{selectedFiles.length > 0 ? (
+										<>
+											<Button
+												variant="contained"
+												onClick={() => handleDownload()}
+											>
+												Descargar
+											</Button>
+										</>
+									) : (
+										''
+									)}
+								</div>
 							</div>
 						) : (
 							''
@@ -360,7 +436,7 @@ function WorkShopOrder({ order, toggleRefresh }) {
 					</div>
 					{fields.printTasks.map((info, index) => (
 						<div
-							className={`${styles.block} ${styles.blockPrintTask}`}
+							className={`${styles.block} ${styles.blockPrintTask} ${styles.noBreak}`}
 							key={index}
 						>
 							<div className={styles.contain}>
@@ -488,7 +564,7 @@ function WorkShopOrder({ order, toggleRefresh }) {
 									<div
 										style={{
 											display: 'flex',
-											width: '740px',
+											width: '720px',
 											gap: '20px',
 										}}
 									>
@@ -522,7 +598,7 @@ function WorkShopOrder({ order, toggleRefresh }) {
 						</div>
 					))}
 					<div
-						className={`${styles.block} ${styles.blockPrintTask}`}
+						className={`${styles.block} ${styles.blockPrintTask} ${styles.noBreak}`}
 					>
 						<table className={styles.table}>
 							<thead>
@@ -547,7 +623,7 @@ function WorkShopOrder({ order, toggleRefresh }) {
 										</td>
 										<td>
 											<input
-												className={styles.input}
+												className={`${styles.input} ${styles.td}`}
 												name="description"
 												value={op.description ?? ''}
 											/>

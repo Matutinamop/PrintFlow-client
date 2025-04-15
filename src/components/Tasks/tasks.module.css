@@ -39,10 +39,10 @@
 .task {
 	margin: 0;
 	padding: 8px 12px 4px;
-	background-color: #24252a;
+	background-color: #9fadbc;
 	border-radius: 10px;
 	width: 100%;
-	color: #9fadbc;
+	color: #24252a;
 	cursor: grab;
 }
 
