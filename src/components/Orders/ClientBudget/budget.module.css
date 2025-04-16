@@ -3,7 +3,7 @@
 	/* min-height: 980px; */
 	/* border: 1px solid black; */
 	background-color: white;
-	margin: 2% auto; /* Centramos la hoja */
+	margin: 40px; /* Centramos la hoja */
 	color: black;
 	overflow: auto;
 }
@@ -17,7 +17,7 @@
 }
 
 .logo {
-	width: 120px;
+	width: 100px;
 }
 
 .mopHeader {
@@ -25,6 +25,24 @@
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: 20px;
+}
+
+.matutinaInfo {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana,
+		sans-serif;
+}
+
+.matutinaInfo h3 {
+	color: #36a77b;
+}
+
+.matutinaInfo p {
+	display: flex;
+	align-items: center;
+	font-size: 13px;
 }
 
 .headerBlock {
@@ -109,4 +127,9 @@
 	font-family: 'Klavika';
 	padding: 5px 0 0;
 	white-space: pre-wrap;
+}
+
+.logoWp {
+	width: 15px;
+	margin: 0 2px;
 }

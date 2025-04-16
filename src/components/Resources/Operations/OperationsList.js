@@ -23,8 +23,8 @@ function OperationsList({
 	setIsEdit,
 }) {
 	const dispatch = useDispatch();
-	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
+	const [currentpage, setCurrentPage] = useState(1);
+	const [totalpages, setTotalPages] = useState(0);
 
 	const { operations, operationsCount } = useSelector(
 		(state) => state.operations
@@ -40,10 +40,10 @@ function OperationsList({
 		dispatch(
 			fetchFilteredOperations({
 				searchTerm,
-				page: currentPage,
+				page: currentpage,
 			})
 		);
-	}, [currentPage, searchTerm, openOperationModal]);
+	}, [currentpage, searchTerm, openOperationModal]);
 
 	const setPage = (event, page) => {
 		setCurrentPage(page);
@@ -100,8 +100,8 @@ function OperationsList({
 			</div>
 			<div className={styles.paginationContainer}>
 				<Pagination
-					count={totalPages}
-					page={currentPage}
+					count={totalpages}
+					page={currentpage}
 					onChange={setPage}
 					variant="contained"
 					shape="rounded"
@@ -121,11 +121,9 @@ function OperationsList({
 			</div>
 
 			<Pagination
-				count={operationsCount}
-				itemsPerPage={15}
-				currentPage={currentPage}
-				totalPages={totalPages}
-				setPage={setPage}
+				count={Math.ceil(operationsCount / 15)}
+				page={currentpage}
+				onChange={(event, page) => setPage(page)}
 			/>
 		</div>
 	);

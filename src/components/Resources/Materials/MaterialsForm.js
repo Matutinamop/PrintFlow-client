@@ -310,21 +310,13 @@ function MaterialsForm({
 								onChange={(e) => changeValue(e, setFields)}
 							/>
 						</div>
-						{isEdit ? (
-							<Button
-								variant="contained"
-								onClick={handleSubmit}
-							>
-								Editar
-							</Button>
-						) : (
-							<Button
-								variant="contained"
-								onClick={handleSubmit}
-							>
-								Crear
-							</Button>
-						)}
+
+						<Button
+							variant="contained"
+							onClick={handleSubmit}
+						>
+							Guardar
+						</Button>
 					</form>
 				</>
 			)}

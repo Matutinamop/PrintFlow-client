@@ -219,21 +219,10 @@ function OperationsForm({
 						/>
 					</div>
 				</div>
-				{isEdit ? (
-					<Button
-						variant="contained"
-						onClick={handleSubmit}
-					>
-						Editar
-					</Button>
-				) : (
-					<Button
-						variant="contained"
-						onClick={handleSubmit}
-					>
-						Crear
-					</Button>
-				)}
+
+				<Button variant="contained" onClick={handleSubmit}>
+					Guardar
+				</Button>
 			</form>
 		</div>
 	);

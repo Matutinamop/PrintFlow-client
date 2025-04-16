@@ -102,14 +102,13 @@
 	color: black;
 }
 
-
 @media (max-width: 1000px) {
-	.formContainer {
+	/* .formContainer {
 		width: 80%;
 	}
 	.labelInput {
 		width: 80%;
-	}
+	} */
 	.input {
 		width: 200px;
 	}
@@ -124,5 +123,4 @@
 		margin-top: 5px;
 		width: 100px;
 	}
-
 }

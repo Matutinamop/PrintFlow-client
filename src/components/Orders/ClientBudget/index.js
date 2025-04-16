@@ -110,18 +110,31 @@ function ClientBudget({ order, toggleRefresh }) {
 			<div className={styles.a4Sheet} ref={orderPDF}>
 				<div className={styles.documentContent}>
 					<div className={styles.mopHeader}>
-						<div className={styles.headerBlock}>
+						<div className={styles.matutinaInfo}>
 							<img
 								className={styles.logo}
-								src="/assets/logos/full-logo-matutina.png"
+								src="/assets/logos/logo-matutina.png"
 							/>
+							<div>
+								<h3>Matutina S.A.S</h3>
+								<h3>RUT. 21 970232 0017 </h3>
+								<p>Yaro 1017, 11.200 Montevideo, Uruguay</p>
+								<p>
+									Tels.: 24126400 - 24126401 -{' '}
+									<img
+										className={styles.logoWp}
+										src="/assets/logos/whatsapp.png"
+									/>{' '}
+									091 307 002
+								</p>
+							</div>
 						</div>
-						<h3
+						{/* <h3
 							className={styles.headerBlock}
 							style={{ textAlign: 'center' }}
 						>
 							Presupuesto del Cliente
-						</h3>
+						</h3> */}
 						<div
 							className={`${styles.headerBlock} ${styles.infoHeader}`}
 						>
@@ -152,7 +165,7 @@ function ClientBudget({ order, toggleRefresh }) {
 						</div>
 					</div>
 					<div className={styles.blockContainer}>
-						<div className={styles.leftBlock}>
+						{/* <div className={styles.leftBlock}>
 							{' '}
 							<div>
 								<p className={styles.infoText}>Yaro 1017</p>
@@ -163,7 +176,7 @@ function ClientBudget({ order, toggleRefresh }) {
 									Email: matutina@imprentamatutina.com.uy
 								</p>
 							</div>
-						</div>
+						</div> */}
 						<div className={styles.rightBlock}>
 							<h3 className={styles.sectionTitle}>
 								Empresa cliente:
@@ -216,12 +229,12 @@ function ClientBudget({ order, toggleRefresh }) {
 						</div>
 					</div>
 					<div className={styles.block}>
-						<div className={styles.workTitle}>
+						{/* <div className={styles.workTitle}>
 							<h2>Trabajo:</h2>
 							<p className={styles.contentText}>
 								{fields.product}
 							</p>
-						</div>
+						</div> */}
 						<div className={styles.workDescription}>
 							<h2>Descripcion:</h2>
 							<p className={styles.contentText}>

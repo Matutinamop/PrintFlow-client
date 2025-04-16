@@ -24,8 +24,8 @@ function MaterialsList({
 	setOpenMaterialModal,
 }) {
 	const dispatch = useDispatch();
-	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
+	const [currentpage, setCurrentPage] = useState(1);
+	const [totalpages, setTotalPages] = useState(0);
 
 	const { loadingMaterials, materials, materialsCount } =
 		useSelector((state) => state.materials);
@@ -40,10 +40,10 @@ function MaterialsList({
 		dispatch(
 			fetchFilteredMaterials({
 				searchTerm: searchTerm ? searchTerm : '',
-				page: currentPage,
+				page: currentpage,
 			})
 		);
-	}, [currentPage, searchTerm, openMaterialModal]);
+	}, [currentpage, searchTerm, openMaterialModal]);
 
 	const setPage = (event, page) => {
 		setCurrentPage(page);
@@ -104,8 +104,8 @@ function MaterialsList({
 			</div>
 			<div className={styles.paginationContainer}>
 				<Pagination
-					count={totalPages}
-					page={currentPage}
+					count={totalpages}
+					page={currentpage}
 					onChange={setPage}
 					variant="contained"
 					shape="rounded"

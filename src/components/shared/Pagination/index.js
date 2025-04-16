@@ -5,15 +5,15 @@ import { Button } from '@mui/material';
 
 function Pagination({
 	count,
-	itemsPerPage,
-	currentPage,
-	totalPages,
+	itemsperpage,
+	currentpage,
+	totalpages,
 	setPage,
 }) {
 	const getPaginationRange = () => {
 		const range = [];
-		let start = Math.max(1, currentPage - 2);
-		let end = Math.min(totalPages, currentPage + 2);
+		let start = Math.max(1, currentpage - 2);
+		let end = Math.min(totalpages, currentpage + 2);
 
 		for (let i = start; i <= end; i++) {
 			range.push(i);
@@ -23,7 +23,7 @@ function Pagination({
 
 	return (
 		<div className={styles.pagination}>
-			{count > itemsPerPage ? (
+			{count > itemsperpage ? (
 				<div className={styles.paginationBtns}>
 					<Button
 						variant="contained"
@@ -31,7 +31,7 @@ function Pagination({
 						onClick={() =>
 							setPage((prev) => Math.max(prev - 1, 1))
 						}
-						disabled={currentPage === 1}
+						disabled={currentpage === 1}
 					>
 						Anterior
 					</Button>
@@ -52,7 +52,7 @@ function Pagination({
 								},
 							}}
 							/* className={`${styles.pageBtn} ${
-								page === currentPage
+								page === currentpage
 									? styles.currentPageBtn
 									: ''
 							}`} */
@@ -65,10 +65,10 @@ function Pagination({
 						/* className={styles.nextBtn} */
 						onClick={() =>
 							setPage((next) =>
-								Math.min(next + 1, totalPages)
+								Math.min(next + 1, totalpages)
 							)
 						}
-						disabled={currentPage === totalPages}
+						disabled={currentpage === totalpages}
 					>
 						Siguiente
 					</Button>

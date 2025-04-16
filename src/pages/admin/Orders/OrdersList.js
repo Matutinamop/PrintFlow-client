@@ -33,8 +33,8 @@ function OrdersList() {
 
 	const [orderNumber, setOrderNumber] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
-	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
+	const [currentpage, setCurrentPage] = useState(1);
+	const [totalpages, setTotalPages] = useState(0);
 	const [status, setStatus] = useState('');
 	const [prevFieldsModal, setPrevFieldsModal] =
 		useState(false);
@@ -79,16 +79,16 @@ function OrdersList() {
 			fetchFilteredOrders({
 				searchTerm,
 				status,
-				page: currentPage,
+				page: currentpage,
 			})
 		);
-	}, [currentPage, status, refresh]);
+	}, [currentpage, status, refresh]);
 
 	const setDateOrder = () => {
 		dispatch(
 			fetchFilteredOrders({
 				searchTerm,
-				page: currentPage,
+				page: currentpage,
 				dateOrder: true,
 			})
 		);
@@ -100,7 +100,7 @@ function OrdersList() {
 			fetchFilteredOrders({
 				searchTerm,
 				status,
-				page: currentPage,
+				page: currentpage,
 			})
 		);
 	};
@@ -111,7 +111,7 @@ function OrdersList() {
 			fetchFilteredOrders({
 				searchTerm: e.target.value,
 				status,
-				page: currentPage,
+				page: currentpage,
 			})
 		);
 	};
@@ -222,8 +222,8 @@ function OrdersList() {
 			/>
 			<div className={styles.paginationContainer}>
 				<Pagination
-					count={totalPages}
-					page={currentPage}
+					count={totalpages}
+					page={currentpage}
 					onChange={setPage}
 					variant="contained"
 					shape="rounded"

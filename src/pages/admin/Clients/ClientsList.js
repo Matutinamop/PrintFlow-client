@@ -17,8 +17,8 @@ function ClientsList() {
 	const dispatch = useDispatch();
 
 	const [searchTerm, setSearchTerm] = useState('');
-	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
+	const [currentpage, setCurrentPage] = useState(1);
+	const [totalpages, setTotalPages] = useState(0);
 	const [openClientModal, setOpenClientModal] =
 		useState(false);
 	const [fields, setFields] = useState({
@@ -46,17 +46,17 @@ function ClientsList() {
 		dispatch(
 			fetchFilteredClients({
 				searchTerm,
-				page: currentPage,
+				page: currentpage,
 			})
 		);
-	}, [currentPage]);
+	}, [currentpage]);
 
 	const searchTermSubmit = (e) => {
 		e.preventDefault();
 		dispatch(
 			fetchFilteredClients({
 				searchTerm,
-				page: currentPage,
+				page: currentpage,
 			})
 		);
 	};
@@ -120,8 +120,8 @@ function ClientsList() {
 			/>
 			<div className={styles.paginationContainer}>
 				<Pagination
-					count={totalPages}
-					page={currentPage}
+					count={totalpages}
+					page={currentpage}
 					onChange={setPage}
 					variant="contained"
 					shape="rounded"
@@ -141,9 +141,9 @@ function ClientsList() {
 			</div>
 			{/* <Pagination
 				count={clientsCount}
-				itemsPerPage={50}
-				currentPage={currentPage}
-				totalPages={totalPages}
+				itemsperpage={50}
+				currentpage={currentpage}
+				totalpages={totalpages}
 				setPage={setPage}
 			/> */}
 		</div>
