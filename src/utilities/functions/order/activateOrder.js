@@ -1,21 +1,22 @@
 import axios from 'axios';
 
-export const activateOrder = async (order) => {
+export const activateOrder = async (orderId) => {
 	try {
 		const res = await axios.get(
-			`${process.env.REACT_APP_API_URL}/api/workStation`
+			`${process.env.REACT_APP_API_URL}/api/workStation/lite`
 		);
 		const stationWithOrder = res.data.stations.find(
 			(station) =>
-				station.tasks.some((task) => task._id === order._id)
+				station.tasks.some((task) => task === orderId)
 		);
 		if (stationWithOrder) {
 			return;
 		}
 
 		const firstStation = res.data.stations[0];
+		const firstStationTasks = firstStation.tasks;
 
-		const newTasks = [...firstStation.tasks, order];
+		const newTasks = [orderId, ...firstStationTasks];
 		const body = {
 			tasks: newTasks,
 		};

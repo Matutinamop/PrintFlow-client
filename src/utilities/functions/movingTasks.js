@@ -1,9 +1,13 @@
+import axios from 'axios';
 import {
 	addTask,
 	removeTask,
 	updateStationsList,
 } from './workStation/updateTasks';
 
+const url = process.env.REACT_APP_API_URL;
+
+/* 
 export const movingTasks = (
 	result,
 	newStations,
@@ -89,4 +93,66 @@ export const movingTasks = (
 	})();
 
 	return changedStations;
+}; */
+
+export const movingTasks = async (info, setIsLoading) => {
+	setIsLoading(true);
+	const {
+		destination,
+		destinationTasks,
+		draggedEl,
+		source,
+	} = info;
+
+	try {
+		const realSource = await axios.get(
+			`${url}/api/workStation/lite/${source._id}`
+		);
+
+		if (
+			!realSource.data.station.tasks.find(
+				(task) => task === draggedEl._id
+			)
+		) {
+			setIsLoading(false);
+			window.location.reload();
+			return;
+		}
+
+		const destinationBody = { tasks: destinationTasks };
+
+		if (destination._id === source._id) {
+			const res = await axios.put(
+				`${url}/api/workStation/${destination._id}`,
+				destinationBody
+			);
+			setIsLoading(false);
+			return;
+		}
+
+		const sourceBody = {
+			tasks: source.tasks.filter(
+				(task) => task !== draggedEl._id
+			),
+		};
+
+		const newSource = await axios.put(
+			`${url}/api/workStation/${source._id}`,
+			sourceBody
+		);
+
+		if (newSource) {
+			const newDestination = await axios.put(
+				`${url}/api/workStation/${destination._id}`,
+				destinationBody
+			);
+		}
+
+		setIsLoading(false);
+		return;
+	} catch (error) {
+		console.error(error);
+		setIsLoading(false);
+		return;
+	}
 };

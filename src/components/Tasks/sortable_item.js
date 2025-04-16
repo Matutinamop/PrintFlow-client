@@ -2,9 +2,18 @@ import React from 'react';
 import styles from './tasks.module.css';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { useSelector } from 'react-redux';
 
 export function Item(props) {
 	const { id, task } = props;
+
+	const { activeOrders } = useSelector(
+		(state) => state.orders
+	);
+
+	const taskToShow = activeOrders.find(
+		(order) => order._id === task
+	);
 
 	const style = {
 		width: '100%',
@@ -19,9 +28,12 @@ export function Item(props) {
 
 	return (
 		<div className={styles.task} id={id}>
-			<h4>{task?.product}</h4>
+			<h4>
+				{taskToShow?.orderNumber}
+				{taskToShow?.product}
+			</h4>
 			<div className={styles.content}>
-				{task?.client.companyName}
+				{taskToShow?.client.companyName}
 			</div>
 		</div>
 	);

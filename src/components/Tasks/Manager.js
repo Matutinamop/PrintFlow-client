@@ -286,14 +286,24 @@ function Manager() {
 		setStationDestiny();
 		setStationSource();
 	}
+	useEffect(() => {
+		console.log('station', newStations);
+	}, [newStations]);
+
+	const cancelMove = () => {
+		setInfoModal({ open: false, info: {} });
+		setNewStations(stations);
+	};
+
+	useEffect(() => {
+		console.log(infoModal);
+	}, [infoModal]);
 
 	return (
 		<div className={styles.taskManager}>
 			<Modal
 				isOpen={infoModal.open}
-				onClose={() =>
-					setInfoModal({ open: false, info: {} })
-				}
+				onClose={cancelMove}
 				title={'Estás seguro?'}
 			>
 				<p>
@@ -304,13 +314,7 @@ function Manager() {
 					Quieres dejar un comentario?
 				</TextArea>
 				<Button onClick={handleMoved}>Aceptar</Button>
-				<Button
-					onClick={() =>
-						setInfoModal({ open: false, info: {} })
-					}
-				>
-					Cancelar
-				</Button>
+				<Button onClick={cancelMove}>Cancelar</Button>
 			</Modal>
 			<Modal transparent isOpen={loaderModal}>
 				<Loader />

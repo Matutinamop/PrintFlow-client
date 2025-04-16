@@ -18,7 +18,7 @@ const fetchStations = createAsyncThunk(
 	async () => {
 		try {
 			const response = await axios.get(
-				`${url}/api/workStation`
+				`${url}/api/workStation/lite`
 			);
 			return response.data.stations;
 		} catch (error) {
@@ -32,7 +32,7 @@ const fetchStationById = createAsyncThunk(
 	async (id) => {
 		try {
 			const response = await axios.get(
-				`${url}/api/workStation/${id}`
+				`${url}/api/workStation/lite:${id}`
 			);
 			return response.data.station;
 		} catch (error) {

@@ -3,18 +3,18 @@ import axios from 'axios';
 export const deactivateOrder = async (orderId) => {
 	try {
 		const res = await axios.get(
-			`${process.env.REACT_APP_API_URL}/api/workStation`
+			`${process.env.REACT_APP_API_URL}/api/workStation/lite`
 		);
 
 		const stationWithOrder = res.data.stations.find(
 			(station) =>
-				station.tasks.some((task) => task._id === orderId)
+				station.tasks.some((task) => task === orderId)
 		);
 		if (!stationWithOrder) {
 			return;
 		}
 		const newTasks = stationWithOrder.tasks.filter(
-			(task) => task._id === orderId
+			(task) => task !== orderId
 		);
 		const body = {
 			tasks: newTasks,

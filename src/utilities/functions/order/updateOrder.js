@@ -70,14 +70,26 @@ export const updateOrder = async (id, fields) => {
 		fields,
 	};
 
-	console.log('tasksupdate', tasks);
-
 	try {
 		const response = await axios.put(
 			`${process.env.REACT_APP_API_URL}/api/order/${id}`,
 			body
 		);
 		localStorage.removeItem('fields');
+		const prevStatus = response.data.orderToUpdate.status;
+		if (
+			(prevStatus === 'Aceptada' ||
+				prevStatus === 'Finalizada') &&
+			(status === 'Facturada' || status === 'Abierta')
+		) {
+			deactivateOrder(id);
+		}
+		if (
+			status === 'Aceptada' &&
+			prevStatus !== 'Aceptada'
+		) {
+			activateOrder(id);
+		}
 	} catch (error) {
 		console.error(error);
 	}
@@ -90,7 +102,7 @@ export const acceptOrder = async (id) => {
 			{ status: 'Aceptada' }
 		);
 		if (response) {
-			activateOrder(response.data.updatedOrder);
+			activateOrder(id);
 		}
 	} catch (error) {
 		console.error(error);
