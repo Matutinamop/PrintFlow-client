@@ -3,7 +3,7 @@
 	/* min-height: 980px; */
 	/* border: 1px solid black; */
 	background-color: white;
-	margin: 0 auto; /* Centramos la hoja */
+	margin: 40px; /* Centramos la hoja */
 	color: black;
 	padding-bottom: 10mm;
 	line-height: 1.2;
@@ -164,7 +164,7 @@
 	background-color: white;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border-color 0.3s;
-	height: 37px;
+	min-height: 37px;
 	width: 200px;
 	font-size: 18px;
 	padding: 5px;

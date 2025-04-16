@@ -95,6 +95,9 @@ function OperationsModule({
 									onChange={(e) => {
 										changeValue(e, index);
 									}}
+									disabled={
+										op.operation.name === op.operation._id
+									}
 								/>
 							</td>
 							<td>

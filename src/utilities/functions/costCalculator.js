@@ -66,6 +66,5 @@ export const toFormatNumber = (number) => {
 		.replace(/\./g, '')
 		.replace(',', '');
 	const res = new Intl.NumberFormat('es-AR').format(raw);
-	console.log(raw, res);
 	return res;
 };

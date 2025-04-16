@@ -375,7 +375,7 @@ function PrintTaskModule({
 				<Input
 					name="excess"
 					onChange={(e) => changeValue(e)}
-					value={info.excess || ''}
+					value={info.excess}
 					size="numberSize"
 					error={checkError('excess')}
 				>
@@ -384,7 +384,7 @@ function PrintTaskModule({
 				<Input
 					name="bulkPaperQuantity"
 					onChange={(e) => changeValue(e)}
-					value={info.bulkPaperQuantity || ''}
+					value={info.bulkPaperQuantity || 0}
 					size="numberSize"
 					isDisabled
 				>
@@ -395,7 +395,10 @@ function PrintTaskModule({
 					onChange={(e) => changeValue(e)}
 					value={`$ ${
 						info.costPerBulkPaper
-							? toFormatNumber(info.costPerBulkPaper)
+							? String(info.costPerBulkPaper).replace(
+									/\./g,
+									','
+							  )
 							: 0
 					}`}
 					size="mediumSize"

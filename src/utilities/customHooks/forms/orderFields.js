@@ -192,12 +192,11 @@ const useCalculateFields = (
 				};
 			});
 		}
-
-		if (
-			module.excess &&
-			module.sheetQuantity &&
-			module.sheetPerBulkPaper
-		) {
+		if (module.sheetQuantity && module.sheetPerBulkPaper) {
+			console.log(
+				module.sheetQuantity,
+				module.sheetPerBulkPaper
+			);
 			setFields((prev) => {
 				const updatedPrintTasks = [...prev.printTasks];
 				updatedPrintTasks[index].bulkPaperQuantity =

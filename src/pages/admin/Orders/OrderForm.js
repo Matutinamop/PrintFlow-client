@@ -59,7 +59,9 @@ function OrderForm() {
 			? editFields
 			: {
 					orderNumber: allOrdersCount + 1,
-					printTasks: [{ id: 0, moduleRepeat: 1 }],
+					printTasks: [
+						{ id: 0, moduleRepeat: 1, excess: 0 },
+					],
 					client: '',
 					otherTasks: [{}],
 					deviation: 0,
@@ -110,7 +112,6 @@ function OrderForm() {
 
 		if (regex.test(value) || value === '') {
 			const deviation = value;
-			console.log(fields.estimatedFinalPrice);
 
 			const newFinalPrice = value
 				? Math.round(
@@ -131,9 +132,7 @@ function OrderForm() {
 		let value = e.target.value.trim();
 		const finalPrice = toRawNumber(value);
 		const regex = /^-?\d*\.?\d*$/;
-		console.log('value', typeof value);
 		if (regex.test(finalPrice) || value === '') {
-			console.log('finalprice', finalPrice);
 			const newDeviation =
 				Math.round(
 					(finalPrice /
@@ -452,21 +451,6 @@ function OrderForm() {
 								''
 							)}
 						</div>
-
-						{(fields.status === 'Aceptada' ||
-							fields.status === 'Abierta') && (
-							<div>
-								<label>Orden activa: </label>
-								<Switch
-									sx={{
-										backgroundColor: 'rgba(0,0,0,0.2)',
-										borderRadius: '10px',
-									}}
-									checked={checked}
-									onChange={handleCheck}
-								/>
-							</div>
-						)}
 						<div
 							style={{
 								width: '200px',

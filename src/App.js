@@ -34,7 +34,6 @@ function App() {
 	useEffect(() => {
 		if (flag) {
 			setIsLoading(false);
-			console.log(isAdmin, isWorker);
 			if (!isAdmin && !isWorker) {
 				navigate('/login');
 			}

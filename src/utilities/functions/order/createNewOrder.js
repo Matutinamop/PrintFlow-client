@@ -118,8 +118,6 @@ export const createNewOrder = async (fields) => {
 		fields,
 	};
 
-	console.log('tasks', tasks);
-
 	try {
 		const response = await axios.post(
 			`${process.env.REACT_APP_API_URL}/api/order`,

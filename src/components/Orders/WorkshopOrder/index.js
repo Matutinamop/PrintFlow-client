@@ -231,10 +231,10 @@ function WorkShopOrder({ order, toggleRefresh }) {
 									fontWeight: 'bold',
 								}}
 							>
-								<div style={{ fontSize: '24px' }}>
+								<span style={{ fontSize: '24px' }}>
 									ORDEN Nº.{' '}
 									<span>{order.orderNumber} </span>
-								</div>
+								</span>
 							</p>
 						</div>
 					</div>
@@ -343,7 +343,7 @@ function WorkShopOrder({ order, toggleRefresh }) {
 								Comentarios para el Cliente:
 							</h3>
 							<p className={styles.textArea}>
-								{fields.descriptioClient ?? ''}
+								{fields.descriptionClient ?? ''}
 							</p>
 						</div>
 						<div className={styles.inputContainer}>
@@ -625,14 +625,16 @@ function WorkShopOrder({ order, toggleRefresh }) {
 											<input
 												className={`${styles.input} ${styles.td}`}
 												name="description"
-												value={op.description ?? ''}
+												defaultValue={op.description ?? ''}
 											/>
 										</td>
 										<td>
 											<input
 												className={styles.smallInput}
 												name="unitType"
-												value={op.operation?.unitType ?? ''}
+												defaultValue={
+													op.operation?.unitType ?? ''
+												}
 												disabled
 											/>
 										</td>
@@ -640,7 +642,7 @@ function WorkShopOrder({ order, toggleRefresh }) {
 											<input
 												className={styles.smallInput}
 												name="quantity"
-												value={op?.quantity ?? ''}
+												defaultValue={op?.quantity ?? ''}
 											/>
 										</td>
 									</tr>
