@@ -1,4 +1,5 @@
 .formPage {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -49,12 +50,12 @@
 
 .buttons {
 	position: fixed;
-	bottom: 3vh;
-	right: 1vw;
+	left: 50%;
+	bottom: 50%;
+	transform: translate(calc(400px), calc(435px));
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
-	margin-bottom: 50px;
 }
 
 .ordersList {

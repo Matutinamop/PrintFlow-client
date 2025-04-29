@@ -1,128 +1,74 @@
 import styles from './tasks.module.css';
 import React, { useEffect, useState } from 'react';
-import { animations, state } from '@formkit/drag-and-drop';
+import { animations } from '@formkit/drag-and-drop';
 import { useDragAndDrop } from '@formkit/drag-and-drop/react';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { fetchStations } from '../../redux/workStations/workStationSlice';
-import { fetchActiveOrders } from '../../redux/orders/ordersSlice';
-import { fetchOperations } from '../../redux/operations/operationsSlice';
 import Modal from '../shared/Modal';
 import { Button } from '@mui/material';
 import Loader from '../shared/Loader';
-import { movingTasks } from '../../utilities/functions/movingTasks';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NextTasks from './NextTasks';
 import WorkShopOrder from '../Orders/WorkshopOrder';
+import { useTaskManager } from '../../utilities/customHooks/taskManager/useTaskManager';
+import { useContainer } from '../../utilities/customHooks/taskManager/useContainer';
+import {
+	billOrder,
+	completeOrder,
+} from '../../utilities/functions/order/updateOrder';
+import {
+	toFormatDate,
+	warningLevel,
+} from '../../utilities/functions/dates';
+import clsx from 'clsx';
+import { fetchOrderById } from '../../redux/orders/ordersSlice';
+import { useDispatch } from 'react-redux';
 
 function NewManager() {
-	const dispatch = useDispatch();
-	const { stations } = useSelector(
-		(state) => state.workStations
-	);
-	const { activeOrders } = useSelector(
-		(state) => state.orders
-	);
-	const [activeOrdersToShow, setActiveOrdersToShow] =
-		useState({ orders: [], station: {} });
-	const [openNextTasksModal, setOpenNextTasksModal] =
-		useState({ open: false, info: {} });
-	const [openOrderModal, setOpenOrderModal] = useState({});
-	const moveModalInit = {
-		isOpen: false,
-		changes: false,
-		source: null,
-		draggedEl: null,
-		destinationTasks: null,
-		destination: null,
-	};
-	const [moveModal, setMoveModal] = useState(moveModalInit);
-
-	const [isLoading, setIsLoading] = useState(true);
-
-	const fetchAll = () => {
-		dispatch(fetchStations());
-		dispatch(fetchActiveOrders());
-		dispatch(fetchOperations());
-	};
-
-	useEffect(() => {
-		fetchAll();
-	}, []);
-
-	const cancelMove = () => {
-		setMoveModal(moveModalInit);
-		dispatch(fetchStations());
-		dispatch(fetchActiveOrders());
-	};
-
-	const handleMove = async () => {
-		movingTasks(moveModal, setIsLoading);
-	};
-
-	useEffect(() => {
-		if (!isLoading) {
-			setMoveModal(moveModalInit);
-			fetchAll();
-		}
-	}, [isLoading]);
-
-	useEffect(() => {
-		if (activeOrders.length > 0) {
-			setIsLoading(false);
-		}
-	}, [activeOrders]);
-
-	/* 	useEffect(() => {
-		if (moveModal.draggedEl && !moveModal.changes) {
-			setOpenOrderModal({
-				open: true,
-				order: moveModal.draggedEl,
-			});
-		}
-		console.log(moveModal);
-	}, [moveModal]); */
-
-	function selectActiveOrders(station) {
-		const allSelectActiveOrders = activeOrders.filter(
-			(order) =>
-				order.stationsList.some(
-					(st) => st.station.workStation === station._id
-				)
-		);
-
-		const finalSelectActiveOrders =
-			allSelectActiveOrders.filter(
-				(order) =>
-					!station.tasks.some(
-						(task) => task._id === order._id
-					) &&
-					!order.stationsList.find(
-						(st) => st.station.workStation === station._id
-					).completed
-			);
-		setActiveOrdersToShow({
-			orders: finalSelectActiveOrders,
-			station: station,
-		});
-	}
+	const {
+		taskManagerRef,
+		stations,
+		activeOrders,
+		activeOrdersToShow,
+		openNextTasksModal,
+		setOpenNextTasksModal,
+		openOrderModal,
+		setOpenOrderModal,
+		moveModal,
+		setMoveModal,
+		isLoading,
+		cancelMove,
+		handleMove,
+		selectActiveOrders,
+	} = useTaskManager();
 
 	return (
-		<div className={styles.taskManager}>
+		<div
+			className={styles.taskManager}
+			ref={taskManagerRef}
+		>
 			<Modal
 				isOpen={moveModal.isOpen}
 				onClose={cancelMove}
 				title={'Estás seguro?'}
 			>
-				<p>
-					Mover{' '}
-					<strong>{moveModal.draggedEl?.product}</strong> a{' '}
-					{''}
-					<strong>{moveModal.destination?.name}</strong>?
-				</p>
-				<label>Quieres dejar un comentario?</label>
-				<textarea />
+				<div>
+					<p>
+						Mover{' '}
+						<strong>{moveModal.draggedEl?.product}</strong>{' '}
+						a {''}
+						<strong>{moveModal.destination?.name}</strong>?
+					</p>
+					<label>Quieres dejar un comentario?</label>
+					<textarea
+						value={moveModal.comment}
+						onChange={(e) =>
+							setMoveModal((prev) => ({
+								...prev,
+								comment: e.target.value,
+							}))
+						}
+					/>
+				</div>
 
 				<Button
 					variant="contained"
@@ -158,17 +104,129 @@ function NewManager() {
 			>
 				<WorkShopOrder order={openOrderModal.order} />
 			</Modal>
-
+			<Modal
+				isOpen={moveModal.bill}
+				onClose={cancelMove}
+				title={'Estás seguro?'}
+			>
+				<div>
+					<p>
+						Si desea mover la orden{' '}
+						<strong>{moveModal.draggedEl?.product}</strong>{' '}
+						a <strong>{moveModal.destination?.name}</strong>{' '}
+						es porque ésta ya está completa
+					</p>
+					<label>Quieres dejar un comentario?</label>
+					<textarea
+						value={moveModal.comment}
+						onChange={(e) =>
+							setMoveModal((prev) => ({
+								...prev,
+								comment: e.target.value,
+							}))
+						}
+					/>
+				</div>
+				<Button
+					variant="contained"
+					color="success"
+					onClick={() => {
+						setMoveModal((prev) => ({
+							...prev,
+							bill: false,
+						}));
+						handleMove();
+						completeOrder(moveModal.draggedEl._id);
+					}}
+				>
+					Aceptar
+				</Button>
+				<Button
+					variant="contained"
+					color="error"
+					onClick={() => {
+						cancelMove();
+						setMoveModal((prev) => ({
+							...prev,
+							bill: false,
+						}));
+					}}
+				>
+					Cancelar
+				</Button>
+			</Modal>
+			<Modal
+				isOpen={moveModal.delivery}
+				onClose={cancelMove}
+				title={'Ingrese Nº de factura'}
+			>
+				<div>
+					<p>
+						Necesita ingresar numero de factura para
+						continuar
+					</p>
+					<input
+						className="billNumber"
+						onChange={(e) =>
+							setMoveModal((prev) => ({
+								...prev,
+								billNumber: e.target.value,
+							}))
+						}
+					/>
+				</div>
+				<Button
+					variant="contained"
+					color="success"
+					onClick={() => {
+						setMoveModal((prev) => ({
+							...prev,
+							delivery: false,
+						}));
+						handleMove();
+						billOrder(
+							moveModal.draggedEl._id,
+							moveModal.billNumber
+						);
+					}}
+					disabled={!moveModal.billNumber}
+					sx={{
+						'&.Mui-disabled': {
+							backgroundColor: 'lightgray',
+							color: 'gray',
+							cursor: 'not-allowed',
+						},
+					}}
+				>
+					Aceptar
+				</Button>
+				<Button
+					variant="contained"
+					color="error"
+					onClick={() => {
+						cancelMove();
+						setMoveModal((prev) => ({
+							...prev,
+							delivery: false,
+						}));
+					}}
+				>
+					Cancelar
+				</Button>
+			</Modal>
 			<div className={styles.paperGrid}>
 				{stations.map((station) => (
 					<Container
+						stations={stations}
 						workStation={station}
 						key={station._id}
 						orders={activeOrders}
+						moveModal={moveModal}
 						setMoveModal={setMoveModal}
 						selectActiveOrders={selectActiveOrders}
 						setOpenNextTasksModal={setOpenNextTasksModal}
 						setOpenOrderModal={setOpenOrderModal}
+						taskManagerRef={taskManagerRef}
 					/>
 				))}
 			</div>
@@ -177,112 +235,86 @@ function NewManager() {
 }
 
 function Container({
+	stations,
 	workStation,
 	orders,
+	moveModal,
 	setMoveModal,
 	selectActiveOrders,
 	setOpenNextTasksModal,
 	setOpenOrderModal,
+	taskManagerRef,
 }) {
-	const [ref, tasks, setTasks] = useDragAndDrop([], {
-		draggable: (el) => {
-			return el.id !== 'no-drag';
-		},
-		group: 'station',
-		plugins: [animations()],
-		name: workStation,
-		onDragstart: (e) => {
-			setMoveModal((prev) => ({
-				...prev,
-				source: e.parent.data.config.name,
-				draggedEl: e.draggedNode.data.value,
-			}));
-		},
-		onDragend: (e) => {
-			setMoveModal((prev) => ({
-				...prev,
-				destination: e.parent.data.config.name,
-				destinationTasks: e.values.map(
-					(value) => value._id
-				),
-				isOpen: prev.changes ? true : false,
-			}));
-		},
-
-		onSort: (e) => {
-			setMoveModal((prev) => ({
-				...prev,
-				changes: true,
-			}));
-		},
-		onTransfer: (e) => {
-			setMoveModal((prev) => ({
-				...prev,
-				changes: true,
-			}));
-		},
-	});
-
-	useEffect(() => {
-		if (orders.length > 0) {
-			setTasks(
-				workStation.tasks.map((task) =>
-					orders.find((order) => order?._id === task)
-				)
-			);
-		}
-	}, [orders]);
-
-	const [anchorEl, setAnchorEl] = useState(null);
-
-	const handleOpenMenu = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleSelectOption = () => {
-		selectActiveOrders(workStation);
-		setOpenNextTasksModal({
-			open: true,
-			info: workStation,
-		});
-		setAnchorEl(null);
-	};
-
-	useEffect(() => {
-		if (ref.current) {
-			const children = Array.from(ref.current.children);
-			let count = 0;
-			children.map((child) => {
-				if (child.id !== 'no-drag') {
-					count = count + 1;
-				}
-			});
-		}
-	}, [ref, tasks]);
+	const dispatch = useDispatch();
+	const {
+		ref,
+		tasks,
+		anchorEl,
+		setAnchorEl,
+		handleOpenMenu,
+		handleSelectOption,
+	} = useContainer(
+		stations,
+		workStation,
+		orders,
+		moveModal,
+		setMoveModal,
+		selectActiveOrders,
+		setOpenNextTasksModal,
+		taskManagerRef
+	);
+	/* 	useEffect(() => {
+		console.log('tasks', tasks);
+	}, [tasks]); */
 
 	return (
 		<div className={styles.container} ref={ref}>
-			<h3 id="no-drag">{workStation.name}</h3>
-			{tasks?.map((task) => (
-				<div
-					className={styles.task}
-					key={task?._id}
-					onClick={() =>
-						setOpenOrderModal({
-							open: true,
-							order: task,
-						})
-					}
-				>
-					<h4>
-						{task?.orderNumber}
-						{task?.product}
-					</h4>
-					<div className={styles.content}>
-						{task?.client.companyName}
+			<h2 id="no-drag">{workStation.name}</h2>
+			{tasks?.map((task) => {
+				const levelClass =
+					styles[
+						`warningLevel${warningLevel(task)}` ||
+							styles.warningLevel0
+					];
+
+				return (
+					<div
+						className={clsx(styles.task, levelClass)}
+						key={task?._id}
+						onClick={() => {
+							setOpenOrderModal({
+								open: true,
+								order: task,
+							});
+							dispatch(fetchOrderById(task._id));
+						}}
+					>
+						<h3>{task?.product}</h3>
+						<p style={{ fontSize: '12px' }}>
+							Orden Nº
+							{task?.orderNumber}
+						</p>
+						<div className={styles.content}>
+							{task?.client.companyName}
+						</div>
+						<div className={styles.taskDate}>
+							Fecha limite:{' '}
+							{task?.dateFinal
+								? toFormatDate(task?.dateFinal)
+								: task?.dateEstimate
+								? toFormatDate(task?.dateEstimate)
+								: ''}
+						</div>
+						{task.status === 'Detenida' ? (
+							<div className={styles.stopedTask}>
+								DETENIDA
+							</div>
+						) : (
+							''
+						)}
 					</div>
-				</div>
-			))}
+				);
+			})}
 			<IconButton
 				id="no-drag"
 				sx={{

@@ -3,7 +3,12 @@ import styles from './workshop.module.css';
 import { toFormatDate } from '../../../utilities/functions/dates';
 import { Button } from '@mui/material';
 import html2pdf from 'html2pdf.js';
-import { acceptOrder } from '../../../utilities/functions/order/updateOrder';
+import {
+	acceptOrder,
+	sendOrder,
+	stopOrder,
+	unStopOrder,
+} from '../../../utilities/functions/order/updateOrder';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import {
 	List,
@@ -15,10 +20,24 @@ import {
 import { fetchFilesFromZip } from '../../../utilities/functions/forms/uploadFile';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCommentsByOrder } from '../../../redux/comments/comments';
+import { fetchActiveOrders } from '../../../redux/orders/ordersSlice';
+import { fetchStations } from '../../../redux/workStations/workStationSlice';
 
-function WorkShopOrder({ order, toggleRefresh }) {
+function WorkShopOrder({ toggleRefresh }) {
+	const dispatch = useDispatch();
 	const orderPDF = useRef();
-	const { fields } = order;
+
+	const { comments } = useSelector(
+		(state) => state.comments
+	);
+	const { order, loadingOrders } = useSelector(
+		(state) => state.orders
+	);
+
+	const [fields, setFields] = useState({});
+	const [currentStatus, setCurrentStatus] = useState('');
 
 	const [selectedFiles, setSelectedFiles] = useState({});
 	const imageExtensions = [
@@ -29,6 +48,26 @@ function WorkShopOrder({ order, toggleRefresh }) {
 		'webp',
 		'svg',
 	];
+
+	useEffect(() => {
+		if (order?.comments?.length > 0) {
+			dispatch(fetchCommentsByOrder(order._id));
+		}
+	}, [order]);
+
+	useEffect(() => {
+		dispatch(fetchActiveOrders());
+		dispatch(fetchStations());
+	}, [currentStatus]);
+
+	/* 	useEffect(() => {
+		console.log(comments);
+	}, [comments]); */
+
+	useEffect(() => {
+		setFields(order?.fields?.values);
+		setCurrentStatus(order?.status);
+	}, [order]);
 
 	useEffect(() => {
 		if (order.scheme?.link) {
@@ -175,484 +214,584 @@ function WorkShopOrder({ order, toggleRefresh }) {
 	};
 
 	return (
-		<div
-			style={{
-				overflow: 'auto',
-				height: '80vh',
-				borderRadius: '5px',
-			}}
-		>
-			<Button
-				variant="contained"
-				color="success"
-				onClick={generatePDF}
-				style={{
-					margin: '15px',
-				}}
-			>
-				crear PDF
-			</Button>
-			<Button variant="contained" onClick={handleDownload}>
-				Descargar archivos
-			</Button>
-			<div className={styles.a4Sheet} ref={orderPDF}>
-				<div className={styles.documentContent}>
-					<div className={styles.mopHeader}>
-						<div className={styles.headerBlock}>
-							<h4>Imprenta</h4>
-							<h2>MATUTINA</h2>
-						</div>
-						<h3
-							className={styles.headerBlock}
-							style={{ textAlign: 'center' }}
-						>
-							Orden de producción
-						</h3>
-						<div
-							className={`${styles.headerBlock} ${styles.infoHeader} `}
-						>
-							<p
-								style={{
-									display: 'flex',
-									justifyContent: 'space-between',
-									alignSelf: 'flex-end',
-									width: '160px',
-								}}
-							>
-								Fecha de Creación:{' '}
-								<span>
-									{toFormatDate(order.dateCreated)}
-								</span>
-							</p>
-							<p
-								style={{
-									display: 'flex',
-									justifyContent: 'flex-end',
-									fontWeight: 'bold',
-								}}
-							>
-								<span style={{ fontSize: '24px' }}>
-									ORDEN Nº.{' '}
-									<span>{order.orderNumber} </span>
-								</span>
-							</p>
-						</div>
-					</div>
-					<div
-						className={`${styles.blockContainer} ${styles.noBreak}`}
+		<>
+			{!fields ||
+			loadingOrders ||
+			Object.keys(fields).length === 0 ? (
+				<div></div>
+			) : (
+				<div
+					style={{
+						overflow: 'auto',
+						height: '80vh',
+						borderRadius: '5px',
+					}}
+				>
+					<Button
+						variant="contained"
+						color="inherit"
+						onClick={generatePDF}
+						style={{
+							margin: '15px',
+							color: 'black',
+						}}
 					>
-						<div className={styles.leftBlock}>
-							{' '}
-							<div>
-								<h3 className={styles.sectionTitle}>
-									Familia:
-								</h3>{' '}
-								<p className={styles.familyInput}>
-									{fields?.product ?? ''}
-								</p>
-							</div>
-							<div>
-								<label>Fecha estimada:</label>{' '}
-								<p className={styles.familyInput}>
-									{fields.dateEstimate ?? '-'}
-								</p>
-							</div>
-							<div>
-								<label>Fecha limite:</label>{' '}
-								<p className={styles.familyInput}>
-									{fields.dateFinal ?? '-'}
-								</p>
-							</div>
-						</div>
-						<div className={styles.rightBlock}>
-							<h3 className={styles.sectionTitle}>
-								Cliente:
-							</h3>
-							<div
-								style={{
-									padding: '10px',
-									width: '500px',
-									backgroundColor: 'white',
-									color: 'black',
-								}}
-							>
-								<h4>{fields.client.companyName}</h4>
-								<p>{fields.client.legalName}</p>
-								<p>{fields.client.address}</p>
-								<p>{fields.client.phone}</p>
-							</div>
-
-							<div className={styles.blockTitle}>
-								<h3>Información de contacto: </h3>
-							</div>
-							<div
-								style={{
-									display: 'flex',
-									justifyContent: 'space-between',
-									gap: '5px',
-								}}
-							>
-								<div>
-									<label className={styles.label}>
-										Nombre:
-									</label>
-									<p
-										className={styles.inputWorkshopContact}
-									>
-										{fields.contactName}
-									</p>
-								</div>
-								<div>
-									<label className={styles.label}>
-										Teléfono:
-									</label>
-									<p
-										className={styles.inputWorkshopContact}
-									>
-										{fields.contactPhone}
-									</p>
-								</div>
-								<div>
-									<label className={styles.label}>
-										Email:
-									</label>
-									<p
-										className={styles.inputWorkshopContact}
-									>
-										{fields.contactEmail}
-									</p>
-								</div>
-							</div>
-						</div>
-						<div className={styles.inputContainer}>
-							<h3 style={{ fontSize: '16px' }}>
-								Datos de entrega:
-							</h3>
-							<p className={styles.textArea}>
-								{fields.deliveryData ?? ''}
-							</p>
-						</div>
-					</div>
-
-					<div className={`${styles.block}`}>
-						<div className={styles.blockTitle}>
-							<h3>Información del pedido: </h3>
-						</div>
-						<div className={styles.inputContainer}>
-							<h3 style={{ fontSize: '16px' }}>
-								Comentarios para el Cliente:
-							</h3>
-							<p className={styles.textArea}>
-								{fields.descriptionClient ?? ''}
-							</p>
-						</div>
-						<div className={styles.inputContainer}>
-							<h3 style={{ fontSize: '16px' }}>
-								Comentarios para el Taller:
-							</h3>
-							<p className={styles.textArea}>
-								{fields.descriptionWork ?? ''}
-							</p>
-						</div>
-						{order.scheme?.link ? (
-							<div className={styles.inputContainer}>
-								<div style={{ width: '100%' }}>
-									<h3 style={{ fontSize: '16px' }}>
-										Archivos adjuntos:
-									</h3>
-									{selectedFiles.length > 0 && (
-										<div
-											style={{
-												textAlign: 'left',
-												width: '100%',
-											}}
-										>
-											<List sx={{ width: '100%' }}>
-												{selectedFiles.map(
-													(file, index) => (
-														<ListItem
-															key={index}
-															sx={{
-																display: 'flex',
-																gap: '10px',
-																justifyContent:
-																	'space-between',
-																width: '100%',
-															}}
-														>
-															<ListItemText
-																primary={file.name}
-																secondary={`Tamaño: ${(
-																	file.size / 1024
-																).toFixed(2)} KB`}
-															/>
-
-															<ListItemIcon>
-																{imageExtensions.includes(
-																	file.name
-																		.split('.')
-																		.pop()
-																		.toLowerCase()
-																) ? (
-																	<img
-																		src={URL.createObjectURL(
-																			file
-																		)}
-																		alt={file.name}
-																		style={{
-																			width: '50px',
-																			height: '50px',
-																			objectFit: 'cover',
-																			borderRadius: '4px',
-																		}}
-																	/>
-																) : (
-																	<UploadFileIcon />
-																)}
-															</ListItemIcon>
-														</ListItem>
-													)
-												)}
-											</List>
-										</div>
-									)}
-									{selectedFiles.length > 0 ? (
-										<>
-											<Button
-												variant="contained"
-												onClick={() => handleDownload()}
-											>
-												Descargar
-											</Button>
-										</>
-									) : (
-										''
-									)}
-								</div>
-							</div>
-						) : (
-							''
-						)}
-					</div>
-					{fields.printTasks.map((info, index) => (
-						<div
-							className={`${styles.block} ${styles.blockPrintTask} ${styles.noBreak}`}
-							key={index}
+						crear PDF
+					</Button>
+					<Button
+						variant="contained"
+						onClick={handleDownload}
+					>
+						Descargar archivos
+					</Button>
+					{currentStatus === 'Aceptada' ? (
+						<Button
+							variant="contained"
+							color="error"
+							onClick={() => {
+								stopOrder(order._id, setCurrentStatus);
+							}}
+							style={{
+								margin: '15px',
+							}}
 						>
-							<div className={styles.contain}>
-								<div
-									style={{
-										display: 'flex',
-										gap: '50px',
-										/* justifyContent: 'space-between', */
-										width: '100%',
-									}}
-								>
-									<h2 className={styles.printTitle}>
-										Módulo de impresión
-									</h2>
-									<Input
-										name="Descripción del módulo"
-										value={info.sheetDescription || ''}
-									/>
+							Detener orden
+						</Button>
+					) : currentStatus === 'Detenida' ? (
+						<Button
+							variant="contained"
+							color="success"
+							onClick={() => {
+								unStopOrder(order._id, setCurrentStatus);
+							}}
+							style={{
+								margin: '15px',
+							}}
+						>
+							Activar orden
+						</Button>
+					) : currentStatus === 'Para enviar' ? (
+						<Button
+							variant="contained"
+							color="success"
+							onClick={() =>
+								sendOrder(order._id, setCurrentStatus)
+							}
+							style={{
+								margin: '15px',
+							}}
+						>
+							Orden enviada
+						</Button>
+					) : (
+						''
+					)}
+
+					<div className={styles.a4Sheet} ref={orderPDF}>
+						<div className={styles.documentContent}>
+							<div className={styles.mopHeader}>
+								<div className={styles.headerBlock}>
+									<h4>Imprenta</h4>
+									<h2>MATUTINA</h2>
 								</div>
-								<Input
-									name={'Unidades:'}
-									value={info.quantity}
-								/>
-								<Input
-									name={'Medida final:'}
-									value={info.finalSize}
-								/>
-								<Input
-									name={'Con márgenes:'}
-									value={info.sizeWithMargins}
-								/>
-								<div
-									className={styles.selectMaterialContainer}
+								<h3
+									className={styles.headerBlock}
+									style={{ textAlign: 'center' }}
 								>
-									<label className={styles.label}>
-										Material:
-									</label>
-									<p className={styles.inputWorkshop}>
-										{info?.materialOptions &&
-										Array.isArray(info.materialOptions)
-											? info.materialOptions.find(
-													(material) =>
-														material.value ===
-														info?.material
-											  )?.label || '-'
-											: '-'}
+									Orden de producción
+								</h3>
+								<div
+									className={`${styles.headerBlock} ${styles.infoHeader} `}
+								>
+									<p
+										style={{
+											display: 'flex',
+											justifyContent: 'space-between',
+											alignSelf: 'flex-end',
+											width: '160px',
+										}}
+									>
+										Fecha de Creación:{' '}
+										<span>
+											{toFormatDate(order.dateCreated)}
+										</span>
+									</p>
+									<p
+										style={{
+											display: 'flex',
+											justifyContent: 'flex-end',
+											fontWeight: 'bold',
+										}}
+									>
+										<span style={{ fontSize: '24px' }}>
+											ORDEN Nº.{' '}
+											<span>{order.orderNumber} </span>
+										</span>
 									</p>
 								</div>
-								<Input
-									name={'Gramaje:'}
-									value={info.grammage}
-								/>
-								<Input
-									name={'Tam. hoja:'}
-									value={info.bulkPaperSize}
-								/>
-								<Input
-									name={'Pliego:'}
-									value={info.sheetSize}
-								/>
-								<Input
-									name={'Pli. x hoja:'}
-									value={info.sheetPerBulkPaper}
-								/>
-								<Input
-									name={'Unid. x pli:'}
-									value={info.unitsPerSheet}
-								/>
-								<Input
-									name={'Nro pliegos:'}
-									value={info.sheetQuantity}
-								/>
-								<Input
-									name={'Demasía:'}
-									value={info.excess}
-								/>
-								<Input
-									name={'Nro hojas:'}
-									value={info.bulkPaperQuantity}
-								/>
-								<div
-									className={styles.selectMaterialContainer}
-								>
-									<label className={styles.label}>
-										Maquina:
-									</label>
-									<p className={styles.inputWorkshop}>
-										{info.operationOptions &&
-										Array.isArray(info.operationOptions)
-											? info.operationOptions.find(
-													(station) =>
-														station.value ===
-														info?.operation
-											  )?.label || '-'
-											: '-'}
-									</p>
-								</div>
-								<Input
-									name="Chapas:"
-									value={info.plates || ''}
-								/>
-
-								<Input
-									name="Posturas:"
-									value={info.postures || ''}
-								/>
-
-								<Input
-									name="Tiraje:"
-									value={info.printRun || ''}
-								/>
-
-								<Input
-									name="Repetir:"
-									value={info.moduleRepeat}
-								/>
 							</div>
-							<div className={styles.lastItem}></div>
 							<div
-								className={styles.printFirstRow}
-								style={{ alignItems: 'flex-end' }}
+								className={`${styles.blockContainer} ${styles.noBreak}`}
 							>
-								<div>
-									<h3>TINTAS</h3>
+								<div className={styles.leftBlock}>
+									{' '}
+									<div>
+										<h3 className={styles.sectionTitle}>
+											Familia:
+										</h3>{' '}
+										<p className={styles.familyInput}>
+											{fields?.product ?? ''}
+										</p>
+									</div>
+									<div>
+										<label>Fecha estimada:</label>{' '}
+										<p className={styles.familyInput}>
+											{fields.dateEstimate ?? '-'}
+										</p>
+									</div>
+									<div>
+										<label>Fecha limite:</label>{' '}
+										<p className={styles.familyInput}>
+											{fields.dateFinal ?? '-'}
+										</p>
+									</div>
+								</div>
+								<div className={styles.rightBlock}>
+									<h3 className={styles.sectionTitle}>
+										Cliente:
+									</h3>
+									<div
+										style={{
+											padding: '10px',
+											width: '500px',
+											backgroundColor: 'white',
+											color: 'black',
+										}}
+									>
+										<h4>{fields.client.companyName}</h4>
+										<p>{fields.client.legalName}</p>
+										<p>{fields.client.address}</p>
+										<p>{fields.client.phone}</p>
+									</div>
+
+									<div className={styles.blockTitle}>
+										<h3>Información de contacto: </h3>
+									</div>
 									<div
 										style={{
 											display: 'flex',
-											width: '720px',
-											gap: '20px',
+											justifyContent: 'space-between',
+											gap: '5px',
 										}}
 									>
-										<div style={{ width: '50%' }}>
+										<div>
 											<label className={styles.label}>
-												Frente:
+												Nombre:
 											</label>
-											<p className={styles.textArea}>
-												{info.front}
+											<p
+												className={
+													styles.inputWorkshopContact
+												}
+											>
+												{fields.contactName}
 											</p>
 										</div>
-										<div style={{ width: '50%' }}>
+										<div>
 											<label className={styles.label}>
-												Dorso:
+												Teléfono:
 											</label>
-											<p className={styles.textArea}>
-												{info.back}
+											<p
+												className={
+													styles.inputWorkshopContact
+												}
+											>
+												{fields.contactPhone}
+											</p>
+										</div>
+										<div>
+											<label className={styles.label}>
+												Email:
+											</label>
+											<p
+												className={
+													styles.inputWorkshopContact
+												}
+											>
+												{fields.contactEmail}
 											</p>
 										</div>
 									</div>
 								</div>
-								<div className={styles.rightRow}>
-									<div
-										className={styles.rightRowContainer}
-									></div>
-									<div
-										className={styles.rightRowContainer}
-									></div>
+								<div className={styles.inputContainer}>
+									<h3 style={{ fontSize: '16px' }}>
+										Datos de entrega:
+									</h3>
+									<p className={styles.textArea}>
+										{fields.deliveryData ?? ''}
+									</p>
 								</div>
 							</div>
-						</div>
-					))}
-					<div
-						className={`${styles.block} ${styles.blockPrintTask} ${styles.noBreak}`}
-					>
-						<table className={styles.table}>
-							<thead>
-								<tr>
-									<th className={styles.th}>Operación</th>
-									<th className={styles.smallth}>
-										Descripción
-									</th>
-									<th className={styles.smallth}>Unidad</th>
-									<th className={styles.smallth}>
-										Cantidad
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{fields.otherTasks?.map((op, index) => (
-									<tr className={styles.tr} key={index}>
-										<td
-											className={`${styles.td} ${styles.nameTd}`}
+
+							<div className={`${styles.block}`}>
+								<div className={styles.blockTitle}>
+									<h3>Información del pedido: </h3>
+								</div>
+								<div className={styles.inputContainer}>
+									<h3 style={{ fontSize: '16px' }}>
+										Comentarios para el Cliente:
+									</h3>
+									<p className={styles.textArea}>
+										{fields.descriptionClient ?? ''}
+									</p>
+								</div>
+								<div className={styles.inputContainer}>
+									<h3 style={{ fontSize: '16px' }}>
+										Comentarios para el Taller:
+									</h3>
+									<p className={styles.textArea}>
+										{fields.descriptionWork ?? ''}
+									</p>
+								</div>
+								{comments.length > 0 ? (
+									<div className={styles.inputContainer}>
+										<h3 style={{ fontSize: '16px' }}>
+											Comentarios del Taller:
+										</h3>
+										{comments?.map((comment) => (
+											<div
+												key={comment._id}
+												className={styles.textArea}
+											>
+												<p
+													className={styles.commentContent}
+												>
+													{comment.content}
+												</p>
+												<p className={styles.commentDate}>
+													{toFormatDate(comment.date)}
+												</p>
+											</div>
+										))}
+									</div>
+								) : (
+									''
+								)}
+
+								{order.scheme?.link ? (
+									<div className={styles.inputContainer}>
+										<div style={{ width: '100%' }}>
+											<h3 style={{ fontSize: '16px' }}>
+												Archivos adjuntos:
+											</h3>
+											{selectedFiles.length > 0 && (
+												<div
+													style={{
+														textAlign: 'left',
+														width: '100%',
+													}}
+												>
+													<List sx={{ width: '100%' }}>
+														{selectedFiles.map(
+															(file, index) => (
+																<ListItem
+																	key={index}
+																	sx={{
+																		display: 'flex',
+																		gap: '10px',
+																		justifyContent:
+																			'space-between',
+																		width: '100%',
+																	}}
+																>
+																	<ListItemText
+																		primary={file.name}
+																		secondary={`Tamaño: ${(
+																			file.size / 1024
+																		).toFixed(2)} KB`}
+																	/>
+
+																	<ListItemIcon>
+																		{imageExtensions.includes(
+																			file.name
+																				.split('.')
+																				.pop()
+																				.toLowerCase()
+																		) ? (
+																			<img
+																				src={URL.createObjectURL(
+																					file
+																				)}
+																				alt={file.name}
+																				style={{
+																					width: '50px',
+																					height: '50px',
+																					objectFit:
+																						'cover',
+																					borderRadius:
+																						'4px',
+																				}}
+																			/>
+																		) : (
+																			<UploadFileIcon />
+																		)}
+																	</ListItemIcon>
+																</ListItem>
+															)
+														)}
+													</List>
+												</div>
+											)}
+											{selectedFiles.length > 0 ? (
+												<>
+													<Button
+														variant="contained"
+														onClick={() => handleDownload()}
+													>
+														Descargar
+													</Button>
+												</>
+											) : (
+												''
+											)}
+										</div>
+									</div>
+								) : (
+									''
+								)}
+							</div>
+							{fields.printTasks.map((info, index) => (
+								<div
+									className={`${styles.block} ${styles.blockPrintTask} ${styles.noBreak}`}
+									key={index}
+								>
+									<div className={styles.contain}>
+										<div
+											style={{
+												display: 'flex',
+												gap: '50px',
+												/* justifyContent: 'space-between', */
+												width: '100%',
+											}}
 										>
-											{op.operation?.name}{' '}
-										</td>
-										<td>
-											<input
-												className={`${styles.input} ${styles.td}`}
-												name="description"
-												defaultValue={op.description ?? ''}
+											<h2 className={styles.printTitle}>
+												Módulo de impresión
+											</h2>
+											<Input
+												name="Descripción del módulo"
+												value={info.sheetDescription || ''}
 											/>
-										</td>
-										<td>
-											<input
-												className={styles.smallInput}
-												name="unitType"
-												defaultValue={
-													op.operation?.unitType ?? ''
-												}
-												disabled
-											/>
-										</td>
-										<td>
-											<input
-												className={styles.smallInput}
-												name="quantity"
-												defaultValue={op?.quantity ?? ''}
-											/>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
+										</div>
+										<Input
+											name={'Unidades:'}
+											value={info.quantity}
+										/>
+										<Input
+											name={'Medida final:'}
+											value={info.finalSize}
+										/>
+										<Input
+											name={'Con márgenes:'}
+											value={info.sizeWithMargins}
+										/>
+										<div
+											className={
+												styles.selectMaterialContainer
+											}
+										>
+											<label className={styles.label}>
+												Material:
+											</label>
+											<p className={styles.inputWorkshop}>
+												{info?.materialOptions &&
+												Array.isArray(info.materialOptions)
+													? info.materialOptions.find(
+															(material) =>
+																material.value ===
+																info?.material
+													  )?.label || '-'
+													: '-'}
+											</p>
+										</div>
+										<Input
+											name={'Gramaje:'}
+											value={info.grammage}
+										/>
+										<Input
+											name={'Tam. hoja:'}
+											value={info.bulkPaperSize}
+										/>
+										<Input
+											name={'Pliego:'}
+											value={info.sheetSize}
+										/>
+										<Input
+											name={'Pli. x hoja:'}
+											value={info.sheetPerBulkPaper}
+										/>
+										<Input
+											name={'Unid. x pli:'}
+											value={info.unitsPerSheet}
+										/>
+										<Input
+											name={'Nro pliegos:'}
+											value={info.sheetQuantity}
+										/>
+										<Input
+											name={'Demasía:'}
+											value={info.excess}
+										/>
+										<Input
+											name={'Nro hojas:'}
+											value={info.bulkPaperQuantity}
+										/>
+										<div
+											className={
+												styles.selectMaterialContainer
+											}
+										>
+											<label className={styles.label}>
+												Maquina:
+											</label>
+											<p className={styles.inputWorkshop}>
+												{info.operationOptions &&
+												Array.isArray(info.operationOptions)
+													? info.operationOptions.find(
+															(station) =>
+																station.value ===
+																info?.operation
+													  )?.label || '-'
+													: '-'}
+											</p>
+										</div>
+										<Input
+											name="Chapas:"
+											value={info.plates || ''}
+										/>
+
+										<Input
+											name="Posturas:"
+											value={info.postures || ''}
+										/>
+
+										<Input
+											name="Tiraje:"
+											value={info.printRun || ''}
+										/>
+
+										<Input
+											name="Repetir:"
+											value={info.moduleRepeat}
+										/>
+									</div>
+									<div className={styles.lastItem}></div>
+									<div
+										className={styles.printFirstRow}
+										style={{ alignItems: 'flex-end' }}
+									>
+										<div>
+											<h3>TINTAS</h3>
+											<div
+												style={{
+													display: 'flex',
+													width: '720px',
+													gap: '20px',
+												}}
+											>
+												<div style={{ width: '50%' }}>
+													<label className={styles.label}>
+														Frente:
+													</label>
+													<p className={styles.textArea}>
+														{info.front}
+													</p>
+												</div>
+												<div style={{ width: '50%' }}>
+													<label className={styles.label}>
+														Dorso:
+													</label>
+													<p className={styles.textArea}>
+														{info.back}
+													</p>
+												</div>
+											</div>
+										</div>
+										<div className={styles.rightRow}>
+											<div
+												className={styles.rightRowContainer}
+											></div>
+											<div
+												className={styles.rightRowContainer}
+											></div>
+										</div>
+									</div>
+								</div>
+							))}
+							<div
+								className={`${styles.block} ${styles.blockPrintTask} ${styles.noBreak}`}
+							>
+								<table className={styles.table}>
+									<thead>
+										<tr>
+											<th className={styles.th}>
+												Operación
+											</th>
+											<th className={styles.smallth}>
+												Descripción
+											</th>
+											<th className={styles.smallth}>
+												Unidad
+											</th>
+											<th className={styles.smallth}>
+												Cantidad
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{fields.otherTasks?.map((op, index) => (
+											<tr className={styles.tr} key={index}>
+												<td
+													className={`${styles.td} ${styles.nameTd}`}
+												>
+													{op.operation?.name}{' '}
+												</td>
+												<td>
+													<input
+														className={`${styles.input} ${styles.td}`}
+														name="description"
+														defaultValue={
+															op.description ?? ''
+														}
+													/>
+												</td>
+												<td>
+													<input
+														className={styles.smallInput}
+														name="unitType"
+														defaultValue={
+															op.operation?.unitType ?? ''
+														}
+														disabled
+													/>
+												</td>
+												<td>
+													<input
+														className={styles.smallInput}
+														name="quantity"
+														defaultValue={
+															op?.quantity ?? ''
+														}
+													/>
+												</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
+			)}
+		</>
 	);
 }
 

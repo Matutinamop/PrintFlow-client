@@ -6,6 +6,7 @@ import { clientReducer } from './clients/clientsSlice';
 import { materialReducer } from './materials/materialsSlice';
 import { operationReducer } from './operations/operationsSlice';
 import { exchangesReducer } from './exchanges/exchangesSlice';
+import { commentsReducer } from './comments/comments';
 
 const rootReducer = combineReducers({
 	workStations: workStationReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
 	materials: materialReducer,
 	operations: operationReducer,
 	exchanges: exchangesReducer,
+	comments: commentsReducer,
 });
 
 export default rootReducer;

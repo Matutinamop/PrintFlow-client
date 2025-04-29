@@ -12,6 +12,7 @@ import {
 	isUrgent,
 	isWarning,
 	toFormatDate,
+	warningLevel,
 } from '../../utilities/functions/dates';
 import Loader from '../shared/Loader';
 import Dropdown from '../shared/Dropdown';
@@ -28,8 +29,14 @@ import {
 	updateOrder,
 } from '../../utilities/functions/order/updateOrder';
 import ClientBudget from './ClientBudget';
-import { fetchFilteredOrders } from '../../redux/orders/ordersSlice';
+import {
+	fetchFilteredOrders,
+	fetchOrderById,
+} from '../../redux/orders/ordersSlice';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import clsx from 'clsx';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
 export function AllOrdersList({
 	orders,
@@ -38,6 +45,7 @@ export function AllOrdersList({
 	toggleRefresh,
 	setDateOrder,
 }) {
+	const dispatch = useDispatch();
 	const [workshopOrderModal, setWorkshopOrderModal] =
 		useState({
 			open: false,
@@ -50,25 +58,33 @@ export function AllOrdersList({
 		'Todos',
 		'Aceptada',
 		'Abierta',
-		'Finalizada',
+		'Para facturar',
+		'Para enviar',
 		'Detenida',
-		'Facturada',
+		'Finalizada',
 	];
 
 	const navigate = useNavigate(); // Cambio aquí
 
-	const handleEditClick = (order) => {
-		navigate('/admin/orders/form', {
-			state: {
-				order,
-				isEdit: true,
-				orderStatus: order.status,
-			},
-		}); // Cambio aquí
+	const handleEditClick = async (order) => {
+		try {
+			const response = await axios.get(
+				`${process.env.REACT_APP_API_URL}/api/order/${order._id}`
+			);
+			const fields = response.data.order;
+			navigate('/admin/orders/form', {
+				state: {
+					order: fields,
+					isEdit: true,
+					orderStatus: order.status,
+				},
+			});
+		} catch (error) {}
 	};
 
 	const createOrder = (order) => {
 		setWorkshopOrderModal({ open: true, order: order });
+		dispatch(fetchOrderById(order._id));
 		/* toggleRefresh();
 		if (order.status === 'Abierta') {
 			acceptOrder(order._id);
@@ -77,6 +93,7 @@ export function AllOrdersList({
 
 	const createBudget = (order) => {
 		setClientBudgetModal({ open: true, order: order });
+		dispatch(fetchOrderById(order._id));
 	};
 
 	const closeWorkshopModal = () => {
@@ -158,74 +175,85 @@ export function AllOrdersList({
 							</Tr>
 						</Thead>
 						<Tbody>
-							{orders.map((order) => (
-								<Tr
-									key={order?._id}
-									/* warning={isWarning(order)}
-									urgent={isUrgent(order)} */
-								>
-									<Td size={'sizeNumber'}>
-										{order?.orderNumber}
-									</Td>
-									<Td>{order?.product}</Td>
-									<Td size={'sizeClient'}>
-										{order?.client?.companyName}
-									</Td>
-									<Td size="sizeStatus">{order?.status}</Td>
-									<Td size={'sizeDate'}>
-										{toFormatDate(order?.dateCreated)}
-									</Td>
-									<Td size={'sizeDate'}>
-										{toFormatDate(order?.dateEstimate) ??
-											'-'}
-									</Td>
-									<Td size={'sizeDate'}>
-										{toFormatDate(order?.dateFinal) ?? '-'}
-									</Td>
-									<Td>
-										$
-										{new Intl.NumberFormat('es-AR').format(
-											order?.budget
-										)}
-									</Td>
-									<Td size={'sizeNumber'}>
-										{order?.deviation}
-									</Td>
-									<td className={styles.editTd}>
-										<IconButton
-											style={{ padding: 0 }}
-											onClick={() => createOrder(order)}
-										>
-											<PictureAsPdfIcon color="error" />
-										</IconButton>
-									</td>
-									{/* <Td>
+							{orders.map((order) => {
+								const levelClass =
+									styles[
+										`warningLevel${warningLevel(order)}` ||
+											styles.warningLevel0
+									];
+								return (
+									<tr
+										key={order?._id}
+										className={clsx(styles.tr, levelClass)}
+									>
+										<Td size={'sizeNumber'}>
+											{order?.orderNumber}
+										</Td>
+										<Td>{order?.product}</Td>
+										<Td size={'sizeClient'}>
+											{order?.client?.companyName}
+										</Td>
+										<Td size="sizeStatus">
+											{order?.status}
+										</Td>
+										<Td size={'sizeDate'}>
+											{toFormatDate(order?.dateCreated)}
+										</Td>
+										<Td size={'sizeDate'}>
+											{toFormatDate(order?.dateEstimate) ??
+												'-'}
+										</Td>
+										<Td size={'sizeDate'}>
+											{toFormatDate(order?.dateFinal) ??
+												'-'}
+										</Td>
+										<Td>
+											$
+											{new Intl.NumberFormat(
+												'es-AR'
+											).format(order?.budget)}
+										</Td>
+										<Td size={'sizeNumber'}>
+											{order?.deviation}
+										</Td>
+										<td className={styles.editTd}>
+											<IconButton
+												style={{ padding: 0 }}
+												onClick={() => createOrder(order)}
+											>
+												<PictureAsPdfIcon color="error" />
+											</IconButton>
+										</td>
+										{/* <Td>
 											<PictureAsPdfIcon
 												color="error"
 												onClick={() => createOrder(order)}
 											/>
 										</Td> */}
-									<td className={styles.editTd}>
-										<IconButton
-											style={{ padding: 0 }}
-											onClick={() => createBudget(order)}
-										>
-											<PictureAsPdfIcon color="error" />
-										</IconButton>
-									</td>
-									<td className={styles.editTd}>
-										<IconButton
-											style={{ padding: 0 }}
-											onClick={() => handleEditClick(order)} // Cambio aquí
-										>
-											<EditIcon
-												fontSize="small"
-												sx={{ color: '#101204' }}
-											/>
-										</IconButton>
-									</td>
-								</Tr>
-							))}
+										<td className={styles.editTd}>
+											<IconButton
+												style={{ padding: 0 }}
+												onClick={() => createBudget(order)}
+											>
+												<PictureAsPdfIcon color="error" />
+											</IconButton>
+										</td>
+										<td className={styles.editTd}>
+											<IconButton
+												style={{ padding: 0 }}
+												onClick={() =>
+													handleEditClick(order)
+												} // Cambio aquí
+											>
+												<EditIcon
+													fontSize="small"
+													sx={{ color: '#101204' }}
+												/>
+											</IconButton>
+										</td>
+									</tr>
+								);
+							})}
 						</Tbody>
 					</Table>
 				</div>

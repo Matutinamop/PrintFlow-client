@@ -4,6 +4,7 @@ import {
 	removeTask,
 	updateStationsList,
 } from './workStation/updateTasks';
+import { addComment } from './order/addComment';
 
 const url = process.env.REACT_APP_API_URL;
 
@@ -102,6 +103,7 @@ export const movingTasks = async (info, setIsLoading) => {
 		destinationTasks,
 		draggedEl,
 		source,
+		comment,
 	} = info;
 
 	try {
@@ -146,6 +148,9 @@ export const movingTasks = async (info, setIsLoading) => {
 				`${url}/api/workStation/${destination._id}`,
 				destinationBody
 			);
+		}
+		if (comment) {
+			addComment(draggedEl._id, comment);
 		}
 
 		setIsLoading(false);

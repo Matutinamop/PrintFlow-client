@@ -15,7 +15,11 @@ import { fetchMaterials } from '../../../redux/materials/materialsSlice';
 import { fetchStations } from '../../../redux/workStations/workStationSlice';
 import OperationsModule from '../../../components/Orders/Form/OperationsModule';
 import { createNewOrder } from '../../../utilities/functions/order/createNewOrder';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {
+	useFetcher,
+	useLocation,
+	useNavigate,
+} from 'react-router-dom';
 import { updateOrder } from '../../../utilities/functions/order/updateOrder';
 import { orderSchema } from '../../../utilities/validations/orderForm';
 import { fetchOrdersPage } from '../../../redux/orders/ordersSlice';
@@ -49,8 +53,13 @@ function OrderForm() {
 			? location.state.order
 			: null;
 	const editFields = location.state?.isEdit
-		? location.state.order.fields
+		? location.state.order.fields.values
 		: null;
+
+	useEffect(() => {
+		console.log('location.state', location.state);
+		console.log('editFields', editFields);
+	}, [location]);
 
 	const [fields, setFields] = useState(
 		recoveredFields
@@ -67,11 +76,10 @@ function OrderForm() {
 					deviation: 0,
 			  }
 	);
-	/* 
+
 	useEffect(() => {
 		console.log(fields);
-		console.log('location', location.state);
-	}, [fields]); */
+	}, [fields]);
 
 	const [checked, setChecked] = useState(() => {
 		const status = location.state?.orderStatus;

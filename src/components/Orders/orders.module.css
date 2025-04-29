@@ -71,6 +71,24 @@
 	width: 60px;
 }
 
+.tr {
+	position: relative;
+	width: 100%;
+}
+
+.warningLevel2 {
+	background-color: #f6d88d;
+}
+.warningLevel3 {
+	background-color: #f8e765;
+}
+.warningLevel4 {
+	background-color: #f7b34e;
+}
+.warningLevel5 {
+	background-color: #f15656;
+}
+
 @media (max-width: 1000px) {
 	.tables {
 		width: 1400px;

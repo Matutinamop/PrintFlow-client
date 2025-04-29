@@ -54,13 +54,58 @@ export const parseDate = (dateString) => {
 	return new Date(year, month - 1, day);
 };
 
-export const today = () => {
+/* export const today = () => {
 	let today = format(startOfDay(new Date()), 'dd/MM/yyyy');
 	return today;
+}; */
+
+export const warningLevel = (order) => {
+	const { dateFinal, dateEstimate, status } = order;
+	const limitDate = dateFinal
+		? new Date(dateFinal)
+		: dateEstimate
+		? new Date(dateEstimate)
+		: null;
+	const today = startOfDay(new Date());
+
+	if (
+		status === 'Abierta' ||
+		status === 'Finalizada' ||
+		!limitDate
+	) {
+		return 0;
+	}
+
+	if (limitDate > today) {
+		const daysInRange = eachDayOfInterval({
+			start: today,
+			end: limitDate,
+		});
+		const businessDays = daysInRange.filter(
+			(date) => !isWeekend(date)
+		).length;
+
+		switch (businessDays) {
+			case 0:
+			case 1:
+				return 5;
+			case 2:
+				return 4;
+			case 3:
+				return 3;
+			case 4:
+				return 2;
+			case 5:
+				return 1;
+			default:
+				return 0;
+		}
+	}
+	return 5;
 };
 
 export const isUrgent = (order) => {
-	if (order.dateFinal) {
+	if (order?.dateFinal) {
 		const { dateFinal, status } = order;
 		if (status === 'Abierta' || status === 'Aceptada') {
 			const startDate = parseDate(now);

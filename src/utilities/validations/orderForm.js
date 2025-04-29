@@ -83,13 +83,13 @@ export const printTaskModuleSchema = Joi.object({
 			Joi.string().pattern(numbersRegex).allow('0')
 		)
 		.allow(''),
-	excess: Joi.string()
-		.pattern(numbersRegex)
-		.allow('')
-		.messages({
+	excess: Joi.alternatives().try(
+		Joi.number().min(0),
+		Joi.string().pattern(numbersRegex).allow('').messages({
 			'string.pattern.base': '"Demasía" debe ser un numero',
 			'any.required': 'El campo "Demasía" es obligatorio',
-		}),
+		})
+	),
 	bulkPaperQuantity: Joi.alternatives()
 		.try(
 			Joi.number().min(0),

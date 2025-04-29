@@ -58,19 +58,19 @@ export const createNewOrder = async (fields) => {
 	let budgetEstimate = 0,
 		budget = 0;
 
-	printTasks.map((task) => {
+	printTasks.forEach((task) => {
 		if (task.estimatedCost) {
 			budgetEstimate += task.estimatedCost;
 			budget += task.totalCost;
 		}
 	});
-	otherTasks.map((task) => {
-		task.estimatedCost
-			? (budgetEstimate += task.estimatedCost)
-			: (budgetEstimate += Number(task.cost));
-		task.cost
-			? (budget += Number(task.cost))
-			: (budget += task.estimatedCost);
+	otherTasks.forEach((task) => {
+		if (task.estimatedCost) {
+			budgetEstimate += task.estimatedCost;
+		}
+		if (task.cost) {
+			budget += task.cost;
+		}
 	});
 
 	const stationsList = tasks
@@ -88,37 +88,43 @@ export const createNewOrder = async (fields) => {
 		})
 		.filter(Boolean);
 
-	const body = {
-		orderNumber,
-		product,
-		client,
-		contact: {
-			name: contactName,
-			phone: contactPhone,
-			email: contactEmail,
-		},
-		deliveryData,
-		status: 'Abierta',
-		request:
-			'asdasd' /* aca tengo que ver si va a ir o no en el formulario */,
-		scheme,
-		dateCreated: new Date(),
-		dateEstimate: dateEstimate
-			? toDateObject(dateEstimate)
-			: '',
-		dateFinal: dateFinal ? toDateObject(dateFinal) : '',
-		descriptionClient,
-		descriptionWork,
-		descriptionPrivate,
-		tasks,
-		stationsList,
-		budgetEstimate,
-		budget,
-		deviation: `${deviation} %`,
-		fields,
-	};
-
 	try {
+		const fieldsResponse = await axios.post(
+			`${process.env.REACT_APP_API_URL}/api/orderFields`,
+			{ values: fields }
+		);
+		const fieldsId = fieldsResponse.data.newOrderFields._id;
+
+		const body = {
+			orderNumber,
+			product,
+			client,
+			contact: {
+				name: contactName,
+				phone: contactPhone,
+				email: contactEmail,
+			},
+			deliveryData,
+			status: 'Abierta',
+			scheme,
+			dateCreated: new Date(),
+			dateEstimate: dateEstimate
+				? toDateObject(dateEstimate)
+				: '',
+			dateFinal: dateFinal ? toDateObject(dateFinal) : '',
+			descriptionClient,
+			descriptionWork,
+			descriptionPrivate,
+			stationsList,
+			budgetEstimate,
+			budget,
+			deviation: `${deviation} %`,
+			fields: fieldsId,
+		};
+
+		console.log('body', body);
+		console.log('fields', fields);
+
 		const response = await axios.post(
 			`${process.env.REACT_APP_API_URL}/api/order`,
 			body
