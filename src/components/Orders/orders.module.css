@@ -78,15 +78,19 @@
 
 .warningLevel2 {
 	background-color: #f6d88d;
+	border: 1px solid #101204;
 }
 .warningLevel3 {
 	background-color: #f8e765;
+	border: 1px solid #101204;
 }
 .warningLevel4 {
 	background-color: #f7b34e;
+	border: 1px solid #101204;
 }
 .warningLevel5 {
 	background-color: #f15656;
+	border: 1px solid #101204;
 }
 
 @media (max-width: 1000px) {

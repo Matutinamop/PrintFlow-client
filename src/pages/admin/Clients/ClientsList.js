@@ -51,15 +51,14 @@ function ClientsList() {
 		);
 	}, [currentpage]);
 
-	const searchTermSubmit = (e) => {
-		e.preventDefault();
+	useEffect(() => {
 		dispatch(
 			fetchFilteredClients({
 				searchTerm,
 				page: currentpage,
 			})
 		);
-	};
+	}, [searchTerm]);
 
 	const setPage = (event, page) => {
 		setCurrentPage(page);
@@ -100,19 +99,14 @@ function ClientsList() {
 				<Button onClick={handleCreate}>Crear</Button>
 				<div className={styles.clientsListSearch}>
 					<label className={styles.label}>Buscar: </label>
-					<form onSubmit={(e) => searchTermSubmit(e)}>
-						<Input
-							value={searchTerm}
-							onChange={(e) =>
-								setSearchTerm(e.target.value)
-							}
-							placeholder={'Buscar por cliente o producto'}
-						></Input>
-					</form>
+					<Input
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+						placeholder={'Buscar por cliente o producto'}
+					></Input>
 				</div>
 			</div>
 			<AllClientsList
-				loadingClient={loadingClient}
 				clients={clients}
 				setFields={setFields}
 				setIsEdit={setIsEdit}

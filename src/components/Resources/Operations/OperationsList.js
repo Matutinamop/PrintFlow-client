@@ -65,9 +65,41 @@ function OperationsList({
 					<Table>
 						<Thead>
 							<Tr>
-								<Th size={'big'}>Nombre</Th>
-								<Th size={'normal'}>Tipo de unidad</Th>
-								<Th size={'big'}>Estación</Th>
+								<th
+									style={{
+										backgroundColor: 'black',
+										color: ' white',
+										whiteSpace: 'nowrap',
+										textAlign: 'left',
+										border: '1px solid #101204',
+									}}
+								>
+									Nombre
+								</th>
+								<th
+									style={{
+										width: '150px',
+										backgroundColor: 'black',
+										color: ' white',
+										whiteSpace: 'nowrap',
+										textAlign: 'left',
+										border: '1px solid #101204',
+									}}
+								>
+									Tipo de unidad
+								</th>
+								<th
+									style={{
+										width: '150px',
+										backgroundColor: 'black',
+										color: ' white',
+										whiteSpace: 'nowrap',
+										textAlign: 'left',
+										border: '1px solid #101204',
+									}}
+								>
+									Estación
+								</th>
 								<th className={styles.editTh}>Editar</th>
 							</Tr>
 						</Thead>

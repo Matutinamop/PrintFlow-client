@@ -344,13 +344,17 @@ function WorkShopOrder({ toggleRefresh }) {
 										</p>
 									</div>
 									<div>
-										<label>Fecha estimada:</label>{' '}
+										<label className={styles.label}>
+											Fecha estimada:
+										</label>{' '}
 										<p className={styles.familyInput}>
 											{fields.dateEstimate ?? '-'}
 										</p>
 									</div>
 									<div>
-										<label>Fecha limite:</label>{' '}
+										<label className={styles.label}>
+											Fecha limite:
+										</label>{' '}
 										<p className={styles.familyInput}>
 											{fields.dateFinal ?? '-'}
 										</p>
@@ -423,7 +427,13 @@ function WorkShopOrder({ toggleRefresh }) {
 									</div>
 								</div>
 								<div className={styles.inputContainer}>
-									<h3 style={{ fontSize: '16px' }}>
+									<h3
+										style={{
+											fontSize: '16px',
+											fontWeight: '100',
+											color: '#444',
+										}}
+									>
 										Datos de entrega:
 									</h3>
 									<p className={styles.textArea}>
@@ -437,7 +447,13 @@ function WorkShopOrder({ toggleRefresh }) {
 									<h3>Información del pedido: </h3>
 								</div>
 								<div className={styles.inputContainer}>
-									<h3 style={{ fontSize: '16px' }}>
+									<h3
+										style={{
+											fontSize: '16px',
+											fontWeight: '100',
+											color: '#444',
+										}}
+									>
 										Comentarios para el Cliente:
 									</h3>
 									<p className={styles.textArea}>
@@ -445,7 +461,13 @@ function WorkShopOrder({ toggleRefresh }) {
 									</p>
 								</div>
 								<div className={styles.inputContainer}>
-									<h3 style={{ fontSize: '16px' }}>
+									<h3
+										style={{
+											fontSize: '16px',
+											fontWeight: '100',
+											color: '#444',
+										}}
+									>
 										Comentarios para el Taller:
 									</h3>
 									<p className={styles.textArea}>

@@ -67,9 +67,41 @@ function MaterialsList({
 						<Table>
 							<Thead>
 								<Tr>
-									<Th size={'big'}>Nombre</Th>
-									<Th size={'big'}>Tipo de unidad</Th>
-									<Th size={'big'}>Precio</Th>
+									<th
+										style={{
+											backgroundColor: 'black',
+											color: ' white',
+											whiteSpace: 'nowrap',
+											textAlign: 'left',
+											border: '1px solid #101204',
+										}}
+									>
+										Nombre
+									</th>
+									<th
+										style={{
+											width: '150px',
+											backgroundColor: 'black',
+											color: ' white',
+											whiteSpace: 'nowrap',
+											textAlign: 'left',
+											border: '1px solid #101204',
+										}}
+									>
+										Tipo de unidad
+									</th>
+									<th
+										style={{
+											width: '70px',
+											backgroundColor: 'black',
+											color: ' white',
+											whiteSpace: 'nowrap',
+											textAlign: 'left',
+											border: '1px solid #101204',
+										}}
+									>
+										Precio
+									</th>
 
 									<th className={styles.editTh}>Editar</th>
 								</Tr>
@@ -77,13 +109,27 @@ function MaterialsList({
 							<Tbody>
 								{materials?.map((material) => (
 									<Tr key={material?._id}>
-										<Td size={'big'}>{material?.name}</Td>
-										<Td size={'big'}>
+										<td
+											style={{
+												border: '1px solid #101204',
+											}}
+										>
+											{material?.name}
+										</td>
+										<td
+											style={{
+												border: '1px solid #101204',
+											}}
+										>
 											{material?.unitType}
-										</Td>
-										<Td size={'big'}>
+										</td>
+										<td
+											style={{
+												border: '1px solid #101204',
+											}}
+										>
 											{material?.pricePerUnitType}
-										</Td>
+										</td>
 										<td className={styles.editTd}>
 											<IconButton
 												style={{ padding: 0 }}
