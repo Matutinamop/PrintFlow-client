@@ -22,9 +22,10 @@ export const updateOrder = async (id, fields) => {
 		otherTasks,
 		status,
 		deviation,
+		finalPrice,
 	} = fields;
 
-	let budgetEstimate = 0,
+	/* let budgetEstimate = 0,
 		budget = 0;
 
 	printTasks.forEach((task) => {
@@ -40,7 +41,7 @@ export const updateOrder = async (id, fields) => {
 		if (task.cost) {
 			budget += task.cost;
 		}
-	});
+	}); */
 	try {
 		console.log('llegue aca');
 		const fieldsIdResponse = await axios.get(
@@ -75,8 +76,7 @@ export const updateOrder = async (id, fields) => {
 			descriptionClient,
 			descriptionWork,
 			descriptionPrivate,
-			budgetEstimate,
-			budget,
+			budget: finalPrice,
 			deviation: `${deviation} %`,
 			status,
 		};
@@ -113,7 +113,9 @@ export const acceptOrder = async (id) => {
 			`${process.env.REACT_APP_API_URL}/api/order/${id}`,
 			{ status: 'Aceptada' }
 		);
-		const status = response.orderToUpdate.status;
+		console.log('response', response);
+		const status = response.data.orderToUpdate.status;
+
 		if (status === 'Abierta') {
 			activateOrder(id);
 		}

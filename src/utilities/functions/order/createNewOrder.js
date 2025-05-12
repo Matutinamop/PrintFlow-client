@@ -20,6 +20,7 @@ export const createNewOrder = async (fields) => {
 		printTasks,
 		otherTasks,
 		deviation,
+		finalPrice,
 	} = fields;
 
 	const newContact = !client.contact.some(
@@ -55,7 +56,7 @@ export const createNewOrder = async (fields) => {
 	}
 
 	const tasks = [...printTasks, ...otherTasks];
-	let budgetEstimate = 0,
+	/* let budgetEstimate = 0,
 		budget = 0;
 
 	printTasks.forEach((task) => {
@@ -71,7 +72,7 @@ export const createNewOrder = async (fields) => {
 		if (task.cost) {
 			budget += task.cost;
 		}
-	});
+	}); */
 
 	const stationsList = tasks
 		.filter((task) => task.operation)
@@ -116,8 +117,7 @@ export const createNewOrder = async (fields) => {
 			descriptionWork,
 			descriptionPrivate,
 			stationsList,
-			budgetEstimate,
-			budget,
+			budget: finalPrice,
 			deviation: `${deviation} %`,
 			fields: fieldsId,
 		};
