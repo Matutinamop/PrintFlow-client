@@ -149,3 +149,32 @@
 .warningLevel5 {
 	background-color: #f15656;
 }
+
+.modal {
+	display: flex;
+	flex-direction: column;
+	padding: 15px 0;
+}
+
+.modalTitle {
+	font-size: 20px;
+}
+
+.modalDescription {
+	margin: 10px 0;
+}
+
+.modalInput {
+	margin: 10px 0;
+}
+
+.modalTextarea {
+	resize: vertical;
+	margin: 10px 0;
+}
+
+.modalButtons {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+}

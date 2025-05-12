@@ -46,20 +46,19 @@ function NewManager() {
 			className={styles.taskManager}
 			ref={taskManagerRef}
 		>
-			<Modal
-				isOpen={moveModal.isOpen}
-				onClose={cancelMove}
-				title={'Estás seguro?'}
-			>
-				<div>
-					<p>
+			<Modal isOpen={moveModal.isOpen} onClose={cancelMove}>
+				<div className={styles.modal}>
+					<p className={styles.modalTitle}>
 						Mover{' '}
 						<strong>{moveModal.draggedEl?.product}</strong>{' '}
 						a {''}
 						<strong>{moveModal.destination?.name}</strong>?
 					</p>
-					<label>Quieres dejar un comentario?</label>
+					<label className={styles.modalDescription}>
+						Quieres dejar un comentario?
+					</label>
 					<textarea
+						className={styles.modalTextarea}
 						value={moveModal.comment}
 						onChange={(e) =>
 							setMoveModal((prev) => ({
@@ -68,22 +67,23 @@ function NewManager() {
 							}))
 						}
 					/>
+					<div className={styles.modalButtons}>
+						<Button
+							variant="contained"
+							color="success"
+							onClick={handleMove}
+						>
+							Aceptar
+						</Button>
+						<Button
+							variant="contained"
+							color="error"
+							onClick={cancelMove}
+						>
+							Cancelar
+						</Button>
+					</div>
 				</div>
-
-				<Button
-					variant="contained"
-					color="success"
-					onClick={handleMove}
-				>
-					Aceptar
-				</Button>
-				<Button
-					variant="contained"
-					color="error"
-					onClick={cancelMove}
-				>
-					Cancelar
-				</Button>
 			</Modal>
 			<Modal transparent isOpen={isLoading}>
 				<Loader />
@@ -104,20 +104,19 @@ function NewManager() {
 			>
 				<WorkShopOrder order={openOrderModal.order} />
 			</Modal>
-			<Modal
-				isOpen={moveModal.bill}
-				onClose={cancelMove}
-				title={'Estás seguro?'}
-			>
-				<div>
-					<p>
+			<Modal isOpen={moveModal.bill} onClose={cancelMove}>
+				<div className={styles.modal}>
+					<p className={styles.modalTitle}>
 						Si desea mover la orden{' '}
 						<strong>{moveModal.draggedEl?.product}</strong>{' '}
 						a <strong>{moveModal.destination?.name}</strong>{' '}
 						es porque ésta ya está completa
 					</p>
-					<label>Quieres dejar un comentario?</label>
+					<label className={styles.modalDescription}>
+						Quieres dejar un comentario?
+					</label>
 					<textarea
+						className={styles.modalTextarea}
 						value={moveModal.comment}
 						onChange={(e) =>
 							setMoveModal((prev) => ({
@@ -126,47 +125,50 @@ function NewManager() {
 							}))
 						}
 					/>
+					<div className={styles.modalButtons}>
+						<Button
+							variant="contained"
+							color="success"
+							onClick={() => {
+								setMoveModal((prev) => ({
+									...prev,
+									bill: false,
+								}));
+								handleMove();
+								completeOrder(moveModal.draggedEl._id);
+							}}
+						>
+							Aceptar
+						</Button>
+						<Button
+							variant="contained"
+							color="error"
+							onClick={() => {
+								cancelMove();
+								setMoveModal((prev) => ({
+									...prev,
+									bill: false,
+								}));
+							}}
+						>
+							Cancelar
+						</Button>
+					</div>
 				</div>
-				<Button
-					variant="contained"
-					color="success"
-					onClick={() => {
-						setMoveModal((prev) => ({
-							...prev,
-							bill: false,
-						}));
-						handleMove();
-						completeOrder(moveModal.draggedEl._id);
-					}}
-				>
-					Aceptar
-				</Button>
-				<Button
-					variant="contained"
-					color="error"
-					onClick={() => {
-						cancelMove();
-						setMoveModal((prev) => ({
-							...prev,
-							bill: false,
-						}));
-					}}
-				>
-					Cancelar
-				</Button>
 			</Modal>
 			<Modal
 				isOpen={moveModal.delivery}
 				onClose={cancelMove}
 				title={'Ingrese Nº de factura'}
 			>
-				<div>
-					<p>
+				<div className={styles.modal}>
+					<p className={styles.modalTitle}>
 						Necesita ingresar numero de factura para
 						continuar
 					</p>
 					<input
-						className="billNumber"
+						className={styles.modalInput}
+						name="billNumber"
 						onChange={(e) =>
 							setMoveModal((prev) => ({
 								...prev,
@@ -174,45 +176,47 @@ function NewManager() {
 							}))
 						}
 					/>
+					<div className={styles.modalButtons}>
+						<Button
+							variant="contained"
+							color="success"
+							onClick={() => {
+								setMoveModal((prev) => ({
+									...prev,
+									delivery: false,
+								}));
+								handleMove();
+								billOrder(
+									moveModal.draggedEl._id,
+									moveModal.billNumber
+								);
+							}}
+							disabled={!moveModal.billNumber}
+							sx={{
+								'&.Mui-disabled': {
+									backgroundColor: 'lightgray',
+									color: 'gray',
+									cursor: 'not-allowed',
+								},
+							}}
+						>
+							Aceptar
+						</Button>
+						<Button
+							variant="contained"
+							color="error"
+							onClick={() => {
+								cancelMove();
+								setMoveModal((prev) => ({
+									...prev,
+									delivery: false,
+								}));
+							}}
+						>
+							Cancelar
+						</Button>
+					</div>
 				</div>
-				<Button
-					variant="contained"
-					color="success"
-					onClick={() => {
-						setMoveModal((prev) => ({
-							...prev,
-							delivery: false,
-						}));
-						handleMove();
-						billOrder(
-							moveModal.draggedEl._id,
-							moveModal.billNumber
-						);
-					}}
-					disabled={!moveModal.billNumber}
-					sx={{
-						'&.Mui-disabled': {
-							backgroundColor: 'lightgray',
-							color: 'gray',
-							cursor: 'not-allowed',
-						},
-					}}
-				>
-					Aceptar
-				</Button>
-				<Button
-					variant="contained"
-					color="error"
-					onClick={() => {
-						cancelMove();
-						setMoveModal((prev) => ({
-							...prev,
-							delivery: false,
-						}));
-					}}
-				>
-					Cancelar
-				</Button>
 			</Modal>
 			<div className={styles.paperGrid}>
 				{stations.map((station) => (
