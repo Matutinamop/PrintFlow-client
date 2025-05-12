@@ -51,7 +51,7 @@ function WorkShopOrder({ toggleRefresh }) {
 
 	useEffect(() => {
 		if (order?.comments?.length > 0) {
-			dispatch(fetchCommentsByOrder(order._id));
+			dispatch(fetchCommentsByOrder(order?._id));
 		}
 	}, [order]);
 
@@ -70,25 +70,30 @@ function WorkShopOrder({ toggleRefresh }) {
 	}, [order]);
 
 	useEffect(() => {
-		if (order.scheme?.link) {
+		if (order?.scheme?.link) {
 			const loadFiles = async () => {
 				const files = await fetchFilesFromZip(
-					order.scheme.link
+					order?.scheme.link
 				);
 				setSelectedFiles(files);
 			};
 
 			loadFiles();
 		}
-	}, [order.scheme]);
+	}, [order?.scheme]);
 
 	const generatePDF = async () => {
-		if (order.status === 'Abierta') {
-			acceptOrder(order._id);
+		if (order?.status === 'Abierta') {
+			await acceptOrder(order?._id);
 			toggleRefresh();
 		}
+
 		const input = orderPDF.current;
 		const scale = 2;
+		if (!input) {
+			console.error('El nodo PDF no está montado.');
+			return;
+		}
 
 		// Asegurarse de que las fuentes estén cargadas
 		await document.fonts.ready;
@@ -207,8 +212,8 @@ function WorkShopOrder({ toggleRefresh }) {
 	const handleDownload = () => {
 		const link = document.createElement('a');
 
-		link.href = order.scheme.link;
-		link.download = `Archivos-Presupuesto-${order.orderNumber}`;
+		link.href = order?.scheme.link;
+		link.download = `Archivos-Presupuesto-${order?.orderNumber}`;
 
 		link.click();
 	};
@@ -249,7 +254,7 @@ function WorkShopOrder({ toggleRefresh }) {
 							variant="contained"
 							color="error"
 							onClick={() => {
-								stopOrder(order._id, setCurrentStatus);
+								stopOrder(order?._id, setCurrentStatus);
 							}}
 							style={{
 								margin: '15px',
@@ -262,7 +267,7 @@ function WorkShopOrder({ toggleRefresh }) {
 							variant="contained"
 							color="success"
 							onClick={() => {
-								unStopOrder(order._id, setCurrentStatus);
+								unStopOrder(order?._id, setCurrentStatus);
 							}}
 							style={{
 								margin: '15px',
@@ -275,7 +280,7 @@ function WorkShopOrder({ toggleRefresh }) {
 							variant="contained"
 							color="success"
 							onClick={() =>
-								sendOrder(order._id, setCurrentStatus)
+								sendOrder(order?._id, setCurrentStatus)
 							}
 							style={{
 								margin: '15px',
@@ -313,7 +318,7 @@ function WorkShopOrder({ toggleRefresh }) {
 									>
 										Fecha de Creación:{' '}
 										<span>
-											{toFormatDate(order.dateCreated)}
+											{toFormatDate(order?.dateCreated)}
 										</span>
 									</p>
 									<p
@@ -325,7 +330,7 @@ function WorkShopOrder({ toggleRefresh }) {
 									>
 										<span style={{ fontSize: '24px' }}>
 											ORDEN Nº.{' '}
-											<span>{order.orderNumber} </span>
+											<span>{order?.orderNumber} </span>
 										</span>
 									</p>
 								</div>
@@ -499,7 +504,7 @@ function WorkShopOrder({ toggleRefresh }) {
 									''
 								)}
 
-								{order.scheme?.link ? (
+								{order?.scheme?.link ? (
 									<div className={styles.inputContainer}>
 										<div style={{ width: '100%' }}>
 											<h3 style={{ fontSize: '16px' }}>
