@@ -50,9 +50,8 @@
 
 .buttons {
 	position: fixed;
-	left: 50%;
-	bottom: 50%;
-	transform: translate(calc(400px), calc(435px));
+	right: 1vw;
+	bottom: 5vh;
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
