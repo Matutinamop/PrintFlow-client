@@ -260,7 +260,11 @@ function OrderForm() {
 	};
 
 	const newPrintTask = () => {
-		const newTask = { id: fields.printTasks.length };
+		const newTask = {
+			id: fields.printTasks.length,
+			moduleRepeat: 1,
+			excess: 0,
+		};
 		setFields((prev) => ({
 			...prev,
 			printTasks: [...prev.printTasks, newTask],
