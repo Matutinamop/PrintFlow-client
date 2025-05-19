@@ -220,7 +220,7 @@ const useCalculateFields = (
 		) {
 			const [width, height] = module.bulkPaperSize
 				.replace(/,/g, '.')
-				.split('x')
+				.split(/x/i)
 				.map((value) => Number(value.trim()));
 
 			const area = (width * height) / 10000;
