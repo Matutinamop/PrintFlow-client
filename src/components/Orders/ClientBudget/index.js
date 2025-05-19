@@ -10,6 +10,8 @@ import { updateOrder } from '../../../utilities/functions/order/updateOrder';
 import { useDispatch } from 'react-redux';
 import { toFormatDate } from '../../../utilities/functions/dates';
 import { useSelector } from 'react-redux';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 function ClientBudget({ toggleRefresh }) {
 	const { order, loadingOrders } = useSelector(
@@ -46,22 +48,115 @@ function ClientBudget({ toggleRefresh }) {
 		);
 	}, [fields]);
 
-	const generatePDF = () => {
+	const generatePDF = async () => {
 		const input = orderPDF.current;
+		const scale = 2;
+		if (!input) {
+			console.error('El nodo PDF no está montado.');
+			return;
+		}
 
-		const options = {
-			margin: 0,
-			filename: `Presupuesto-Nro-${fields?.orderNumber}.pdf`,
-			image: { type: 'png', quality: 0.6 },
-			html2canvas: { scale: 2 },
-			jsPDF: {
-				unit: 'mm',
-				format: 'a4',
-				orientation: 'portrait',
-			},
-		};
+		// Asegurarse de que las fuentes estén cargadas
+		await document.fonts.ready;
 
-		html2pdf().from(input).set(options).save();
+		// Generamos el canvas
+		const canvas = await html2canvas(input, {
+			scale,
+			useCORS: true,
+		});
+
+		const canvasWidth = canvas.width;
+		const canvasHeight = canvas.height;
+
+		// Creamos el PDF en tamaño A4 (mm)
+		const pdf = new jsPDF({
+			orientation: 'portrait',
+			unit: 'mm',
+			format: 'a4',
+		});
+
+		// Dimensiones del PDF en mm y en píxeles
+		const pdfWidthMM = pdf.internal.pageSize.getWidth(); // 210 mm
+		const pdfHeightMM = pdf.internal.pageSize.getHeight(); // 297 mm
+		const pdfWidthPx = Math.floor(
+			(pdfWidthMM / 25.4) * 96 * scale
+		);
+		const pdfHeightPx = Math.floor(
+			(pdfHeightMM / 25.4) * 96 * scale
+		);
+
+		// Margen deseado en mm (definí 10 mm, pero podés cambiarlo)
+		const marginMM = 10;
+		// Área disponible en mm
+		const availableWidthMM = pdfWidthMM - marginMM * 2;
+		const availableHeightMM = pdfHeightMM - marginMM * 2;
+		// Convertimos el margen y área disponible a píxeles
+		const mmToPx = (mm) =>
+			Math.floor((mm / 25.4) * 96 * scale);
+		const pxToMm = (px) => (px / (96 * scale)) * 25.4;
+		const availableWidthPx = mmToPx(availableWidthMM);
+		const availableHeightPx = mmToPx(availableHeightMM);
+
+		let currentHeight = 0;
+		let pageCount = 0;
+
+		while (currentHeight < canvasHeight) {
+			// Cortamos el canvas en slices del alto disponible en la página (sin márgenes)
+			const sliceHeight = Math.min(
+				availableHeightPx,
+				canvasHeight - currentHeight
+			);
+
+			// Canvas temporal para el slice
+			const tempCanvas = document.createElement('canvas');
+			tempCanvas.width = canvasWidth;
+			tempCanvas.height = sliceHeight;
+			const ctx = tempCanvas.getContext('2d');
+			ctx.drawImage(
+				canvas,
+				0,
+				currentHeight, // desde dónde recortar en Y
+				canvasWidth, // ancho a recortar
+				sliceHeight, // alto a recortar
+				0,
+				0,
+				canvasWidth,
+				sliceHeight
+			);
+
+			const imgData = tempCanvas.toDataURL('image/png');
+
+			if (pageCount > 0) {
+				pdf.addPage();
+			}
+
+			// Convertir dimensiones del slice de px a mm
+			const sliceWidthMM = pxToMm(canvasWidth);
+			const sliceHeightMM = pxToMm(sliceHeight);
+
+			// Calcular el factor de escala para que la imagen se ajuste en el área disponible
+			const scaleRatio = Math.min(
+				availableWidthMM / sliceWidthMM,
+				availableHeightMM / sliceHeightMM
+			);
+			const finalWidth = sliceWidthMM * scaleRatio;
+			const finalHeight = sliceHeightMM * scaleRatio;
+
+			// Posicionar la imagen en (margen, margen)
+			pdf.addImage(
+				imgData,
+				'PNG',
+				marginMM,
+				marginMM,
+				finalWidth,
+				finalHeight
+			);
+
+			currentHeight += sliceHeight;
+			pageCount++;
+		}
+
+		pdf.save('orden.pdf');
 	};
 
 	const vendorOptions = [
