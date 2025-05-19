@@ -170,7 +170,7 @@ export function AllOrdersList({
 								<Th size={'sizeDate'}>Precio</Th>
 								<Th size={'sizeNumber'}>Desv.</Th>
 								<Th size={'sizePDF'}>Orden</Th>
-								<Th size={'sizePDF'}>Pres. Cli.</Th>
+								<Th size={'sizePDF'}>Pto. Clte.</Th>
 								<th className={styles.editTh}>Editar</th>
 							</Tr>
 						</Thead>
