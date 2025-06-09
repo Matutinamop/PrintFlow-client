@@ -4,6 +4,7 @@ import { fetchStations } from '../../../redux/workStations/workStationSlice';
 import { fetchActiveOrders } from '../../../redux/orders/ordersSlice';
 import { fetchOperations } from '../../../redux/operations/operationsSlice';
 import { movingTasks } from '../../functions/movingTasks';
+import { activateOrder } from '../../functions/order/activateOrder';
 
 export const useTaskManager = () => {
 	const dispatch = useDispatch();
@@ -38,6 +39,20 @@ export const useTaskManager = () => {
 			fetchAll();
 		}
 	}, [openOrderModal]);
+
+	useEffect(() => {
+		const tasksArray = new Set(
+			stations.flatMap((station) => station.tasks)
+		);
+		const ordersOut = activeOrders.filter(
+			(order) => !tasksArray.has(order._id)
+		);
+		console.log('tasksArray', tasksArray);
+		console.log('ordersOut', ordersOut);
+		if (ordersOut.length > 0) {
+			ordersOut.map((order) => activateOrder(order._id));
+		}
+	}, []);
 
 	const [isLoading, setIsLoading] = useState(true);
 
