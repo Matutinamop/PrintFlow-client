@@ -75,19 +75,18 @@ export const createNewOrder = async (fields) => {
 	}); */
 
 	const stationsList = tasks
-		.filter((task) => task.operation)
+		.filter((task) => task.operation && !task.manualAdded)
 		.map((task, index) => {
-			if (!task._id) {
-				return;
-			} else {
-				return {
-					station: task.operation._id ?? task.operation,
-					completed: false,
-					number: index,
-				};
-			}
+			return {
+				station: task.operation._id ?? task.operation,
+				completed: false,
+				number: index,
+			};
 		})
 		.filter(Boolean);
+
+	console.log('tasks', tasks);
+	console.log('stationsList', stationsList);
 
 	try {
 		const fieldsResponse = await axios.post(

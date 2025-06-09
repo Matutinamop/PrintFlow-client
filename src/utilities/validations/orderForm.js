@@ -184,6 +184,7 @@ const otherTaskModuleSchema = Joi.object({
 		}),
 	estimatedCost: Joi.any().optional(),
 	cost: Joi.any().optional(),
+	manualAdded: Joi.any().optional(),
 });
 
 export const orderSchema = Joi.object({

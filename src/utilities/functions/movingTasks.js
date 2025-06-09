@@ -106,6 +106,9 @@ export const movingTasks = async (info, setIsLoading) => {
 		comment,
 	} = info;
 
+	console.log('draggedEl', draggedEl);
+	console.log('source', source);
+
 	try {
 		const realSource = await axios.get(
 			`${url}/api/workStation/lite/${source._id}`
@@ -151,6 +154,28 @@ export const movingTasks = async (info, setIsLoading) => {
 		}
 		if (comment) {
 			addComment(draggedEl._id, comment);
+		}
+
+		if (
+			draggedEl.stationsList.find(
+				(station) =>
+					station.station.workStation === source._id
+			)
+		) {
+			console.log('entre');
+			const newStationsList = draggedEl.stationsList.map(
+				(station) => {
+					if (station.station.workStation === source._id) {
+						console.log('station', station);
+						return { ...station, completed: true };
+					} else {
+						return station;
+					}
+				}
+			);
+			await axios.put(`${url}/api/order/${draggedEl._id}`, {
+				stationsList: newStationsList,
+			});
 		}
 
 		setIsLoading(false);

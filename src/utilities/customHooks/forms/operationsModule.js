@@ -138,6 +138,7 @@ export const useOperationsModule = (fields, setFields) => {
 				quantity: 0,
 				estimatedCost: 0,
 				cost: 0,
+				manualAdded: true,
 			};
 
 			setOperationsList((prev) => [...prev, newOperation]);

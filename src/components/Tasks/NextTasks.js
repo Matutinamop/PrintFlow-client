@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styles from './tasks.module.css';
 
 function NextTasks({
@@ -9,6 +10,10 @@ function NextTasks({
 		setOpenOrder({ open: true, order: order });
 		setOpenModal(false);
 	};
+
+	useEffect(() => {
+		console.log('activeOrders', activeOrders);
+	}, []);
 
 	return (
 		<div className={styles.container}>

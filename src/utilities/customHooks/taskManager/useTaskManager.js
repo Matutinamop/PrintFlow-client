@@ -87,7 +87,7 @@ export const useTaskManager = () => {
 			allSelectActiveOrders.filter(
 				(order) =>
 					!station.tasks.some(
-						(task) => task._id === order._id
+						(task) => task === order._id
 					) &&
 					!order.stationsList.find(
 						(st) => st.station.workStation === station._id
