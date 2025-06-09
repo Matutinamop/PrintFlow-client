@@ -216,7 +216,8 @@ const useCalculateFields = (
 			module.grammage &&
 			module.bulkPaperSize &&
 			module.material &&
-			material?.pricePerUnitType
+			material?.pricePerUnitType &&
+			material?.unitType === 'Tonelada'
 		) {
 			const [width, height] = module.bulkPaperSize
 				.replace(/,/g, '.')
@@ -240,6 +241,21 @@ const useCalculateFields = (
 			});
 		}
 
+		if (
+			module.material &&
+			material?.unitType === 'Unidad' &&
+			material?.pricePerUnitType
+		) {
+			setFields((prev) => {
+				const updatedPrintTasks = [...prev.printTasks];
+				updatedPrintTasks[index].costPerBulkPaper =
+					material.pricePerUnitType;
+				return {
+					...prev,
+					printTasks: updatedPrintTasks,
+				};
+			});
+		}
 		if (
 			module.bulkPaperQuantity &&
 			module.costPerBulkPaper
