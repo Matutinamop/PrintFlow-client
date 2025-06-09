@@ -62,7 +62,7 @@ function RequestInfoModule({
 				<h3>Detalle del pedido: </h3>
 			</div>
 			<div className={styles.inputContainer}>
-				<label>Comentarios para el Cliente:</label>
+				<label>Descripción para el Cliente:</label>
 				<textarea
 					name="descriptionClient"
 					className={styles.textArea}

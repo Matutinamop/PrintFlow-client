@@ -93,7 +93,7 @@ function NavBar({ setHideSideBar, hideSideBar, role }) {
 									}
 									to="/admin/orders/all"
 								>
-									Presupuestos
+									MOPS
 								</Link>
 								<Link
 									className={(active) =>

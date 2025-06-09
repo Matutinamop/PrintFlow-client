@@ -342,8 +342,9 @@ function OrderForm() {
 								width: '280px',
 								textAlign: 'center',
 							}}
+							translate="no"
 						>
-							Presupuesto de la empresa
+							MOP de la empresa
 						</h3>
 						<div
 							className={`${styles.headerBlock} ${styles.infoHeader}`}
@@ -364,12 +365,12 @@ function OrderForm() {
 							>
 								{editFields ? (
 									<>
-										Presupuesto Nº.{' '}
+										MOP Nº.{' '}
 										<span>{fields.orderNumber} </span>
 									</>
 								) : (
 									<>
-										Presupuesto Nº.{' '}
+										MOP Nº.{' '}
 										<span>{allOrdersCount + 1} </span>
 									</>
 								)}

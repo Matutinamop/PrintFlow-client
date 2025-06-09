@@ -40,8 +40,9 @@ function SideBar({ hideSideBar }) {
 							: ''
 					}
 					to="/admin/orders/all"
+					translate="no"
 				>
-					Presupuestos
+					MOP
 				</Link>
 				<Link
 					className={

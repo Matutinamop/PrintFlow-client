@@ -149,9 +149,8 @@ function OrdersList() {
 				onClose={() => setPrevFieldsModal(false)}
 			>
 				<div className={styles.prevModal}>
-					<h3>
-						Quieres recuperar los datos del ultimo
-						presupuesto?
+					<h3 translate="no">
+						Quieres recuperar los datos de la ultima MOP?
 					</h3>
 					<div className={styles.prevButtons}>
 						<Link to={'/admin/orders/form'}>
@@ -175,8 +174,8 @@ function OrdersList() {
 					</div>
 				</div>
 			</Modal>
-			<h2 className={styles.allOrdersTitle}>
-				LISTA DE PRESUPUESTOS
+			<h2 className={styles.allOrdersTitle} translate="no">
+				LISTA DE MOPS
 			</h2>
 			<div
 				style={{

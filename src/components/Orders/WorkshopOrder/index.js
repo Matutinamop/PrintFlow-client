@@ -459,7 +459,7 @@ function WorkShopOrder({ toggleRefresh }) {
 											color: '#444',
 										}}
 									>
-										Comentarios para el Cliente:
+										Descripción para el Cliente:
 									</h3>
 									<p className={styles.textArea}>
 										{fields.descriptionClient ?? ''}
