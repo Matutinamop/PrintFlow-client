@@ -143,6 +143,9 @@ export function AllOrdersList({
 								<Th size={'sizeNumber'}>Nº PRES.</Th>
 								<Th size={'sizeDate'}>Producto</Th>
 								<Th size={'sizeClient'}>Cliente</Th>
+								<Th size={'sizeDescription'}>
+									Comentarios cliente
+								</Th>
 								<Th size="sizeStatus">
 									<p>Estado</p>{' '}
 									<Dropdown
@@ -161,6 +164,7 @@ export function AllOrdersList({
 										Fecha límite
 									</p>
 									<ArrowDropDownIcon
+										onClick={setDateOrder}
 										sx={{
 											fontSize: '1.2rem',
 											cursor: 'pointer',
@@ -192,6 +196,9 @@ export function AllOrdersList({
 										<Td>{order?.product}</Td>
 										<Td size={'sizeClient'}>
 											{order?.client?.companyName}
+										</Td>
+										<Td size={'sizeDescription'}>
+											{order?.descriptionClient}
 										</Td>
 										<Td size="sizeStatus">
 											{order?.status}

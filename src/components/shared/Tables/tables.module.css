@@ -40,6 +40,7 @@
 
 .td {
 	overflow: hidden;
+	height: 20px;
 }
 
 .normal {
@@ -69,11 +70,15 @@
 }
 
 .sizePDF {
-	width: 70px;
+	width: 65px;
+}
+
+.sizeDescription {
+	min-width: 100px;
 }
 
 .sizeClient {
-	width: 450px;
+	width: 350px;
 }
 
 .tr:nth-child(odd) {

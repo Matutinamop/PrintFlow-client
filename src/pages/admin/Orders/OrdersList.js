@@ -182,7 +182,7 @@ function OrdersList() {
 					display: 'flex',
 					justifyContent: 'space-between',
 					alignItems: 'center',
-					width: '95%',
+					width: '100%',
 				}}
 			>
 				<div className={styles.ordersListSearch}>
