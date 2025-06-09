@@ -125,7 +125,7 @@ function WorkShopOrder({ toggleRefresh }) {
 		);
 
 		// Margen deseado en mm (definí 10 mm, pero podés cambiarlo)
-		const marginMM = 10;
+		const marginMM = 7;
 		// Área disponible en mm
 		const availableWidthMM = pdfWidthMM - marginMM * 2;
 		const availableHeightMM = pdfHeightMM - marginMM * 2;
