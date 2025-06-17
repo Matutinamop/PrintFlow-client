@@ -308,8 +308,13 @@ function OrderForm() {
 				setFields((prev) => ({
 					...prev,
 					estimatedFinalPrice: price,
-					finalPrice: price,
-					deviation: 0,
+					finalPrice: prev.deviation
+						? Math.round(
+								price *
+									(1 + parseFloat(prev.deviation) / 100)
+						  )
+						: price,
+					deviation: prev.deviation || 0, // mantiene el deviation si ya hay uno
 				}));
 			}
 		}
