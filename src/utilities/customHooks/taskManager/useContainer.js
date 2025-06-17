@@ -101,9 +101,11 @@ export const useContainer = (
 	useEffect(() => {
 		if (orders.length > 0) {
 			setTasks(
-				workStation.tasks?.map((task) =>
-					orders.find((order) => order?._id === task)
-				)
+				workStation.tasks
+					?.map((task) =>
+						orders.find((order) => order?._id === task)
+					)
+					.filter(Boolean)
 			);
 		}
 	}, [orders]);
