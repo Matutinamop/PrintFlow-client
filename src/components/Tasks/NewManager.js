@@ -275,6 +275,10 @@ function Container({
 		<div className={styles.container} ref={ref}>
 			<h2 id="no-drag">{workStation.name}</h2>
 			{tasks?.map((task) => {
+				if (task === undefined) {
+					return;
+				}
+
 				const levelClass =
 					styles[
 						`warningLevel${warningLevel(task)}` ||
