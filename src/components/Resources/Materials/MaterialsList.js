@@ -31,7 +31,7 @@ function MaterialsList({
 		useSelector((state) => state.materials);
 
 	useEffect(() => {
-		const pages = Math.ceil(materialsCount / 15);
+		const pages = Math.ceil(materialsCount / 50);
 		setTotalPages(pages);
 		setCurrentPage(1);
 	}, [materialsCount]);

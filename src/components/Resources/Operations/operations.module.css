@@ -10,7 +10,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
-	height: 60vh;
+	height: 70vh;
 	overflow-x: auto;
 	padding: 10px;
 	background-color: rgba(255, 255, 255, 1);
@@ -19,6 +19,10 @@
 	color: #101204;
 	box-shadow: 0 1px 5px 0 #101204;
 }
+
+/* .tables {
+	height: 70vh;
+} */
 
 .formContainer {
 	display: flex;
@@ -100,6 +104,25 @@
 	width: 100%;
 	height: 200px;
 	color: black;
+}
+
+.allOperationsTable::-webkit-scrollbar {
+	width: 12px;
+	border-radius: 20px;
+}
+
+.allOperationsTable::-webkit-scrollbar-track {
+	border-radius: 20px;
+}
+
+.allOperationsTable::-webkit-scrollbar-thumb {
+	background-color: black;
+	border-radius: 20px;
+	border: 3px solid #ddd;
+}
+
+.allOperationsTable::-webkit-scrollbar:window-inactive {
+	display: none;
 }
 
 @media (max-width: 1000px) {

@@ -31,7 +31,7 @@ function OperationsList({
 	);
 
 	useEffect(() => {
-		const pages = Math.ceil(operationsCount / 15);
+		const pages = Math.ceil(operationsCount / 50);
 		setTotalPages(pages);
 		setCurrentPage(1);
 	}, [operationsCount]);
