@@ -11,6 +11,7 @@ import { selectStyles } from '../../../utilities/selectStyles/selectStyles';
 import Modal from '../../shared/Modal';
 import MaterialsForm from '../../Resources/Materials/MaterialsForm';
 import { toFormatNumber } from '../../../utilities/functions/costCalculator';
+import CutVisualizer from '../../shared/CutVisualizer';
 
 function PrintTaskModule({
 	fields,
@@ -30,6 +31,12 @@ function PrintTaskModule({
 	const [manualChanges, setManualChanges] = useState({
 		totalCost: false,
 	});
+	const [visualizerData, setVisualizerData] = useState({
+		bulkWidth: '0',
+		bulkHeight: '0',
+		cutWidth: '0',
+		cutHeight: '0',
+	});
 
 	useEffect(() => {
 		setFields((prev) => {
@@ -40,6 +47,38 @@ function PrintTaskModule({
 			return { ...prev, printTasks: updatedPrintTasks };
 		});
 	}, [selectedOptions]);
+
+	useEffect(() => {
+		console.log('info', info);
+		if (
+			typeof info?.bulkPaperSize === 'string' &&
+			typeof info?.sheetSize === 'string' &&
+			/[xX]/.test(info.bulkPaperSize) &&
+			/[xX]/.test(info.sheetSize)
+		) {
+			const [bulkWidth, bulkHeight] = info?.bulkPaperSize
+				.replace(/,/g, '.')
+				.split(/[xX]/)
+				.map((value) => Number(value.trim()));
+			const [cutWidth, cutHeight] = info?.sheetSize
+				.replace(/,/g, '.')
+				.split(/[xX]/)
+				.map((value) => Number(value.trim()));
+			setVisualizerData({
+				bulkWidth: bulkWidth,
+				bulkHeight: bulkHeight,
+				cutWidth: cutWidth,
+				cutHeight: cutHeight,
+			});
+		} else {
+			setVisualizerData({
+				bulkWidth: '0',
+				bulkHeight: '0',
+				cutWidth: '0',
+				cutHeight: '0',
+			});
+		}
+	}, [info.bulkPaperSize, info.sheetSize]);
 
 	const handleManualChange = (e) => {
 		setManualChanges((prev) => ({
@@ -130,7 +169,6 @@ function PrintTaskModule({
 					Borrar
 				</Button>
 			</div>
-
 			<div className={styles.contain}>
 				<div
 					style={{
@@ -494,8 +532,19 @@ function PrintTaskModule({
 				</div>
 				<div
 					className={styles.printFirstRow}
-					style={{ alignItems: 'flex-end' }}
+					style={{ alignItems: 'center' }}
 				>
+					{!visualizerData ||
+					Object.values(visualizerData).some(
+						(value) =>
+							Number(value) === 0 || isNaN(Number(value))
+					) ? (
+						''
+					) : (
+						<CutVisualizer
+							visualizerData={visualizerData}
+						/>
+					)}
 					<div className={styles.tintasDiv}>
 						<h3>TINTAS</h3>
 						<div>
