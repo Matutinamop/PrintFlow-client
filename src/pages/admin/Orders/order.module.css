@@ -65,8 +65,12 @@
 	width: 95%;
 	height: 93vh;
 	color: #edf0f1;
-	padding-top: 20px;
+	/* padding-top: 20px; */
 	margin: 0 auto;
+}
+
+.allOrdersTitle {
+	font-size: 32px;
 }
 
 .ordersListSearch {
@@ -85,6 +89,10 @@
 	display: flex;
 	justify-content: center;
 	gap: 15px;
+}
+
+.paginationContainer {
+	margin: 10px 0;
 }
 
 /* 

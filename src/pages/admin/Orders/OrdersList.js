@@ -8,7 +8,7 @@ import {
 } from '../../../redux/orders/ordersSlice';
 import { Input } from '../../../components/shared/Inputs';
 import { AllOrdersList } from '../../../components/Orders/AllOrdersList';
-import Pagination from '../../../components/shared/Pagination';
+import { Pagination } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { rolToken } from '../../../utilities/functions/login';
 import { Button, setRef } from '@mui/material';
@@ -33,8 +33,8 @@ function OrdersList() {
 
 	const [orderNumber, setOrderNumber] = useState('');
 	const [searchTerm, setSearchTerm] = useState('');
-	const [currentpage, setCurrentPage] = useState(1);
-	const [totalpages, setTotalPages] = useState(0);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(0);
 	const [status, setStatus] = useState('');
 	const [prevFieldsModal, setPrevFieldsModal] =
 		useState(false);
@@ -61,6 +61,12 @@ function OrdersList() {
 	}, [ordersCount]);
 
 	useEffect(() => {
+		console.log('currentPage', currentPage);
+		console.log('totalPages', totalPages);
+		console.log('ordersCount', ordersCount);
+	}, [totalPages, currentPage]);
+
+	useEffect(() => {
 		rolToken();
 		dispatch(fetchOrdersPage());
 	}, []);
@@ -79,16 +85,16 @@ function OrdersList() {
 			fetchFilteredOrders({
 				searchTerm,
 				status,
-				page: currentpage,
+				page: currentPage,
 			})
 		);
-	}, [currentpage, status, refresh]);
+	}, [currentPage, status, refresh]);
 
 	const setDateOrder = () => {
 		dispatch(
 			fetchFilteredOrders({
 				searchTerm,
-				page: currentpage,
+				page: currentPage,
 				dateOrder: true,
 			})
 		);
@@ -100,7 +106,7 @@ function OrdersList() {
 			fetchFilteredOrders({
 				searchTerm,
 				status,
-				page: currentpage,
+				page: currentPage,
 			})
 		);
 	};
@@ -111,7 +117,7 @@ function OrdersList() {
 			fetchFilteredOrders({
 				searchTerm: e.target.value,
 				status,
-				page: currentpage,
+				page: currentPage,
 			})
 		);
 	};
@@ -221,8 +227,8 @@ function OrdersList() {
 			/>
 			<div className={styles.paginationContainer}>
 				<Pagination
-					count={totalpages}
-					page={currentpage}
+					count={totalPages}
+					page={currentPage}
 					onChange={setPage}
 					variant="contained"
 					shape="rounded"

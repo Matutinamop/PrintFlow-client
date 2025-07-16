@@ -122,9 +122,9 @@ function ClientsList() {
 					sx={{
 						'& .MuiPaginationItem-root': {
 							color: 'white',
-							backgroundColor: '#1976D2', // Color de los botones
+							backgroundColor: '#1976D2',
 							'&:hover': {
-								backgroundColor: 'lightblue', // Color al pasar el cursor
+								backgroundColor: 'lightblue',
 							},
 						},
 						'& .MuiPaginationItem-root.Mui-selected': {
@@ -133,13 +133,6 @@ function ClientsList() {
 					}}
 				/>
 			</div>
-			{/* <Pagination
-				count={clientsCount}
-				itemsperpage={50}
-				currentpage={currentpage}
-				totalpages={totalpages}
-				setPage={setPage}
-			/> */}
 		</div>
 	);
 }
