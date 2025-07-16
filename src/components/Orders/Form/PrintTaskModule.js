@@ -541,9 +541,15 @@ function PrintTaskModule({
 					) ? (
 						''
 					) : (
-						<CutVisualizer
-							visualizerData={visualizerData}
-						/>
+						<div>
+							<label className={styles.label}>
+								{' '}
+								Pliegos por hoja:
+							</label>
+							<CutVisualizer
+								visualizerData={visualizerData}
+							/>
+						</div>
 					)}
 					<div className={styles.tintasDiv}>
 						<h3>TINTAS</h3>

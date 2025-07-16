@@ -5,23 +5,9 @@ const CutVisualizer = ({ visualizerData }) => {
 	const { bulkWidth, bulkHeight, cutWidth, cutHeight } =
 		visualizerData;
 
-	/* if (
-		!bulkWidth ||
-		!bulkHeight ||
-		!cutWidth ||
-		!cutHeight ||
-		isNaN(bulkWidth) ||
-		isNaN(bulkHeight) ||
-		isNaN(cutWidth) ||
-		isNaN(cutHeight)
-	) {
-		return <></>;
-	} */
-	// Usar lado más largo como ancho para forzar visualización horizontal
 	const sheetWidth = Math.max(bulkWidth, bulkHeight);
 	const sheetHeight = Math.min(bulkWidth, bulkHeight);
 
-	// Calcular cortes en ambas orientaciones
 	const colsNormal = Math.floor(sheetWidth / cutWidth);
 	const rowsNormal = Math.floor(sheetHeight / cutHeight);
 	const totalNormal = colsNormal * rowsNormal;
@@ -30,7 +16,6 @@ const CutVisualizer = ({ visualizerData }) => {
 	const rowsRotated = Math.floor(sheetHeight / cutWidth);
 	const totalRotated = colsRotated * rowsRotated;
 
-	// Usar orientación que permita más cortes
 	const useRotated = totalRotated > totalNormal;
 
 	const finalCutWidth = useRotated ? cutHeight : cutWidth;
@@ -38,7 +23,6 @@ const CutVisualizer = ({ visualizerData }) => {
 	const cols = useRotated ? colsRotated : colsNormal;
 	const rows = useRotated ? rowsRotated : rowsNormal;
 
-	// Escala por ancho
 	const maxDisplayWidth = 130;
 	const scale = maxDisplayWidth / sheetWidth;
 
@@ -47,7 +31,31 @@ const CutVisualizer = ({ visualizerData }) => {
 	const scaledSheetWidth = sheetWidth * scale;
 	const scaledSheetHeight = sheetHeight * scale;
 
-	const totalCuts = rows * cols;
+	// Crear filas con cortes distribuidos con space-around
+	const rowsArray = Array.from(
+		{ length: rows },
+		(_, rowIndex) => (
+			<div
+				key={rowIndex}
+				style={{
+					display: 'flex',
+					justifyContent: 'space-around',
+					width: '100%',
+				}}
+			>
+				{Array.from({ length: cols }).map((_, colIndex) => (
+					<div
+						key={colIndex}
+						className={styles.cut}
+						style={{
+							width: `${scaledCutWidth}px`,
+							height: `${scaledCutHeight}px`,
+						}}
+					/>
+				))}
+			</div>
+		)
+	);
 
 	return (
 		<div
@@ -55,24 +63,12 @@ const CutVisualizer = ({ visualizerData }) => {
 			style={{
 				width: `${scaledSheetWidth}px`,
 				height: `${scaledSheetHeight}px`,
-				display: 'grid',
-				gridTemplateColumns: `repeat(${cols}, ${scaledCutWidth}px)`,
-				gridTemplateRows: `repeat(${rows}, ${scaledCutHeight}px)`,
-				justifyContent: 'center',
-				alignContent: 'center',
-				gap: '2px',
+				display: 'flex',
+				flexDirection: 'column',
+				justifyContent: 'space-around',
 			}}
 		>
-			{Array.from({ length: totalCuts }).map((_, i) => (
-				<div
-					key={i}
-					className={styles.cut}
-					style={{
-						width: `${scaledCutWidth}px`,
-						height: `${scaledCutHeight}px`,
-					}}
-				/>
-			))}
+			{rowsArray}
 		</div>
 	);
 };
