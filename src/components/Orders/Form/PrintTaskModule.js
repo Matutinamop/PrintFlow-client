@@ -51,16 +51,16 @@ function PrintTaskModule({
 	useEffect(() => {
 		console.log('info', info);
 		if (
-			typeof info?.bulkPaperSize === 'string' &&
+			typeof info?.sizeWithMargins === 'string' &&
 			typeof info?.sheetSize === 'string' &&
-			/[xX]/.test(info.bulkPaperSize) &&
+			/[xX]/.test(info.sizeWithMargins) &&
 			/[xX]/.test(info.sheetSize)
 		) {
-			const [bulkWidth, bulkHeight] = info?.bulkPaperSize
+			const [bulkWidth, bulkHeight] = info?.sheetSize
 				.replace(/,/g, '.')
 				.split(/[xX]/)
 				.map((value) => Number(value.trim()));
-			const [cutWidth, cutHeight] = info?.sheetSize
+			const [cutWidth, cutHeight] = info?.sizeWithMargins
 				.replace(/,/g, '.')
 				.split(/[xX]/)
 				.map((value) => Number(value.trim()));
@@ -78,7 +78,7 @@ function PrintTaskModule({
 				cutHeight: '0',
 			});
 		}
-	}, [info.bulkPaperSize, info.sheetSize]);
+	}, [info.sizeWithMargins, info.sheetSize]);
 
 	const handleManualChange = (e) => {
 		setManualChanges((prev) => ({
@@ -544,7 +544,7 @@ function PrintTaskModule({
 						<div>
 							<label className={styles.label}>
 								{' '}
-								Pliegos por hoja:
+								Unidades por pliego:
 							</label>
 							<CutVisualizer
 								visualizerData={visualizerData}
