@@ -7,127 +7,126 @@ import { movingTasks } from '../../functions/movingTasks';
 import { activateOrder } from '../../functions/order/activateOrder';
 
 export const useTaskManager = () => {
-	const dispatch = useDispatch();
-	const taskManagerRef = useRef(null);
-	const { stations } = useSelector(
-		(state) => state.workStations
-	);
-	const { activeOrders } = useSelector(
-		(state) => state.orders
-	);
-	const [activeOrdersToShow, setActiveOrdersToShow] =
-		useState({ orders: [], station: {} });
-	const [openNextTasksModal, setOpenNextTasksModal] =
-		useState({ open: false, info: {} });
-	const [openOrderModal, setOpenOrderModal] = useState({});
-	const moveModalInit = {
-		isOpen: false,
-		changes: false,
-		source: null,
-		draggedEl: null,
-		destinationTasks: null,
-		destination: null,
-		comment: '',
-		bill: false,
-		billNumber: '',
-		delivery: false,
-	};
-	const [moveModal, setMoveModal] = useState(moveModalInit);
+  const dispatch = useDispatch();
+  const taskManagerRef = useRef(null);
+  const { stations } = useSelector((state) => state.workStations);
+  const { activeOrders } = useSelector((state) => state.orders);
+  const [activeOrdersToShow, setActiveOrdersToShow] = useState({
+    orders: [],
+    station: {},
+  });
+  const [openNextTasksModal, setOpenNextTasksModal] = useState({
+    open: false,
+    info: {},
+  });
+  const [openOrderModal, setOpenOrderModal] = useState({});
+  const moveModalInit = {
+    isOpen: false,
+    changes: false,
+    source: null,
+    draggedEl: null,
+    destinationTasks: null,
+    destination: null,
+    comment: '',
+    bill: false,
+    billNumber: '',
+    delivery: false,
+  };
+  const [moveModal, setMoveModal] = useState(moveModalInit);
 
-	useEffect(() => {
-		if (!openOrderModal.open) {
-			fetchAll();
-		}
-	}, [openOrderModal]);
+  useEffect(() => {
+    if (!openOrderModal.open) {
+      fetchAll();
+    }
+  }, [openOrderModal]);
 
-	useEffect(() => {
-		const tasksArray = new Set(
-			stations.flatMap((station) => station.tasks)
-		);
-		const ordersOut = activeOrders.filter(
-			(order) => !tasksArray.has(order._id)
-		);
-		console.log('tasksArray', tasksArray);
-		console.log('ordersOut', ordersOut);
-		if (ordersOut.length > 0) {
-			ordersOut.map((order) => activateOrder(order._id));
-		}
-	}, []);
+  useEffect(() => {
+    if (!Array.isArray(stations)) return;
 
-	const [isLoading, setIsLoading] = useState(true);
+    const tasksArray = new Set(stations.flatMap((station) => station.tasks));
+    const ordersOut = activeOrders.filter(
+      (order) => !tasksArray.has(order._id)
+    );
+    console.log('tasksArray', tasksArray);
+    console.log('ordersOut', ordersOut);
+    if (ordersOut.length > 0) {
+      ordersOut.forEach((order) => activateOrder(order._id));
+    }
+  }, [stations]);
 
-	const fetchAll = () => {
-		dispatch(fetchStations());
-		dispatch(fetchActiveOrders());
-		dispatch(fetchOperations());
-	};
+  const [isLoading, setIsLoading] = useState(true);
 
-	useEffect(() => {
-		fetchAll();
-	}, []);
+  const fetchAll = () => {
+    dispatch(fetchStations());
+    dispatch(fetchActiveOrders());
+    dispatch(fetchOperations());
+  };
 
-	const cancelMove = () => {
-		setMoveModal(moveModalInit);
-		dispatch(fetchStations());
-		dispatch(fetchActiveOrders());
-	};
+  useEffect(() => {
+    fetchAll(); // ejecución inicial
 
-	const handleMove = async () => {
-		movingTasks(moveModal, setIsLoading);
-	};
+    const interval = setInterval(() => {
+      fetchAll();
+    }, 60000); // 60 segundos
 
-	useEffect(() => {
-		if (!isLoading) {
-			setMoveModal(moveModalInit);
-			fetchAll();
-		}
-	}, [isLoading]);
+    return () => clearInterval(interval); // limpieza
+  }, []);
 
-	useEffect(() => {
-		setIsLoading(false);
-		if (activeOrders.length > 0) {
-			setIsLoading(false);
-		}
-	}, [activeOrders]);
+  const cancelMove = () => {
+    setMoveModal(moveModalInit);
+    dispatch(fetchStations());
+    dispatch(fetchActiveOrders());
+  };
 
-	function selectActiveOrders(station) {
-		const allSelectActiveOrders = activeOrders.filter(
-			(order) =>
-				order.stationsList.some(
-					(st) => st.station.workStation === station._id
-				)
-		);
+  const handleMove = async () => {
+    movingTasks(moveModal, setIsLoading);
+  };
 
-		const finalSelectActiveOrders =
-			allSelectActiveOrders.filter(
-				(order) =>
-					!station.tasks.some(
-						(task) => task === order._id
-					) &&
-					!order.stationsList.find(
-						(st) => st.station.workStation === station._id
-					).completed
-			);
-		setActiveOrdersToShow({
-			orders: finalSelectActiveOrders,
-			station: station,
-		});
-	}
+  useEffect(() => {
+    if (!isLoading) {
+      setMoveModal(moveModalInit);
+      fetchAll();
+    }
+  }, [isLoading]);
 
-	return {
-		taskManagerRef,
-		stations,
-		activeOrders,
-		activeOrdersToShow,
-		openNextTasksModal,
-		setOpenNextTasksModal,
-		openOrderModal,
-		setOpenOrderModal,
-		moveModal,
-		setMoveModal,
-		isLoading,
-		cancelMove,
-		handleMove,
-		selectActiveOrders,
-	};
+  useEffect(() => {
+    setIsLoading(false);
+    if (activeOrders.length > 0) {
+      setIsLoading(false);
+    }
+  }, [activeOrders]);
+
+  function selectActiveOrders(station) {
+    const allSelectActiveOrders = activeOrders.filter((order) =>
+      order.stationsList.some((st) => st.station.workStation === station._id)
+    );
+
+    const finalSelectActiveOrders = allSelectActiveOrders.filter(
+      (order) =>
+        !station.tasks.some((task) => task === order._id) &&
+        !order.stationsList.find((st) => st.station.workStation === station._id)
+          .completed
+    );
+    setActiveOrdersToShow({
+      orders: finalSelectActiveOrders,
+      station: station,
+    });
+  }
+
+  return {
+    taskManagerRef,
+    stations,
+    activeOrders,
+    activeOrdersToShow,
+    openNextTasksModal,
+    setOpenNextTasksModal,
+    openOrderModal,
+    setOpenOrderModal,
+    moveModal,
+    setMoveModal,
+    isLoading,
+    cancelMove,
+    handleMove,
+    selectActiveOrders,
+  };
 };
