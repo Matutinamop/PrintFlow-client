@@ -69,6 +69,17 @@
 	font-size: 12px;
 }
 
+.fakeInput {
+	width: 100%;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 3px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	background-color: white;
+	font-size: 14px;
+	/* padding: 10px; */
+}
+
 .input:focus {
 	border-color: #007bff;
 }
@@ -105,6 +116,9 @@
 
 .mailSize {
 	width: 250px;
+}
+.materialSize {
+	width: 400px;
 }
 
 .bigSize {

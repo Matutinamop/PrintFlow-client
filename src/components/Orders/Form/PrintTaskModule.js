@@ -49,7 +49,6 @@ function PrintTaskModule({
 	}, [selectedOptions]);
 
 	useEffect(() => {
-		console.log('info', info);
 		if (
 			typeof info?.sizeWithMargins === 'string' &&
 			typeof info?.sheetSize === 'string' &&

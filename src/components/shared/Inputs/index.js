@@ -48,6 +48,17 @@ export function Input({
 	);
 }
 
+export function FakeInput({ value, size, children }) {
+	return (
+		<div
+			className={`${styles.container} ${styles.vertical} ${styles[size]}`}
+		>
+			<label className={styles.label}>{children}</label>
+			<div className={styles.fakeInput}>{value}</div>
+		</div>
+	);
+}
+
 export function SearchableInput({
 	name,
 	children,
