@@ -75,7 +75,9 @@ export const createNewOrder = async (fields) => {
 	}); */
 
 	const stationsList = tasks
-		.filter((task) => task.operation && !task.manualAdded)
+		.filter(
+			(task) => task.operation && task.unitType !== ''
+		)
 		.map((task, index) => {
 			return {
 				station: task.operation._id ?? task.operation,
