@@ -21,6 +21,9 @@
 	background-color: black;
 	color: white;
 	white-space: nowrap;
+	position: sticky;
+	top: 0;
+	z-index: 1;
 }
 
 .thContent {
@@ -30,7 +33,6 @@
 
 .th,
 .td {
-	position: relative;
 	border: 1px solid #101204;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -71,6 +73,7 @@
 
 .sizePDF {
 	width: 65px;
+	text-align: center;
 }
 
 .sizeDescription {

@@ -43,17 +43,18 @@
 	background-color: black;
 	color: white;
 	white-space: nowrap;
+	position: sticky;
+	top: 0;
+	z-index: 1
 }
 
 .editTd,
 .editTh {
-	position: relative;
 	border: 1px solid #101204;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	text-align: center;
 	padding: 5px;
-	width: 60px;
 }
 
 .formContainer {

@@ -52,7 +52,7 @@
 .nav {
 	display: flex;
 	justify-content: space-between;
-	gap: 20px;
+	gap: 10px;
 	padding: 5px 2%;
 	align-items: center;
 	height: 100%;
@@ -69,6 +69,14 @@
 	top: 7vh;
 	padding: 20px;
 	background-color: #24252a;
+}
+
+.horizontalNav {
+	display: flex;
+	justify-content: space-between;
+	width: 50%;
+	font-weight: bold;
+	font-size: 24px;
 }
 
 .burgerMenu {

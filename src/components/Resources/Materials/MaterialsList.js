@@ -67,43 +67,24 @@ function MaterialsList({
 						<Table>
 							<Thead>
 								<Tr>
-									<th
-										style={{
-											backgroundColor: 'black',
-											color: ' white',
-											whiteSpace: 'nowrap',
-											textAlign: 'left',
-											border: '1px solid #101204',
-										}}
-									>
+									<th className={styles.editTh}>
 										Nombre
 									</th>
-									<th
+									<th className={styles.editTh}
 										style={{
-											width: '150px',
-											backgroundColor: 'black',
-											color: ' white',
-											whiteSpace: 'nowrap',
-											textAlign: 'left',
-											border: '1px solid #101204',
-										}}
+											width: '150px'}}
 									>
 										Tipo de unidad
 									</th>
-									<th
+									<th className={styles.editTh}
 										style={{
-											width: '70px',
-											backgroundColor: 'black',
-											color: ' white',
-											whiteSpace: 'nowrap',
-											textAlign: 'left',
-											border: '1px solid #101204',
-										}}
+											width: '70px'}}
 									>
 										Precio
 									</th>
 
-									<th className={styles.editTh}>Editar</th>
+									<th className={styles.editTh} style={{
+											width: '70px'}}>Editar</th>
 								</Tr>
 							</Thead>
 							<Tbody>

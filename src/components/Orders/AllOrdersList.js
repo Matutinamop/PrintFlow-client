@@ -162,7 +162,7 @@ export function AllOrdersList({
                 <Th size={'sizeNumber'}>Desv.</Th>
                 <Th size={'sizePDF'}>Orden</Th>
                 <Th size={'sizePDF'}>Pto. Clte.</Th>
-                <th className={styles.editTh}>Editar</th>
+                <Th size={'sizePDF'}>Editar</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -191,36 +191,36 @@ export function AllOrdersList({
                       ${new Intl.NumberFormat('es-AR').format(order?.budget)}
                     </Td>
                     <Td size={'sizeNumber'}>{order?.deviation}</Td>
-                    <td className={styles.editTd}>
+                    <Td size={'sizePDF'}>
                       <IconButton
                         style={{ padding: 0 }}
                         onClick={() => createOrder(order)}
                       >
                         <PictureAsPdfIcon color='error' />
                       </IconButton>
-                    </td>
+                    </Td>
                     {/* <Td>
 											<PictureAsPdfIcon
 												color="error"
 												onClick={() => createOrder(order)}
 											/>
 										</Td> */}
-                    <td className={styles.editTd}>
+                    <Td size={'sizePDF'}>
                       <IconButton
                         style={{ padding: 0 }}
                         onClick={() => createBudget(order)}
                       >
                         <PictureAsPdfIcon color='error' />
                       </IconButton>
-                    </td>
-                    <td className={styles.editTd}>
+                    </Td>
+                    <Td size={'sizePDF'} >
                       <IconButton
                         style={{ padding: 0 }}
                         onClick={() => handleEditClick(order)} // Cambio aquí
                       >
                         <EditIcon fontSize='small' sx={{ color: '#101204' }} />
                       </IconButton>
-                    </td>
+                    </Td>
                   </tr>
                 );
               })}
