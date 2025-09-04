@@ -249,7 +249,7 @@ const useCalculateFields = (
 			setFields((prev) => {
 				const updatedPrintTasks = [...prev.printTasks];
 				updatedPrintTasks[index].costPerBulkPaper =
-					material.pricePerUnitType;
+					material.pricePerUnitType * dollarPrice;
 				return {
 					...prev,
 					printTasks: updatedPrintTasks,
